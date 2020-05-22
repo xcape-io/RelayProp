@@ -15,13 +15,11 @@ from PropPanel import PropPanel
 from ControlSettingsDialog import ControlSettingsDialog
 from PanelSettingsDialog import PanelSettingsDialog
 from AppletDialog import AppletDialog
-from DataWidget import DataWidget
 from LedWidget import LedWidget
 from PushButton import PushButton
 from SwitchWidget import SwitchWidget
-from ToggleButton import ToggleButton
 
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QGuiApplication
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog
 
@@ -38,8 +36,6 @@ class ControlDialog(AppletDialog):
 
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
-
-        self._propWidgets = PropPanel.getWidgets(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getJson(self._propSettings['prop']['json'], logger)
@@ -62,13 +58,16 @@ class ControlDialog(AppletDialog):
     # __________________________________________________________________
     def _buildPropWidgets(self):
 
-        box = QGroupBox(self.tr(""))
-        box_layout = QVBoxLayout(box)
-        box_layout.setSpacing(12)
-        self._mainLayout.addWidget(box)
+        self._groupBoxes = {}
 
-        for variable, pin in self._propVariables.items():
-            switch = SwitchWidget(label=pin.getLabel(),
+        for v, pin in self._propVariables.items():
+            if '/' in v:
+                group, variable = v.split('/', 1)
+                group = group.capitalize()
+            else:
+                group = None
+                variable = v
+            switch = SwitchWidget(label=variable.capitalize(),
                                   variable=pin.getVariable(),
                                   image_on=DATALED_IMAGE_ON,
                                   image_off=DATALED_IMAGE_OFF,
@@ -80,7 +79,15 @@ class ControlDialog(AppletDialog):
                                   value_on=pin.getHigh(),
                                   value_off=pin.getLow(),
                                   topic=self._propSettings['prop']['prop_inbox'])
-            box_layout.addWidget(switch)
+            if group in self._groupBoxes:
+                self._groupBoxes[group].layout().addWidget(switch)
+            else:
+                box = QGroupBox(group)
+                box_layout = QVBoxLayout(box)
+                box_layout.setSpacing(12)
+                self._groupBoxes[group] = box
+                self._mainLayout.addWidget(box)
+                box_layout.addWidget(switch)
             switch.publishMessage.connect(self.publishMessage)
             self.propDataReveived.connect(switch.onDataReceived)
         '''
@@ -257,7 +264,17 @@ class ControlDialog(AppletDialog):
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings, self._logger)
         dlg.setModal(True)
         if dlg.exec() == QDialog.Accepted:
-            pass
+            for group in list(self._groupBoxes.keys()):
+                for i in reversed(range(self._groupBoxes[group].layout().count())):
+                    widgetToRemove = self._groupBoxes[group].layout().itemAt(i).widget()
+                    # remove it from the layout list
+                    self._groupBoxes[group].layout().removeWidget(widgetToRemove)
+                    # remove it from the gui
+                    widgetToRemove.deleteLater()
+                self._mainLayout.removeWidget(self._groupBoxes[group])
+                self._groupBoxes[group].deleteLater()
+            QGuiApplication.processEvents()
+            self._buildPropWidgets()
 
     # __________________________________________________________________
     @pyqtSlot()
