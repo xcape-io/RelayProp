@@ -19,7 +19,7 @@ from LedWidget import LedWidget
 from PushButton import PushButton
 from SwitchWidget import SwitchWidget
 
-from PyQt5.QtGui import QIcon, QGuiApplication
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog
 
@@ -265,15 +265,17 @@ class ControlDialog(AppletDialog):
         dlg.setModal(True)
         if dlg.exec() == QDialog.Accepted:
             for group in list(self._groupBoxes.keys()):
-                for i in reversed(range(self._groupBoxes[group].layout().count())):
-                    widgetToRemove = self._groupBoxes[group].layout().itemAt(i).widget()
-                    # remove it from the layout list
-                    self._groupBoxes[group].layout().removeWidget(widgetToRemove)
-                    # remove it from the gui
-                    widgetToRemove.deleteLater()
+                widgets = self._groupBoxes[group].findChildren(SwitchWidget, '', options=Qt.FindChildrenRecursively)
+                for w in widgets:
+                    try:
+                        self._groupBoxes[group].layout().removeWidget(w)
+                        w.deleteLater()
+                    except Exception as e:
+                        print(e)
+                del(widgets)
                 self._mainLayout.removeWidget(self._groupBoxes[group])
                 self._groupBoxes[group].deleteLater()
-            QGuiApplication.processEvents()
+                del(self._groupBoxes[group])
             self._buildPropWidgets()
 
     # __________________________________________________________________
