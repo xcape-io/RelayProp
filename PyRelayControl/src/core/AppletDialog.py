@@ -13,7 +13,7 @@ try:
 except NameError:
     LAYOUT_FILE = ".layout.yml"
 
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QPoint, QSize, QTimer
+from PyQt5.QtCore import pyqtSlot, QPoint, QSize, QTimer
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QDialog
 import os, yaml
