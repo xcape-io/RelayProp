@@ -85,11 +85,11 @@ class PanelSettingsDialog(QDialog):
         cancel_button = QPushButton(self.tr("Cancel"))
         cancel_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
-        help_button = QPushButton(self.tr("Help"))
-        help_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        edit_button = QPushButton(self.tr("Edit indicators"))
+        edit_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         button_layout = QHBoxLayout()
-        button_layout.addWidget(help_button)
+        button_layout.addWidget(edit_button)
         button_layout.addStretch()
         button_layout.addWidget(apply_button)
         button_layout.addWidget(cancel_button)
@@ -99,7 +99,7 @@ class PanelSettingsDialog(QDialog):
 
         apply_button.pressed.connect(self.onApply)
         cancel_button.pressed.connect(self.accept)
-        help_button.pressed.connect(self.onHelp)
+        edit_button.pressed.connect(self.onEdit)
         add_button.pressed.connect(self.onAdd)
         json_browse_button.pressed.connect(self.onBrowse)
 
@@ -224,9 +224,8 @@ class PanelSettingsDialog(QDialog):
                 with open('prop.ini', 'w') as configfile:
                     self._propSettings.write(configfile)
 
+
     # __________________________________________________________________
     @pyqtSlot()
-    def onHelp(self):
-
-        dlg = HelpDialog(self.tr("Edit the control panel"), './help/panel.html')
-        dlg.exec()
+    def onEdit(self):
+        pass
