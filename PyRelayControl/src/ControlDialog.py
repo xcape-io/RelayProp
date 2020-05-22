@@ -36,6 +36,7 @@ class ControlDialog(AppletDialog):
 
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
+        self._groupBoxes = {}
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getJson(self._propSettings['prop']['json'], logger)
@@ -56,9 +57,21 @@ class ControlDialog(AppletDialog):
             self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
 
     # __________________________________________________________________
+    @pyqtSlot()
     def _buildPropWidgets(self):
 
-        self._groupBoxes = {}
+        for group in list(self._groupBoxes.keys()):
+            widgets = self._groupBoxes[group].findChildren(SwitchWidget, '', options=Qt.FindChildrenRecursively)
+            for w in widgets:
+                try:
+                    self._groupBoxes[group].layout().removeWidget(w)
+                    w.deleteLater()
+                except Exception as e:
+                    print(e)
+            del (widgets)
+            self._mainLayout.removeWidget(self._groupBoxes[group])
+            self._groupBoxes[group].deleteLater()
+            del (self._groupBoxes[group])
 
         for v, pin in self._propVariables.items():
             if '/' in v:
@@ -263,20 +276,10 @@ class ControlDialog(AppletDialog):
 
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings, self._logger)
         dlg.setModal(True)
-        if dlg.exec() == QDialog.Accepted:
-            for group in list(self._groupBoxes.keys()):
-                widgets = self._groupBoxes[group].findChildren(SwitchWidget, '', options=Qt.FindChildrenRecursively)
-                for w in widgets:
-                    try:
-                        self._groupBoxes[group].layout().removeWidget(w)
-                        w.deleteLater()
-                    except Exception as e:
-                        print(e)
-                del(widgets)
-                self._mainLayout.removeWidget(self._groupBoxes[group])
-                self._groupBoxes[group].deleteLater()
-                del(self._groupBoxes[group])
-            self._buildPropWidgets()
+
+        dlg.rebuildWidgets.connect(self._buildPropWidgets)
+
+        dlg.exec()
 
     # __________________________________________________________________
     @pyqtSlot()

@@ -7,18 +7,18 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 Dialog to configure control parameters.
 """
 
-from HelpDialog import HelpDialog
 from PropPanel import PropPanel
 
-from PyQt5.QtCore import Qt, pyqtSlot, QDir, QFileInfo, QSize
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout, QSizePolicy
 from PyQt5.QtWidgets import QDialog, QPushButton, QGroupBox
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QMessageBox, QFileDialog
 from PyQt5.QtGui import QIcon
 import os
-import json
+
 
 class PanelSettingsDialog(QDialog):
+    rebuildWidgets = pyqtSignal()
 
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings, logger):
@@ -41,7 +41,7 @@ class PanelSettingsDialog(QDialog):
     def buildUi(self):
 
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(12)
+        main_layout.setSpacing(6)
 
         settings_box = QGroupBox(self.tr("Prop settings"))
         settings_box_layout = QVBoxLayout(settings_box)
@@ -64,9 +64,14 @@ class PanelSettingsDialog(QDialog):
         json_layout.addWidget(self._jsonInput)
         json_layout.addWidget(json_browse_button)
 
-        add_button = QPushButton(" {} ".format(self.tr("Add widgets from new settings")))
-        add_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        settings_box_layout.addWidget(add_button)
+        if self._propVariables:
+            button = self.tr("Rebuild widgets from new settings")
+        else:
+            button = self.tr("Build widgets from new settings")
+
+        build_button = QPushButton(" {} ".format(button))
+        build_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        settings_box_layout.addWidget(build_button)
 
         self._settingsWidget = QWidget()
         self._settingsWidget.setContentsMargins(0, 0, 0, 0)
@@ -74,33 +79,24 @@ class PanelSettingsDialog(QDialog):
         settings_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.addWidget(self._settingsWidget)
 
-        prop_name_label = QLabel(self.tr("Prop name"))
-        settings_layout.addWidget(prop_name_label, settings_layout.rowCount(), 0)
-        self._propNameInput = QLineEdit()
-        settings_layout.addWidget(self._propNameInput, settings_layout.rowCount() - 1, 1)
+        close_button = QPushButton(self.tr("Close"))
+        close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
-        apply_button = QPushButton(self.tr("Apply"))
-        apply_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-
-        cancel_button = QPushButton(self.tr("Cancel"))
-        cancel_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-
-        edit_button = QPushButton(self.tr("Edit indicators"))
+        edit_button = QPushButton(' {} '.format(self.tr("Edit indicators")))
         edit_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        edit_button.setEnabled(len(self._propVariables))
 
         button_layout = QHBoxLayout()
         button_layout.addWidget(edit_button)
         button_layout.addStretch()
-        button_layout.addWidget(apply_button)
-        button_layout.addWidget(cancel_button)
+        button_layout.addWidget(close_button)
         main_layout.addLayout(button_layout)
 
         self.setLayout(main_layout)
 
-        apply_button.pressed.connect(self.onApply)
-        cancel_button.pressed.connect(self.accept)
+        close_button.pressed.connect(self.accept)
         edit_button.pressed.connect(self.onEdit)
-        add_button.pressed.connect(self.onAdd)
+        build_button.pressed.connect(self.onBuild)
         json_browse_button.pressed.connect(self.onBrowse)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
@@ -108,7 +104,7 @@ class PanelSettingsDialog(QDialog):
 
     # __________________________________________________________________
     @pyqtSlot()
-    def onAdd(self):
+    def onBuild(self):
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             prop_variables = PropPanel.getJson(self._propSettings['prop']['json'], self._logger)
@@ -120,6 +116,7 @@ class PanelSettingsDialog(QDialog):
             msg.setWindowTitle("Missing JSON")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec_()
+            return
 
         new_variables = []
         for variable in prop_variables:
@@ -132,64 +129,13 @@ class PanelSettingsDialog(QDialog):
                 lost_variables.append(variable)
 
         while lost_variables:
-            variable = lost_variables.pop(0)
-            if variable in self._propVariables:
-                msg = QMessageBox()
-                msg.setWindowIcon(self.windowIcon())
-                msg.setIcon(QMessageBox.Question)
-                msg.setText(self.tr("The variable '{}' at {} is no longer in the prop pins.").format(variable,
-                            self._propVariables[variable].getPin()) +
-                            "<br><br>" +
-                            self.tr("Do you want to keep its widget in the panel?"))
-                msg.setWindowTitle("Deprecated variable")
-                msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No |
-                                       QMessageBox.YesToAll| QMessageBox.NoToAll)
-                msg.setDefaultButton(QMessageBox.No)
-                res = msg.exec_()
-                if res == QMessageBox.No:
-                    del(self._propVariables[variable])
-                elif res == QMessageBox.NoToAll:
-                    del(self._propVariables[variable])
-                    while lost_variables:
-                        del(self._propVariables[lost_variables.pop(0)])
-                    break
-                elif res == QMessageBox.NoToAll:
-                    break
+            del (self._propVariables[lost_variables.pop(0)])
 
-        if not new_variables:
-            msg = QMessageBox()
-            msg.setWindowIcon(self.windowIcon())
-            msg.setIcon(QMessageBox.Information)
-            msg.setText(self.tr("There is no new variable in the prop pins."))
-            msg.setWindowTitle("Loading variables")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec_()
-        else:
-            for variable in new_variables:
-                self._propVariables[variable] = prop_variables[variable]
-            msg = QMessageBox()
-            msg.setWindowIcon(self.windowIcon())
-            msg.setIcon(QMessageBox.Information)
-            if len(new_variables) == 1:
-                msg.setText(self.tr("Loaded 1 new variables for the prop pins."))
-            else:
-                msg.setText(self.tr("Loaded {} new variables for the prop pins.").format(len(new_variables)))
-            msg.setWindowTitle("Loading variables")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec_()
+        for variable in new_variables:
+            self._propVariables[variable] = prop_variables[variable]
 
-        return
+        self.rebuildWidgets.emit()
 
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onApply(self):
-
-        pass
-
-        #with open('settins.ini', 'w') as configfile:
-        #    self._propSettings.write(configfile)
-
-        self.accept()
 
     # __________________________________________________________________
     @pyqtSlot()
