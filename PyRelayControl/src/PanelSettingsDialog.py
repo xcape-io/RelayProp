@@ -7,6 +7,7 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 Dialog to configure control parameters.
 """
 
+from EditPanelWidgets import EditPanelWidgets
 from PropPanel import PropPanel
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
@@ -82,7 +83,7 @@ class PanelSettingsDialog(QDialog):
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
-        edit_button = QPushButton(' {} '.format(self.tr("Edit indicators")))
+        edit_button = QPushButton(' {} '.format(self.tr("Edit captions and indicators")))
         edit_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         edit_button.setEnabled(len(self._propVariables))
 
@@ -174,4 +175,10 @@ class PanelSettingsDialog(QDialog):
     # __________________________________________________________________
     @pyqtSlot()
     def onEdit(self):
-        pass
+
+        dlg = EditPanelWidgets(self._propVariables, self._propSettings, self._logger)
+        dlg.setModal(True)
+
+        #dlg.rebuildWidget.connect(self._rebuildPropWidget(variable))
+
+        dlg.exec()

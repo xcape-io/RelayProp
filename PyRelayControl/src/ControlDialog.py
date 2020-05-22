@@ -16,8 +16,8 @@ from ControlSettingsDialog import ControlSettingsDialog
 from PanelSettingsDialog import PanelSettingsDialog
 from AppletDialog import AppletDialog
 from LedWidget import LedWidget
-from PushButton import PushButton
-from SwitchWidget import SwitchWidget
+from PinGroupButton import PinGroupButton
+from PinSwitch import PinSwitch
 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint
@@ -61,7 +61,7 @@ class ControlDialog(AppletDialog):
     def _buildPropWidgets(self):
 
         for group in list(self._groupBoxes.keys()):
-            widgets = self._groupBoxes[group].findChildren(SwitchWidget, '', options=Qt.FindChildrenRecursively)
+            widgets = self._groupBoxes[group].findChildren(PinSwitch, '', options=Qt.FindChildrenRecursively)
             for w in widgets:
                 try:
                     self._groupBoxes[group].layout().removeWidget(w)
@@ -80,18 +80,18 @@ class ControlDialog(AppletDialog):
             else:
                 group = None
                 variable = v
-            switch = SwitchWidget(label=variable.capitalize(),
-                                  variable=pin.getVariable(),
-                                  image_on=DATALED_IMAGE_ON,
-                                  image_off=DATALED_IMAGE_OFF,
-                                  sync=pin.getVariable(),
-                                  sync_on=pin.getHigh(),
-                                  sync_off=pin.getLow(),
-                                  action_on=pin.getOff(),
-                                  action_off=pin.getOn(),
-                                  value_on=pin.getHigh(),
-                                  value_off=pin.getLow(),
-                                  topic=self._propSettings['prop']['prop_inbox'])
+            switch = PinSwitch(label=variable.capitalize(),
+                               variable=pin.getVariable(),
+                               image_on=DATALED_IMAGE_ON,
+                               image_off=DATALED_IMAGE_OFF,
+                               sync=pin.getVariable(),
+                               sync_on=pin.getHigh(),
+                               sync_off=pin.getLow(),
+                               action_on=pin.getOff(),
+                               action_off=pin.getOn(),
+                               value_on=pin.getHigh(),
+                               value_off=pin.getLow(),
+                               topic=self._propSettings['prop']['prop_inbox'])
             if group in self._groupBoxes:
                 self._groupBoxes[group].layout().addWidget(switch)
             else:
@@ -103,20 +103,17 @@ class ControlDialog(AppletDialog):
                 box_layout.addWidget(switch)
             switch.publishMessage.connect(self.publishMessage)
             self.propDataReveived.connect(switch.onDataReceived)
-        '''
-        box_layout.addWidget(QLabel("<hr>"))
 
-        self._blinkOnButton = PushButton(self.tr("Start blinking"), 'blink:1', self._propInbox)
-        box_layout.addWidget(self._blinkOnButton)
+        for group in list(self._groupBoxes.keys()):
+            if group is None: continue
+            button_on = PinGroupButton(group + self.tr(" ON"), group + ':1', self._propSettings['prop']['prop_inbox'])
+            self._groupBoxes[group].layout().addWidget(button_on)
 
-        self._blinkOffButton = PushButton(self.tr("Stop blinking"), 'blink:0', self._propInbox)
-        box_layout.addWidget(self._blinkOffButton)
-        
-        self._blinkOnButton.publishMessage.connect(self.publishMessage)
-        self._blinkOffButton.publishMessage.connect(self.publishMessage)
+            button_off = PinGroupButton(group + self.tr(" OFF"), group + ':0', self._propSettings['prop']['prop_inbox'])
+            self._groupBoxes[group].layout().addWidget(button_off)
 
-        box_layout.addWidget(QLabel("<hr>"))
-        '''
+            button_on.publishMessage.connect(self.publishMessage)
+            button_off.publishMessage.connect(self.publishMessage)
 
     # __________________________________________________________________
     def _buildUi(self):
