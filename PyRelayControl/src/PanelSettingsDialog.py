@@ -146,9 +146,10 @@ class PanelSettingsDialog(QDialog):
                                        QMessageBox.YesToAll| QMessageBox.NoToAll)
                 msg.setDefaultButton(QMessageBox.No)
                 res = msg.exec_()
-                if res == QMessageBox.Yes:
+                if res == QMessageBox.No:
                     del(self._propVariables[variable])
-                elif res == QMessageBox.YesToAll:
+                elif res == QMessageBox.NoToAll:
+                    del(self._propVariables[variable])
                     while lost_variables:
                         del(self._propVariables[lost_variables.pop(0)])
                     break
