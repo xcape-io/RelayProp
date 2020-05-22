@@ -76,7 +76,6 @@ class ControlDialog(AppletDialog):
         for v, pin in self._propVariables.items():
             if '/' in v:
                 group, variable = v.split('/', 1)
-                group = group.capitalize()
             else:
                 group = None
                 variable = v
@@ -95,7 +94,8 @@ class ControlDialog(AppletDialog):
             if group in self._groupBoxes:
                 self._groupBoxes[group].layout().addWidget(switch)
             else:
-                box = QGroupBox(group)
+                caption = group.capitalize() if group is not None else ''
+                box = QGroupBox(caption)
                 box_layout = QVBoxLayout(box)
                 box_layout.setSpacing(12)
                 self._groupBoxes[group] = box
@@ -106,10 +106,10 @@ class ControlDialog(AppletDialog):
 
         for group in list(self._groupBoxes.keys()):
             if group is None: continue
-            button_on = PinGroupButton(group + self.tr(" ON"), group + ':1', self._propSettings['prop']['prop_inbox'])
+            button_on = PinGroupButton(group, GPIO_HIGH, self._propSettings['prop']['prop_inbox'])
             self._groupBoxes[group].layout().addWidget(button_on)
 
-            button_off = PinGroupButton(group + self.tr(" OFF"), group + ':0', self._propSettings['prop']['prop_inbox'])
+            button_off = PinGroupButton(group, GPIO_LOW, self._propSettings['prop']['prop_inbox'])
             self._groupBoxes[group].layout().addWidget(button_off)
 
             button_on.publishMessage.connect(self.publishMessage)

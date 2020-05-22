@@ -15,6 +15,11 @@ from PyQt5.QtCore import pyqtSlot, Qt
 class PinGroupButton(PushButton):
 
     # __________________________________________________________________
-    def __init__(self, caption, action, topic):
+    def __init__(self, group, level, topic):
+
+        command = "ON" if level else "OFF"
+        caption = '{} {}'.format(group.capitalize(), command)
+        action = '{}/*:{}'.format(group, str(level))
+
         super(PinGroupButton, self).__init__(caption, action, topic)
 
