@@ -73,7 +73,24 @@ class EditPanelWidgets(QDialog):
         if group is not None:layout.addWidget(action_widget)
         layout.addWidget(caption_input)
 
-        return (ew, caption_input)
+        move_up_button = QPushButton()
+        move_up_button.setFlat(True)
+        move_up_button.setToolTip(self.tr("Move group up"))
+        move_up_button.setIconSize(QSize(10, 10))
+        move_up_button.setFixedSize(QSize(14, 14))
+        move_up_button.setIcon(QIcon('./images/caret-top'))
+
+        move_down_button = QPushButton()
+        move_down_button.setFlat(True)
+        move_down_button.setToolTip(self.tr("Move group down"))
+        move_down_button.setIconSize(QSize(20, 20))
+        move_down_button.setFixedSize(QSize(28, 28))
+        move_down_button.setIcon(QIcon('./images/caret-bottom'))
+
+        layout.addWidget(move_up_button)
+        layout.addWidget(move_down_button)
+
+        return (ew, caption_input, move_up_button, move_down_button)
 
     # __________________________________________________________________
     def _switchEditor(self, action, variable):
@@ -140,40 +157,18 @@ class EditPanelWidgets(QDialog):
                 box_layout.addWidget(switch)
 
         for group in list(self._groupBoxes.keys()):
-            title, title_input = self._groupEditor(group)
+            title, title_input, move_up_button, move_down_button = self._groupEditor(group)
             self._groupBoxes[group].layout().insertWidget(0, title)
+
+            # move_up_button.pressed.connect(self.onMoveGroupUp)
+            # move_down_button.pressed.connect(self.onMoveGroupDown)
+
             if group is None: continue
+
             button_on, button_on_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_HIGH)), group)
             self._groupBoxes[group].layout().addWidget(button_on)
 
             button_off, button_off_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_LOW)), group)
             self._groupBoxes[group].layout().addWidget(button_off)
-
-            move_up_button = QPushButton()
-            move_up_button.setFlat(True)
-            move_up_button.setToolTip(self.tr("Move up"))
-            move_up_button.setIconSize(QSize(10, 10))
-            move_up_button.setFixedSize(QSize(14, 14))
-            move_up_button.setIcon(QIcon('./images/caret-top'))
-
-            #move_up_button.pressed.connect(self.onMoveGroupUp)
-
-            move_down_button = QPushButton()
-            move_down_button.setFlat(True)
-            move_down_button.setToolTip(self.tr("Move down"))
-            move_down_button.setIconSize(QSize(20, 20))
-            move_down_button.setFixedSize(QSize(28, 28))
-            move_down_button.setIcon(QIcon('./images/caret-bottom'))
-
-            #move_down_button.pressed.connect(self.onMoveGroupDown)
-
-            move_layout = QHBoxLayout()
-            move_layout.setContentsMargins(0, 0, 0, 0)
-            move_layout.setSpacing(8)
-            move_layout.addWidget(move_up_button)
-            move_layout.addWidget(move_down_button)
-            move_layout.addStretch()
-
-            self._groupBoxes[group].layout().addLayout(move_layout)
 
         self.setLayout(main_layout)
