@@ -7,14 +7,12 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 Dialog to edit caption and indicators.
 """
 
-from PropPanel import PropPanel
-
+from constants import *
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QSizePolicy
 from PyQt5.QtWidgets import QDialog, QComboBox, QGroupBox
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFrame
 from PyQt5.QtGui import QIcon
-import os
 
 
 class EditPanelWidgets(QDialog):
@@ -37,43 +35,57 @@ class EditPanelWidgets(QDialog):
         self.buildUi()
 
     # __________________________________________________________________
-    def _buttonEditor(self, variable):
+    def _buttonEditor(self, action, variable):
 
         ew = QWidget()
         layout = QHBoxLayout(ew)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
 
+        action_widget = QLineEdit(action)
+        action_widget.setFrame(QFrame.NoFrame)
+        action_widget.setReadOnly(True)
         caption_input = QLineEdit(variable.capitalize())
 
         layout.addWidget(QLabel(self.tr("Button")))
+        layout.addWidget(action_widget)
         layout.addWidget(caption_input)
 
         return (ew, caption_input)
 
     # __________________________________________________________________
-    def _groupEditor(self, variable):
+    def _groupEditor(self, group):
 
         ew = QWidget()
         layout = QHBoxLayout(ew)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
 
-        caption_input = QLineEdit(variable.capitalize())
+        if group is not None:
+            action_widget = QLineEdit('{}/'.format(group))
+            action_widget.setFrame(QFrame.NoFrame)
+            action_widget.setReadOnly(True)
+            caption_input = QLineEdit(group.capitalize())
+        else:
+            caption_input = QLineEdit()
 
-        layout.addWidget(QLabel(self.tr("Title")))
+        layout.addWidget(QLabel(self.tr("Group")))
+        if group is not None:layout.addWidget(action_widget)
         layout.addWidget(caption_input)
 
         return (ew, caption_input)
 
     # __________________________________________________________________
-    def _switchEditor(self, variable):
+    def _switchEditor(self, action, variable):
 
         ew = QWidget()
         layout = QHBoxLayout(ew)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
 
+        action_widget = QLineEdit(action)
+        action_widget.setFrame(QFrame.NoFrame)
+        action_widget.setReadOnly(True)
         label_input = QLineEdit(variable.capitalize())
         image_selector = QComboBox()
 
@@ -84,6 +96,7 @@ class EditPanelWidgets(QDialog):
         image_selector.addItem(self.tr("Relay"), 'relay')
 
         layout.addWidget(QLabel(self.tr("Switch")))
+        layout.addWidget(action_widget)
         layout.addWidget(label_input)
         layout.addWidget(image_selector)
 
@@ -101,7 +114,7 @@ class EditPanelWidgets(QDialog):
             else:
                 group = None
                 variable = v
-            switch, label_input, image_selector = self._switchEditor(variable)
+            switch, label_input, image_selector = self._switchEditor(pin.getVariable(), variable)
             '''
             switch = PinSwitch(label=variable.capitalize(),
                                variable=pin.getVariable(),
@@ -119,8 +132,7 @@ class EditPanelWidgets(QDialog):
             if group in self._groupBoxes:
                 self._groupBoxes[group].layout().addWidget(switch)
             else:
-                caption = group.capitalize() if group is not None else ''
-                box = QGroupBox(caption)
+                box = QGroupBox()
                 box_layout = QVBoxLayout(box)
                 box_layout.setSpacing(12)
                 self._groupBoxes[group] = box
@@ -128,15 +140,13 @@ class EditPanelWidgets(QDialog):
                 box_layout.addWidget(switch)
 
         for group in list(self._groupBoxes.keys()):
-            title, title_input = self._groupEditor(str(group))
-            self._groupBoxes[group].layout().insertWidget(0, title_input)
+            title, title_input = self._groupEditor(group)
+            self._groupBoxes[group].layout().insertWidget(0, title)
             if group is None: continue
-            button_on, button_on_input = self._buttonEditor(group)
-            #button_on = PinGroupButton(group, GPIO_HIGH, self._propSettings['prop']['prop_inbox'])
+            button_on, button_on_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_HIGH)), group)
             self._groupBoxes[group].layout().addWidget(button_on)
 
-            button_off, button_off_input = self._buttonEditor(group)
-            #button_off = PinGroupButton(group, GPIO_LOW, self._propSettings['prop']['prop_inbox'])
+            button_off, button_off_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_LOW)), group)
             self._groupBoxes[group].layout().addWidget(button_off)
 
         self.setLayout(main_layout)
