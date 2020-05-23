@@ -102,7 +102,7 @@ void InboxMessage::run(String a) {
     settings.setValue(prop.pinCount());
     prop.sendAllData();
   }
-  else if (a == u8"app:startup")
+  else if (a == u8"app:startup" || a == u8"app:data")
   {
     prop.sendAllData();
     prop.sendDone(a);
