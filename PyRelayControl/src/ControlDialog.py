@@ -36,6 +36,7 @@ class ControlDialog(AppletDialog):
 
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
+        self._groupBoxes = {}
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getJson(self._propSettings['prop']['json'], logger)
@@ -59,20 +60,18 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def _buildPropWidgets(self):
 
-        group_boxes = {}
-
-        for group in list(group_boxes.keys()):
-            widgets = group_boxes[group].findChildren(PinSwitch, '', options=Qt.FindChildrenRecursively)
+        for group in list(self._groupBoxes.keys()):
+            widgets = self._groupBoxes[group].findChildren(PinSwitch, '', options=Qt.FindChildrenRecursively)
             for w in widgets:
                 try:
-                    group_boxes[group].layout().removeWidget(w)
+                    self._groupBoxes[group].layout().removeWidget(w)
                     w.deleteLater()
                 except Exception as e:
                     print(e)
             del (widgets)
-            self._mainLayout.removeWidget(group_boxes[group])
-            group_boxes[group].deleteLater()
-            del (group_boxes[group])
+            self._mainLayout.removeWidget(self._groupBoxes[group])
+            self._groupBoxes[group].deleteLater()
+            del (self._groupBoxes[group])
 
         for v, pin in self._propVariables.items():
             if '/' in v:
@@ -92,26 +91,26 @@ class ControlDialog(AppletDialog):
                                value_on=pin.getHigh(),
                                value_off=pin.getLow(),
                                topic=self._propSettings['prop']['prop_inbox'])
-            if group in group_boxes:
-                group_boxes[group].layout().addWidget(switch)
+            if group in self._groupBoxes:
+                self._groupBoxes[group].layout().addWidget(switch)
             else:
                 caption = group.capitalize() if group is not None else ''
                 box = QGroupBox(caption)
                 box_layout = QVBoxLayout(box)
                 box_layout.setSpacing(12)
-                group_boxes[group] = box
+                self._groupBoxes[group] = box
                 self._mainLayout.addWidget(box)
                 box_layout.addWidget(switch)
             switch.publishMessage.connect(self.publishMessage)
             self.propDataReveived.connect(switch.onDataReceived)
 
-        for group in list(group_boxes.keys()):
+        for group in list(self._groupBoxes.keys()):
             if group is None: continue
             button_on = PinGroupButton(group, GPIO_HIGH, self._propSettings['prop']['prop_inbox'])
-            group_boxes[group].layout().addWidget(button_on)
+            self._groupBoxes[group].layout().addWidget(button_on)
 
             button_off = PinGroupButton(group, GPIO_LOW, self._propSettings['prop']['prop_inbox'])
-            group_boxes[group].layout().addWidget(button_off)
+            self._groupBoxes[group].layout().addWidget(button_off)
 
             button_on.publishMessage.connect(self.publishMessage)
             button_off.publishMessage.connect(self.publishMessage)
