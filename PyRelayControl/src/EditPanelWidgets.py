@@ -10,7 +10,7 @@ Dialog to edit caption and indicators.
 from constants import *
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QSizePolicy
-from PyQt5.QtWidgets import QDialog, QComboBox, QGroupBox
+from PyQt5.QtWidgets import QDialog, QComboBox, QGroupBox, QPushButton
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFrame
 from PyQt5.QtGui import QIcon
 
@@ -148,5 +148,32 @@ class EditPanelWidgets(QDialog):
 
             button_off, button_off_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_LOW)), group)
             self._groupBoxes[group].layout().addWidget(button_off)
+
+            move_up_button = QPushButton()
+            move_up_button.setFlat(True)
+            move_up_button.setToolTip(self.tr("Move up"))
+            move_up_button.setIconSize(QSize(10, 10))
+            move_up_button.setFixedSize(QSize(14, 14))
+            move_up_button.setIcon(QIcon('./images/caret-top'))
+
+            #move_up_button.pressed.connect(self.onMoveGroupUp)
+
+            move_down_button = QPushButton()
+            move_down_button.setFlat(True)
+            move_down_button.setToolTip(self.tr("Move down"))
+            move_down_button.setIconSize(QSize(20, 20))
+            move_down_button.setFixedSize(QSize(28, 28))
+            move_down_button.setIcon(QIcon('./images/caret-bottom'))
+
+            #move_down_button.pressed.connect(self.onMoveGroupDown)
+
+            move_layout = QHBoxLayout()
+            move_layout.setContentsMargins(0, 0, 0, 0)
+            move_layout.setSpacing(8)
+            move_layout.addWidget(move_up_button)
+            move_layout.addWidget(move_down_button)
+            move_layout.addStretch()
+
+            self._groupBoxes[group].layout().addLayout(move_layout)
 
         self.setLayout(main_layout)
