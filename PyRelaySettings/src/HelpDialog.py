@@ -50,7 +50,7 @@ class HelpDialog(QDialog):
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
-        close_button.pressed.connect(self.accept)
+        close_button.released.connect(self.accept)
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()

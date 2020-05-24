@@ -123,11 +123,11 @@ class PropSettingsDialog(QDialog):
 
         self.setLayout(main_layout)
 
-        self._boardMegaButton.pressed.connect(self.onBoardMegaButton)
-        self._boardPiButton.pressed.connect(self.onBoardPiButton)
-        apply_button.pressed.connect(self.onApply)
-        cancel_button.pressed.connect(self.onClose)
-        help_button.pressed.connect(self.onHelp)
+        self._boardMegaButton.released.connect(self.onBoardMegaButton)
+        self._boardPiButton.released.connect(self.onBoardPiButton)
+        apply_button.released.connect(self.onApply)
+        cancel_button.released.connect(self.onClose)
+        help_button.released.connect(self.onHelp)
 
         if 'board' not in self._propSettings['prop']:
             self._paramWidget.setDisabled(True)

@@ -110,9 +110,9 @@ class PropPinDialog(QDialog):
 
         self.setLayout(main_layout)
 
-        apply_button.pressed.connect(self.onApply)
-        cancel_button.pressed.connect(self.reject)
-        delete_button.pressed.connect(self.onDelete)
+        apply_button.released.connect(self.onApply)
+        cancel_button.released.connect(self.reject)
+        delete_button.released.connect(self.onDelete)
 
     # __________________________________________________________________
     @pyqtSlot()

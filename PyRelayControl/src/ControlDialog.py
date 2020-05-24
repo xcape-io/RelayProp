@@ -37,6 +37,8 @@ class ControlDialog(AppletDialog):
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
         self._groupBoxes = {}
+        self._widgetGroups = []
+        self._widgetVariables = {}
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getJson(self._propSettings['prop']['json'], logger)
@@ -115,6 +117,24 @@ class ControlDialog(AppletDialog):
             button_on.publishMessage.connect(self.publishMessage)
             button_off.publishMessage.connect(self.publishMessage)
 
+        box = QGroupBox("Board")
+        box_layout = QVBoxLayout(box)
+        box_layout.setSpacing(12)
+        self._groupBoxes['__prop__'] = box
+        self._mainLayout.addWidget(box)
+
+        button_relaunch = QPushButton(self.tr("Relaunch"))
+        self._groupBoxes[group].layout().addWidget(button_relaunch)
+
+        button_reboot = QPushButton(self.tr("Reboot"))
+        self._groupBoxes[group].layout().addWidget(button_reboot)
+
+        box_layout.addWidget(button_relaunch)
+        box_layout.addWidget(button_reboot)
+
+        button_relaunch.released.connect(self.relaunchProp)
+        button_reboot.released.connect(self.rebootProp)
+
         self.publishMessage.emit(self._propSettings['prop']['prop_inbox'], 'app:data')
 
     # __________________________________________________________________
@@ -138,7 +158,7 @@ class ControlDialog(AppletDialog):
         self._settingsButton.setToolTip(self.tr("Prop configuration"))
         self._settingsButton.setIconSize(QSize(20, 20))
         self._settingsButton.setFixedSize(QSize(28, 28))
-        self._settingsButton.pressed.connect(self.onPropConfiguration)
+        self._settingsButton.released.connect(self.onPropConfiguration)
 
         if self._propSettings['prop']['board'] == 'mega':
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
@@ -151,7 +171,7 @@ class ControlDialog(AppletDialog):
         self._editButton.setToolTip(self.tr("Edit panel"))
         self._editButton.setIconSize(QSize(16, 16))
         self._editButton.setFixedSize(QSize(20, 20))
-        self._editButton.pressed.connect(self.onPanelEdition)
+        self._editButton.released.connect(self.onPanelEdition)
 
         header_layout = QHBoxLayout()
         header_layout.setSpacing(2)
@@ -275,7 +295,8 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def onPanelEdition(self):
 
-        dlg = PanelSettingsDialog(self._propVariables, self._propSettings, self._logger)
+        dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
+                                  self._widgetGroups, self._widgetVariables, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
@@ -308,3 +329,17 @@ class ControlDialog(AppletDialog):
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
         else:
             self._settingsButton.setIcon(QIcon('./images/raspberry-pi.svg'))
+
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def rebootProp(self):
+
+        pass
+
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def relaunchProp(self):
+
+        pass

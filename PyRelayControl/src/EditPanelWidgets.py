@@ -18,12 +18,15 @@ from PyQt5.QtGui import QIcon
 class EditPanelWidgets(QDialog):
 
     # __________________________________________________________________
-    def __init__(self, prop_variables, prop_settings, logger):
+    def __init__(self, prop_variables, prop_settings,
+                 widget_groups, widgets_variables, logger):
 
         self._logger = logger
         self._propSettings = prop_settings
         self._propVariables = prop_variables
         self._groupBoxes = {}
+        self._widgetGroups = widget_groups
+        self._widgetVariables = widgets_variables
 
         super(EditPanelWidgets, self).__init__()
 
@@ -125,6 +128,13 @@ class EditPanelWidgets(QDialog):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(6)
 
+        for group in self._widgetGroups:
+            box = QGroupBox()
+            box_layout = QVBoxLayout(box)
+            box_layout.setSpacing(12)
+            self._groupBoxes[group] = box
+            main_layout.addWidget(box)
+
         for v, pin in self._propVariables.items():
             if '/' in v:
                 group, variable = v.split('/', 1)
@@ -160,8 +170,8 @@ class EditPanelWidgets(QDialog):
             title, title_input, move_up_button, move_down_button = self._groupEditor(group)
             self._groupBoxes[group].layout().insertWidget(0, title)
 
-            # move_up_button.pressed.connect(self.onMoveGroupUp)
-            # move_down_button.pressed.connect(self.onMoveGroupDown)
+            # move_up_button.released.connect(self.onMoveGroupUp)
+            # move_down_button.released.connect(self.onMoveGroupDown)
 
             if group is None: continue
 

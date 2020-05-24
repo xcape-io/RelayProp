@@ -135,7 +135,7 @@ class MainDialog(AppletDialog):
         self._settingsButton.setToolTip(self.tr("Configuration"))
         self._settingsButton.setIconSize(QSize(20, 20))
         self._settingsButton.setFixedSize(QSize(28, 28))
-        self._settingsButton.pressed.connect(self.onPropConfiguration)
+        self._settingsButton.released.connect(self.onPropConfiguration)
 
         if self._propSettings['prop']['board'] == 'mega':
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
@@ -196,10 +196,10 @@ class MainDialog(AppletDialog):
 
         self.switchLed.connect(self._led.switchOn)
         self.reloadPropPinsDisplay.connect(self.onReloadPropPinsDisplay)
-        clear_button.pressed.connect(self.clear)
-        print_button.pressed.connect(self.print)
-        close_button.pressed.connect(self.accept)
-        upload_button.pressed.connect(self.upload)
+        clear_button.released.connect(self.clear)
+        print_button.released.connect(self.print)
+        close_button.released.connect(self.accept)
+        upload_button.released.connect(self.upload)
 
     # __________________________________________________________________
     def _parsePropData(self, message):
@@ -425,7 +425,7 @@ class MainDialog(AppletDialog):
 
         for p, _ in self._boardPins:
             button = QPushButton(" {} ".format(p))
-            button.pressed.connect(self.onPinConfiguration)
+            button.released.connect(self.onPinConfiguration)
             if p in self._propPins:
                 variable = self._propPins[p].getVariable()
                 if self._propPins[p].getInitial() == GPIO_HIGH:

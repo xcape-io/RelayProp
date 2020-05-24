@@ -22,13 +22,16 @@ class PanelSettingsDialog(QDialog):
     rebuildWidgets = pyqtSignal()
 
     # __________________________________________________________________
-    def __init__(self, prop_variables, prop_settings, logger):
+    def __init__(self, prop_variables, prop_settings,
+                 widget_groups, widgets_variables, logger):
 
         super(PanelSettingsDialog, self).__init__()
 
         self._logger = logger
         self._propSettings = prop_settings
         self._propVariables = prop_variables
+        self._widgetGroups = widget_groups
+        self._widgetVariables = widgets_variables
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.setWindowTitle(self.tr("Panel configuration"))
@@ -95,10 +98,10 @@ class PanelSettingsDialog(QDialog):
 
         self.setLayout(main_layout)
 
-        close_button.pressed.connect(self.accept)
-        edit_button.pressed.connect(self.onEdit)
-        build_button.pressed.connect(self.onBuild)
-        json_browse_button.pressed.connect(self.onBrowse)
+        close_button.released.connect(self.accept)
+        edit_button.released.connect(self.onEdit)
+        build_button.released.connect(self.onBuild)
+        json_browse_button.released.connect(self.onBrowse)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._jsonInput.setText(os.path.basename(self._propSettings['prop']['json']))
@@ -176,7 +179,8 @@ class PanelSettingsDialog(QDialog):
     @pyqtSlot()
     def onEdit(self):
 
-        dlg = EditPanelWidgets(self._propVariables, self._propSettings, self._logger)
+        dlg = EditPanelWidgets(self._propVariables, self._propSettings,
+                               self._widgetGroups, self._widgetVariables, self._logger)
         dlg.setModal(True)
 
         #dlg.rebuildWidget.connect(self._rebuildPropWidget(variable))
