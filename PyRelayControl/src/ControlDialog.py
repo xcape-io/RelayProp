@@ -117,7 +117,9 @@ class ControlDialog(AppletDialog):
             button_on.publishMessage.connect(self.publishMessage)
             button_off.publishMessage.connect(self.publishMessage)
 
-        box = QGroupBox("Board")
+        board = self._propSettings['prop']['prop_name'] if 'prop_name' in self._propSettings['prop'] else self.tr("Prop")
+
+        box = QGroupBox(board)
         box_layout = QVBoxLayout(box)
         box_layout.setSpacing(12)
         self._groupBoxes['__prop__'] = box
