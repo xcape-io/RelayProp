@@ -8,6 +8,8 @@ Dialog to edit caption and indicators.
 """
 
 from constants import *
+from PropPanel import PropPanel
+
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QSizePolicy
 from PyQt5.QtWidgets import QDialog, QComboBox, QGroupBox, QPushButton
@@ -16,6 +18,7 @@ from PyQt5.QtGui import QIcon
 
 
 class EditPanelWidgets(QDialog):
+    rebuild = pyqtSignal()
 
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings,
@@ -28,6 +31,9 @@ class EditPanelWidgets(QDialog):
         self._widgetGroups = widget_groups
         self._widgetVariables = widgets_variables
 
+        self._moveUpButtons = {}
+        self._moveDownButtons = {}
+
         super(EditPanelWidgets, self).__init__()
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -36,6 +42,8 @@ class EditPanelWidgets(QDialog):
         self.setWindowIcon(QIcon('./images/cog-black.svg'))
 
         self.buildUi()
+
+        self.rebuild.connect(self.rebuildGroups)
 
     # __________________________________________________________________
     def _buttonEditor(self, action, variable):
@@ -128,6 +136,73 @@ class EditPanelWidgets(QDialog):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(6)
 
+        self.setLayout(main_layout)
+
+        self.rebuildGroups()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onMoveGroupDown(self):
+
+        button = self.sender()
+        if button not in self._moveDownButtons:
+            self._logger.warning("Button not found : {}".format(button.toolTip()))
+            return
+
+        group = self._moveDownButtons[button]
+
+        try:
+            i = self._widgetGroups.index(group)
+        except ValueError:
+            return
+
+        if i < len(self._widgetGroups) - 1:
+            self._widgetGroups.pop(i)
+            self._widgetGroups.insert(i+1, group)
+            self.rebuild.emit()
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetVariables)
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onMoveGroupUp(self):
+
+        button = self.sender()
+        if button not in self._moveUpButtons:
+            self._logger.warning("Button not found : {}".format(button.toolTip()))
+            return
+
+        group = self._moveUpButtons[button]
+
+        try:
+            i = self._widgetGroups.index(group)
+        except ValueError:
+            return
+
+        if i > 0:
+            self._widgetGroups.pop(i)
+            self._widgetGroups.insert(i-1, group)
+            self.rebuild.emit()
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetVariables)
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def rebuildGroups(self):
+
+        main_layout = self.layout()
+
+        for group in list(self._groupBoxes.keys()):
+            widgets = self._groupBoxes[group].findChildren(QWidget, '', options=Qt.FindChildrenRecursively)
+            for w in widgets:
+                try:
+                    self._groupBoxes[group].layout().removeWidget(w)
+                    w.deleteLater()
+                except Exception as e:
+                    print(e)
+            del (widgets)
+            main_layout.removeWidget(self._groupBoxes[group])
+            self._groupBoxes[group].deleteLater()
+            del (self._groupBoxes[group])
+
         for group in self._widgetGroups:
             box = QGroupBox()
             box_layout = QVBoxLayout(box)
@@ -165,13 +240,17 @@ class EditPanelWidgets(QDialog):
                 self._groupBoxes[group] = box
                 main_layout.addWidget(box)
                 box_layout.addWidget(switch)
+                self._widgetGroups.append(group)
 
         for group in list(self._groupBoxes.keys()):
             title, title_input, move_up_button, move_down_button = self._groupEditor(group)
             self._groupBoxes[group].layout().insertWidget(0, title)
 
-            # move_up_button.released.connect(self.onMoveGroupUp)
-            # move_down_button.released.connect(self.onMoveGroupDown)
+            self._moveUpButtons[move_up_button] = group
+            self._moveDownButtons[move_down_button] = group
+
+            move_up_button.released.connect(self.onMoveGroupUp)
+            move_down_button.released.connect(self.onMoveGroupDown)
 
             if group is None: continue
 
@@ -180,5 +259,3 @@ class EditPanelWidgets(QDialog):
 
             button_off, button_off_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_LOW)), group)
             self._groupBoxes[group].layout().addWidget(button_off)
-
-        self.setLayout(main_layout)

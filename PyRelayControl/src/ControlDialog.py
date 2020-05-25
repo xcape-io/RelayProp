@@ -37,11 +37,10 @@ class ControlDialog(AppletDialog):
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
         self._groupBoxes = {}
-        self._widgetGroups = []
-        self._widgetVariables = {}
+        self._widgetGroups, self._widgetVariables = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
-            self._propVariables = PropPanel.getJson(self._propSettings['prop']['json'], logger)
+            self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
         else:
             self._propVariables = {}
 
@@ -74,6 +73,14 @@ class ControlDialog(AppletDialog):
             self._mainLayout.removeWidget(self._groupBoxes[group])
             self._groupBoxes[group].deleteLater()
             del (self._groupBoxes[group])
+
+        for group in self._widgetGroups:
+            caption = group.capitalize() if group is not None else ''
+            box = QGroupBox(caption)
+            box_layout = QVBoxLayout(box)
+            box_layout.setSpacing(12)
+            self._groupBoxes[group] = box
+            self._mainLayout.addWidget(box)
 
         for v, pin in self._propVariables.items():
             if '/' in v:

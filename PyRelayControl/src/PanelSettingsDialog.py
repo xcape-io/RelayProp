@@ -111,7 +111,7 @@ class PanelSettingsDialog(QDialog):
     def onBuild(self):
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
-            prop_variables = PropPanel.getJson(self._propSettings['prop']['json'], self._logger)
+            prop_variables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], self._logger)
         else:
             msg = QMessageBox()
             msg.setWindowIcon(self.windowIcon())
@@ -183,6 +183,6 @@ class PanelSettingsDialog(QDialog):
                                self._widgetGroups, self._widgetVariables, self._logger)
         dlg.setModal(True)
 
-        #dlg.rebuildWidget.connect(self._rebuildPropWidget(variable))
+        dlg.rebuild.connect(self.rebuildWidgets)
 
         dlg.exec()

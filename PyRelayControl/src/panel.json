@@ -1,0 +1,9 @@
+{
+  "groups": [
+    "smoke",
+    "doors",
+    "maglocks",
+    null
+  ],
+  "variables": {}
+}

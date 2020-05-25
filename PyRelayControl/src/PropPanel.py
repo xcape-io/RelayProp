@@ -10,14 +10,13 @@ from constants import *
 from PropPin import PropPin
 import os
 import json
-import codecs
-import configparser
+
 
 class PropPanel:
 
     # __________________________________________________________________
     @classmethod
-    def getJson(self, file, logger):
+    def getVariablesJson(self, file, logger):
 
         prop_variables = {}
         if os.path.isfile(file):
@@ -39,3 +38,33 @@ class PropPanel:
                 logger.error("Failed to load JSON file '{0}'".format(file))
                 logger.debug(e)
         return prop_variables
+
+    # __________________________________________________________________
+    @classmethod
+    def loadPanelJson(self, logger):
+
+        groups = []
+        variables = {}
+        if os.path.isfile('panel.json'):
+            try:
+                with open('panel.json', 'r', encoding='utf-8') as fp:
+                    json_doc = json.load(fp)
+                groups = json_doc['groups']
+                variables = json_doc['variables']
+            except json.JSONDecodeError as jex:
+                logger.error("JSONDecodeError '{}' at {} in: {}".format(jex.msg, jex.pos, jex.doc))
+            except Exception as e:
+                logger.error("Failed to load JSON file '{0}'".format(file))
+                logger.debug(e)
+        return groups, variables
+
+    # __________________________________________________________________
+    @classmethod
+    def savePanelJson(self, groups, variables):
+
+        doc = {}
+        doc['groups'] = groups
+        doc['variables'] = variables
+
+        with open('panel.json', 'w', encoding='utf-8') as fp:
+            fp.write(json.dumps(doc, indent=2, ensure_ascii=False))  # for UTF-8 encoding
