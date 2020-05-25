@@ -37,7 +37,7 @@ class ControlDialog(AppletDialog):
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
         self._groupBoxes = {}
-        self._widgetGroups, self._widgetVariables = PropPanel.loadPanelJson(logger)
+        self._widgetGroups, self._widgetTitles, self._widgetVariables = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -305,7 +305,7 @@ class ControlDialog(AppletDialog):
     def onPanelEdition(self):
 
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
-                                  self._widgetGroups, self._widgetVariables, self._logger)
+                                  self._widgetGroups, self._widgetTitles, self._widgetVariables, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)

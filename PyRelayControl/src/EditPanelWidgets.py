@@ -22,15 +22,19 @@ class EditPanelWidgets(QDialog):
 
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings,
-                 widget_groups, widgets_variables, logger):
+                 widget_groups, widget_titles, widget_variables, logger):
 
         self._logger = logger
         self._propSettings = prop_settings
         self._propVariables = prop_variables
         self._groupBoxes = {}
         self._widgetGroups = widget_groups
-        self._widgetVariables = widgets_variables
+        self._widgetTitles = widget_titles
+        self._widgetVariables = widget_variables
 
+        self._imageSelections = {}
+        self._labelInputs = {}
+        self._titleInputs = {}
         self._moveUpButtons = {}
         self._moveDownButtons = {}
 
@@ -142,6 +146,30 @@ class EditPanelWidgets(QDialog):
 
     # __________________________________________________________________
     @pyqtSlot()
+    def onImageSelection(self):
+
+        combobox = self.sender()
+        if combobox not in self._imageSelections:
+            self._logger.warning("Image selection not found")
+            return
+
+        variable = self._imageSelections[combobox]
+        pass
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onLabelEdition(self):
+
+        input = self.sender()
+        if input not in self._labelInputs:
+            self._logger.warning("Label input not found")
+            return
+
+        variable = self._labelInputs[input]
+        pass
+
+    # __________________________________________________________________
+    @pyqtSlot()
     def onMoveGroupDown(self):
 
         button = self.sender()
@@ -160,7 +188,7 @@ class EditPanelWidgets(QDialog):
             self._widgetGroups.pop(i)
             self._widgetGroups.insert(i+1, group)
             self.rebuild.emit()
-            PropPanel.savePanelJson(self._widgetGroups, self._widgetVariables)
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables)
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -182,7 +210,20 @@ class EditPanelWidgets(QDialog):
             self._widgetGroups.pop(i)
             self._widgetGroups.insert(i-1, group)
             self.rebuild.emit()
-            PropPanel.savePanelJson(self._widgetGroups, self._widgetVariables)
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables)
+
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onTitleEdition(self):
+
+        input = self.sender()
+        if input not in self._titleInputs:
+            self._logger.warning("Title input not found")
+            return
+
+        variable = self._titleInputs[input]
+        pass
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -217,20 +258,11 @@ class EditPanelWidgets(QDialog):
                 group = None
                 variable = v
             switch, label_input, image_selector = self._switchEditor(pin.getVariable(), variable)
-            '''
-            switch = PinSwitch(label=variable.capitalize(),
-                               variable=pin.getVariable(),
-                               image_on=DATALED_IMAGE_ON,
-                               image_off=DATALED_IMAGE_OFF,
-                               sync=pin.getVariable(),
-                               sync_on=pin.getHigh(),
-                               sync_off=pin.getLow(),
-                               action_on=pin.getOff(),
-                               action_off=pin.getOn(),
-                               value_on=pin.getHigh(),
-                               value_off=pin.getLow(),
-                               topic=self._propSettings['prop']['prop_inbox'])
-            '''
+            self._labelInputs[label_input] = variable
+            self._imageSelections[image_selector] = variable
+            label_input.editingFinished.connect(self.onLabelEdition)
+            image_selector.currentIndexChanged.connect(self.onImageSelection)
+
             if group in self._groupBoxes:
                 self._groupBoxes[group].layout().addWidget(switch)
             else:
@@ -246,9 +278,11 @@ class EditPanelWidgets(QDialog):
             title, title_input, move_up_button, move_down_button = self._groupEditor(group)
             self._groupBoxes[group].layout().insertWidget(0, title)
 
+            self._titleInputs[title_input] = group + '/' if group is not None else None
             self._moveUpButtons[move_up_button] = group
             self._moveDownButtons[move_down_button] = group
 
+            title_input.editingFinished.connect(self.onTitleEdition)
             move_up_button.released.connect(self.onMoveGroupUp)
             move_down_button.released.connect(self.onMoveGroupDown)
 
