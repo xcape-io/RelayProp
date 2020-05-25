@@ -19,10 +19,13 @@ from PyQt5.QtGui import QIcon
 
 class EditPanelWidgets(QDialog):
     rebuild = pyqtSignal()
+    reorder = pyqtSignal()
 
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings,
-                 widget_groups, widget_titles, widget_variables, logger):
+                 widget_groups, widget_titles,
+                 widget_variables, widget_images,
+                 widget_buttons, logger):
 
         self._logger = logger
         self._propSettings = prop_settings
@@ -31,12 +34,15 @@ class EditPanelWidgets(QDialog):
         self._widgetGroups = widget_groups
         self._widgetTitles = widget_titles
         self._widgetVariables = widget_variables
+        self._widgetImages = widget_images
+        self._widgetButtons = widget_buttons
 
         self._imageSelections = {}
         self._labelInputs = {}
         self._titleInputs = {}
         self._moveUpButtons = {}
         self._moveDownButtons = {}
+        self._groupButtons = {}
 
         super(EditPanelWidgets, self).__init__()
 
@@ -47,7 +53,7 @@ class EditPanelWidgets(QDialog):
 
         self.buildUi()
 
-        self.rebuild.connect(self.rebuildGroups)
+        self.reorder.connect(self.buildGroups)
 
     # __________________________________________________________________
     def _buttonEditor(self, action, variable):
@@ -135,99 +141,8 @@ class EditPanelWidgets(QDialog):
         return (ew, label_input, image_selector)
 
     # __________________________________________________________________
-    def buildUi(self):
-
-        main_layout = QVBoxLayout()
-        main_layout.setSpacing(6)
-
-        self.setLayout(main_layout)
-
-        self.rebuildGroups()
-
-    # __________________________________________________________________
     @pyqtSlot()
-    def onImageSelection(self):
-
-        combobox = self.sender()
-        if combobox not in self._imageSelections:
-            self._logger.warning("Image selection not found")
-            return
-
-        variable = self._imageSelections[combobox]
-        pass
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onLabelEdition(self):
-
-        input = self.sender()
-        if input not in self._labelInputs:
-            self._logger.warning("Label input not found")
-            return
-
-        variable = self._labelInputs[input]
-        pass
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onMoveGroupDown(self):
-
-        button = self.sender()
-        if button not in self._moveDownButtons:
-            self._logger.warning("Button not found : {}".format(button.toolTip()))
-            return
-
-        group = self._moveDownButtons[button]
-
-        try:
-            i = self._widgetGroups.index(group)
-        except ValueError:
-            return
-
-        if i < len(self._widgetGroups) - 1:
-            self._widgetGroups.pop(i)
-            self._widgetGroups.insert(i+1, group)
-            self.rebuild.emit()
-            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables)
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onMoveGroupUp(self):
-
-        button = self.sender()
-        if button not in self._moveUpButtons:
-            self._logger.warning("Button not found : {}".format(button.toolTip()))
-            return
-
-        group = self._moveUpButtons[button]
-
-        try:
-            i = self._widgetGroups.index(group)
-        except ValueError:
-            return
-
-        if i > 0:
-            self._widgetGroups.pop(i)
-            self._widgetGroups.insert(i-1, group)
-            self.rebuild.emit()
-            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables)
-
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onTitleEdition(self):
-
-        input = self.sender()
-        if input not in self._titleInputs:
-            self._logger.warning("Title input not found")
-            return
-
-        variable = self._titleInputs[input]
-        pass
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def rebuildGroups(self):
+    def buildGroups(self):
 
         main_layout = self.layout()
 
@@ -258,8 +173,14 @@ class EditPanelWidgets(QDialog):
                 group = None
                 variable = v
             switch, label_input, image_selector = self._switchEditor(pin.getVariable(), variable)
-            self._labelInputs[label_input] = variable
-            self._imageSelections[image_selector] = variable
+            self._labelInputs[label_input] = v
+            self._imageSelections[image_selector] = v
+            if v in self._widgetVariables:
+                label_input.setText(self._widgetVariables[v])
+            if v in self._widgetImages:
+                idx = image_selector.findData(self._widgetImages[v])
+                if idx > 0:
+                    image_selector.setCurrentIndex(idx)
             label_input.editingFinished.connect(self.onLabelEdition)
             image_selector.currentIndexChanged.connect(self.onImageSelection)
 
@@ -286,10 +207,152 @@ class EditPanelWidgets(QDialog):
             move_up_button.released.connect(self.onMoveGroupUp)
             move_down_button.released.connect(self.onMoveGroupDown)
 
+            variable = group + '/' if group is not None else ''
+            if variable in self._widgetTitles:
+                title_input.setText(self._widgetTitles[variable])
+
             if group is None: continue
 
-            button_on, button_on_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_HIGH)), group)
+            v_high = '{}/*:{}'.format(group, str(GPIO_HIGH))
+            button_on, button_on_input = self._buttonEditor(v_high, group)
             self._groupBoxes[group].layout().addWidget(button_on)
 
-            button_off, button_off_input = self._buttonEditor('{}/*:{}'.format(group, str(GPIO_LOW)), group)
+            v_low = '{}/*:{}'.format(group, str(GPIO_LOW))
+            button_off, button_off_input = self._buttonEditor(v_low, group)
             self._groupBoxes[group].layout().addWidget(button_off)
+
+            if v_high in self._widgetButtons:
+                button_on_input.setText(self._widgetButtons[v_high])
+            if v_low in self._widgetButtons:
+                button_off_input.setText(self._widgetButtons[v_low])
+
+            button_on_input.editingFinished.connect(self.onButtonEdition)
+            button_off_input.editingFinished.connect(self.onButtonEdition)
+
+            self._groupButtons[button_on_input] = v_high
+            self._groupButtons[button_off_input] = v_low
+
+            if v_high in self._widgetButtons:
+                button_on_input.setText(self._widgetButtons[v_high])
+            if v_low in self._widgetButtons:
+                button_off_input.setText(self._widgetButtons[v_low])
+
+    # __________________________________________________________________
+    def buildUi(self):
+
+        main_layout = QVBoxLayout()
+        main_layout.setSpacing(6)
+
+        self.setLayout(main_layout)
+
+        self.buildGroups()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onButtonEdition(self):
+
+        input = self.sender()
+        if input not in self._groupButtons:
+            self._logger.warning("Label input not found")
+            return
+
+        variable = self._groupButtons[input]
+        self._widgetButtons[variable] = input.text().strip()
+        PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
+                                self._widgetVariables, self._widgetImages, self._widgetButtons)
+        self.rebuild.emit()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onImageSelection(self):
+
+        combobox = self.sender()
+        if combobox not in self._imageSelections:
+            self._logger.warning("Image selection not found")
+            return
+
+        variable = self._imageSelections[combobox]
+        self._widgetImages[variable] = combobox.currentData()
+        PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
+                                self._widgetVariables, self._widgetImages, self._widgetButtons)
+        self.rebuild.emit()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onLabelEdition(self):
+
+        input = self.sender()
+        if input not in self._labelInputs:
+            self._logger.warning("Label input not found")
+            return
+
+        variable = self._labelInputs[input]
+        self._widgetVariables[variable] = input.text().strip()
+        PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
+                                self._widgetVariables, self._widgetImages, self._widgetButtons)
+        self.rebuild.emit()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onMoveGroupDown(self):
+
+        button = self.sender()
+        if button not in self._moveDownButtons:
+            self._logger.warning("Button not found : {}".format(button.toolTip()))
+            return
+
+        group = self._moveDownButtons[button]
+
+        try:
+            i = self._widgetGroups.index(group)
+        except ValueError:
+            return
+
+        if i < len(self._widgetGroups) - 1:
+            self._widgetGroups.pop(i)
+            self._widgetGroups.insert(i+1, group)
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
+                                    self._widgetVariables, self._widgetImages, self._widgetButtons)
+            self.rebuild.emit()
+            self.reorder.emit()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onMoveGroupUp(self):
+
+        button = self.sender()
+        if button not in self._moveUpButtons:
+            self._logger.warning("Button not found : {}".format(button.toolTip()))
+            return
+
+        group = self._moveUpButtons[button]
+
+        try:
+            i = self._widgetGroups.index(group)
+        except ValueError:
+            return
+
+        if i > 0:
+            self._widgetGroups.pop(i)
+            self._widgetGroups.insert(i-1, group)
+            self.rebuild.emit()
+            self.reorder.emit()
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
+                                    self._widgetVariables, self._widgetImages, self._widgetButtons)
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onTitleEdition(self):
+
+        input = self.sender()
+        if input not in self._titleInputs:
+            self._logger.warning("Title input not found")
+            return
+
+        variable = self._titleInputs[input]
+        if variable is None: variable = ''
+        self._widgetTitles[variable] = input.text().strip()
+        self.rebuild.emit()
+        PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
+                                self._widgetVariables, self._widgetImages, self._widgetButtons)
+

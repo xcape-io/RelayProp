@@ -23,7 +23,9 @@ class PanelSettingsDialog(QDialog):
 
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings,
-                 widget_groups, widget_titles, widget_variables, logger):
+                 widget_groups, widget_titles,
+                 widget_variables, widget_images,
+                 widget_buttons, logger):
 
         super(PanelSettingsDialog, self).__init__()
 
@@ -33,6 +35,8 @@ class PanelSettingsDialog(QDialog):
         self._widgetGroups = widget_groups
         self._widgetTitles = widget_titles
         self._widgetVariables = widget_variables
+        self._widgetImages = widget_images
+        self._widgetButtons = widget_buttons
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.setWindowTitle(self.tr("Panel configuration"))
@@ -181,7 +185,9 @@ class PanelSettingsDialog(QDialog):
     def onEdit(self):
 
         dlg = EditPanelWidgets(self._propVariables, self._propSettings,
-                               self._widgetGroups, self._widgetTitles, self._widgetVariables, self._logger)
+                               self._widgetGroups, self._widgetTitles,
+                               self._widgetVariables, self._widgetImages,
+                               self._widgetButtons, self._logger)
         dlg.setModal(True)
 
         dlg.rebuild.connect(self.rebuildWidgets)

@@ -37,3 +37,8 @@ class PushButton(QWidget):
     def onPushButton(self):
 
         self.publishMessage.emit(self._topic, self._action)
+
+    # __________________________________________________________________
+    def setCaption(self, caption):
+
+        self._pushButton.setText(caption)

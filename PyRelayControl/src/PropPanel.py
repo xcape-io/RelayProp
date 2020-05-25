@@ -46,6 +46,8 @@ class PropPanel:
         groups = []
         titles = {}
         variables = {}
+        images = {}
+        buttons = {}
         if os.path.isfile('panel.json'):
             try:
                 with open('panel.json', 'r', encoding='utf-8') as fp:
@@ -53,21 +55,25 @@ class PropPanel:
                 groups = json_doc['groups']
                 titles = json_doc['titles']
                 variables = json_doc['variables']
+                images = json_doc['images']
+                buttons = json_doc['buttons']
             except json.JSONDecodeError as jex:
                 logger.error("JSONDecodeError '{}' at {} in: {}".format(jex.msg, jex.pos, jex.doc))
             except Exception as e:
                 logger.error("Failed to load JSON file 'panel.json'")
                 logger.debug(e)
-        return groups, titles, variables
+        return groups, titles, variables, images, buttons
 
     # __________________________________________________________________
     @classmethod
-    def savePanelJson(self, groups, titles, variables):
+    def savePanelJson(self, groups, titles, variables, images, buttons):
 
         doc = {}
         doc['groups'] = groups
-        doc['titles'] = groups
+        doc['titles'] = titles
         doc['variables'] = variables
+        doc['images'] = images
+        doc['buttons'] = buttons
 
         with open('panel.json', 'w', encoding='utf-8') as fp:
             fp.write(json.dumps(doc, indent=2, ensure_ascii=False))  # for UTF-8 encoding

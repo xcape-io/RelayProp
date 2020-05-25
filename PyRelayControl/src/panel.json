@@ -1,9 +1,32 @@
 {
   "groups": [
+    null,
     "smoke",
     "doors",
-    "maglocks",
-    null
+    "maglocks"
   ],
-  "variables": {}
+  "titles": {
+    "doors/": "Portes"
+  },
+  "variables": {
+    "doors/exit": "Sortie",
+    "doors/front": "Entrée",
+    "maglocks/1": "Drawer top",
+    "maglocks/2": "Drawer middle",
+    "maglocks/3": "Drawer bottom"
+  },
+  "images": {
+    "props": "plug",
+    "smoke/mach": "smoke",
+    "smoke/fog": "smoke",
+    "doors/front": "door",
+    "doors/exit": "door",
+    "maglocks/1": "relay",
+    "maglocks/2": "relay",
+    "maglocks/3": "relay"
+  },
+  "buttons": {
+    "doors/*:1": "Fermer les portes",
+    "doors/*:0": "Ouvrir les portes"
+  }
 }

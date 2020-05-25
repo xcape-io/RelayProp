@@ -37,7 +37,8 @@ class ControlDialog(AppletDialog):
         # members required by _buildUi() must be set before calling super().__init__()
         self._propSettings = prop_settings
         self._groupBoxes = {}
-        self._widgetGroups, self._widgetTitles, self._widgetVariables = PropPanel.loadPanelJson(logger)
+        self._widgetGroups, self._widgetTitles, self._widgetVariables, \
+        self._widgetImages, self._widgetButtons = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -76,6 +77,9 @@ class ControlDialog(AppletDialog):
 
         for group in self._widgetGroups:
             caption = group.capitalize() if group is not None else ''
+            variable = group + '/' if group is not None else ''
+            if variable in self._widgetTitles:
+                caption = self._widgetTitles[variable]
             box = QGroupBox(caption)
             box_layout = QVBoxLayout(box)
             box_layout.setSpacing(12)
@@ -88,10 +92,18 @@ class ControlDialog(AppletDialog):
             else:
                 group = None
                 variable = v
-            switch = PinSwitch(label=variable.capitalize(),
+            if v in self._widgetVariables:
+                label = self._widgetVariables[v]
+            else:
+                label = variable.capitalize()
+            if v in self._widgetImages and self._widgetImages[v] in SWITCH_IMAGES:
+                image_on, image_off = SWITCH_IMAGES[self._widgetImages[v]]
+            else:
+                image_on, image_off = SWITCH_IMAGES['default']
+            switch = PinSwitch(label=label,
                                variable=pin.getVariable(),
-                               image_on=DATALED_IMAGE_ON,
-                               image_off=DATALED_IMAGE_OFF,
+                               image_on=image_on,
+                               image_off=image_off,
                                sync=pin.getVariable(),
                                sync_on=pin.getHigh(),
                                sync_off=pin.getLow(),
@@ -120,6 +132,14 @@ class ControlDialog(AppletDialog):
 
             button_off = PinGroupButton(group, GPIO_LOW, self._propSettings['prop']['prop_inbox'])
             self._groupBoxes[group].layout().addWidget(button_off)
+
+            v_high = '{}/*:{}'.format(group, str(GPIO_HIGH))
+            v_low = '{}/*:{}'.format(group, str(GPIO_LOW))
+
+            if v_high in self._widgetButtons:
+                button_on.setCaption(self._widgetButtons[v_high])
+            if v_low in self._widgetButtons:
+                button_off.setCaption(self._widgetButtons[v_low])
 
             button_on.publishMessage.connect(self.publishMessage)
             button_off.publishMessage.connect(self.publishMessage)
@@ -305,7 +325,9 @@ class ControlDialog(AppletDialog):
     def onPanelEdition(self):
 
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
-                                  self._widgetGroups, self._widgetTitles, self._widgetVariables, self._logger)
+                                  self._widgetGroups, self._widgetTitles,
+                                  self._widgetVariables, self._widgetImages,
+                                  self._widgetButtons, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
