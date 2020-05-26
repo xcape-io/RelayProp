@@ -9,6 +9,7 @@ Dialog to edit caption and indicators.
 
 from constants import *
 from PropPanel import PropPanel
+from SshSettingsDialog import SshSettingsDialog
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QSizePolicy
@@ -384,7 +385,14 @@ class EditPanelWidgets(QDialog):
     @pyqtSlot()
     def onRelaunch(self):
 
-        button = self.sender()
+        ssh = 'ahah'
+
+        dlg = SshSettingsDialog(self.tr("Relaunch command"), ssh, self._logger)
+        dlg.setModal(True)
+
+        #dlg.rebuildWidgets.connect(self._buildPropWidgets)
+
+        dlg.exec()
 
     # __________________________________________________________________
     @pyqtSlot()
