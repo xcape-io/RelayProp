@@ -9,6 +9,7 @@ Dialog to control PanelProps app running on Raspberry.
 
 import os, re, yaml
 from netmiko import Netmiko
+import paramiko
 
 from constants import *
 try:
@@ -381,45 +382,26 @@ class ControlDialog(AppletDialog):
         if self._rebootCommand:
             ssh = self._rebootCommand
         elif self._propSettings['prop']['board'] == 'mega':
-            ssh = "reset-mcu && reboot -n -f"
+            ssh = "reset-mcu && reboot -d 1 -f"
         else:
             ssh = "sudo reboot -f"
+
+        ssh = ssh + ' && echo EOF'
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
         try:
-            import paramiko
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
             s = client.get_transport().open_session()
             paramiko.agent.AgentRequestHandler(s)
-
-            client.exec_command(ssh, timeout=5.0, max_loops=2) # max_loops illegal param to get a return on TypeError
-        except TypeError:
-            pass  # show countdown 60s if mega, 20s if pi
+            client.exec_command(ssh, timeout=3)
         except Exception as e:
             print(e) # show failed message box
         finally:
             client.close()
         return
-
-
-        prop = {
-            "host": "192.168.1.23",
-            "username": "root",
-            "password": "dragino",
-            "device_type": "linux",
-        }
-
-        try:
-            net_connect = Netmiko(**prop)
-            print(net_connect.find_prompt())
-            output = net_connect.send_command(ssh, max_loops=1)
-            net_connect.disconnect()
-            print(output)
-        except:
-            pass
 
 
     # __________________________________________________________________
@@ -440,17 +422,17 @@ class ControlDialog(AppletDialog):
         if broker:
             ssh = ssh.replace('%BROKER%', broker)
 
+        ssh = ssh + ' && echo EOF'
+
         self._logger.info("Send SSH command : {}".format(ssh))
 
         try:
-            import paramiko
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
             s = client.get_transport().open_session()
             paramiko.agent.AgentRequestHandler(s)
-
-            client.exec_command(ssh, timeout=10.0) # max_loops illegal param to get a return on TypeError
+            client.exec_command(ssh, timeout=3)
         except Exception as e:
             print(e) # show failed message box
         finally:
