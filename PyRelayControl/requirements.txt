@@ -3,4 +3,4 @@ PyQt5>=5.12
 PyQt5-sip>=4.19
 Unidecode>=1.1
 PyYAML
-netmiko
+paramiko

@@ -8,7 +8,6 @@ Dialog to control PanelProps app running on Raspberry.
 """
 
 import os, re, yaml
-from netmiko import Netmiko
 import paramiko
 
 from constants import *
