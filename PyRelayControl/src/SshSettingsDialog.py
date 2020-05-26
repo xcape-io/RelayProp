@@ -50,10 +50,10 @@ class SshSettingsDialog(QDialog):
         settings_box_layout.addLayout(ssh_layout)
 
         self._sshInput = QLineEdit()
-        self._sshInput.setFixedHeight(36)
+        self._sshInput.setFixedHeight(76)
 
         ssh_layout.addWidget(QLabel(self.tr("SSH command")))
-        ssh_layout.addWidget(self._sshInput)
+        ssh_layout.addWidget(self._sshInput, Qt.AlignTop)
 
         self._settingsWidget = QWidget()
         self._settingsWidget.setContentsMargins(0, 0, 0, 0)
