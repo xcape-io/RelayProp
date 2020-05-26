@@ -32,7 +32,7 @@ from PinSwitch import PinSwitch
 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog, QMessageBox
 
 
 class ControlDialog(AppletDialog):
@@ -387,6 +387,24 @@ class ControlDialog(AppletDialog):
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
+        try:
+            import paramiko
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
+            s = client.get_transport().open_session()
+            paramiko.agent.AgentRequestHandler(s)
+
+            client.exec_command(ssh, timeout=5.0, max_loops=2) # max_loops illegal param to get a return on TypeError
+        except TypeError:
+            pass  # show countdown 60s if mega, 20s if pi
+        except Exception as e:
+            print(e) # show failed message box
+        finally:
+            client.close()
+        return
+
+
         prop = {
             "host": "192.168.1.23",
             "username": "root",
@@ -394,9 +412,15 @@ class ControlDialog(AppletDialog):
             "device_type": "linux",
         }
 
-        net_connect = Netmiko(**prop)
-        net_connect.send_command(ssh)
-        net_connect.disconnect()
+        try:
+            net_connect = Netmiko(**prop)
+            print(net_connect.find_prompt())
+            output = net_connect.send_command(ssh, max_loops=1)
+            net_connect.disconnect()
+            print(output)
+        except:
+            pass
+
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -418,13 +442,16 @@ class ControlDialog(AppletDialog):
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
-        prop = {
-            "host": "192.168.1.23",
-            "username": "root",
-            "password": "dragino",
-            "device_type": "linux",
-        }
+        try:
+            import paramiko
+            client = paramiko.SSHClient()
+            client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
+            s = client.get_transport().open_session()
+            paramiko.agent.AgentRequestHandler(s)
 
-        net_connect = Netmiko(**prop)
-        net_connect.send_command(ssh)
-        net_connect.disconnect()
+            client.exec_command(ssh, timeout=10.0) # max_loops illegal param to get a return on TypeError
+        except Exception as e:
+            print(e) # show failed message box
+        finally:
+            client.close()
