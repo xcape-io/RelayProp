@@ -44,6 +44,8 @@ class EditPanelWidgets(QDialog):
         self._moveDownButtons = {}
         self._groupButtons = {}
 
+        self._propBox = None
+
         super(EditPanelWidgets, self).__init__()
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -159,6 +161,19 @@ class EditPanelWidgets(QDialog):
             self._groupBoxes[group].deleteLater()
             del (self._groupBoxes[group])
 
+        if self._propBox is not None:
+            widgets = self._propBox.findChildren(QWidget, '', options=Qt.FindChildrenRecursively)
+            for w in widgets:
+                try:
+                    self._propBox.layout().removeWidget(w)
+                    w.deleteLater()
+                except Exception as e:
+                    print(e)
+            del (widgets)
+            main_layout.removeWidget(self._propBox)
+            self._propBox.deleteLater()
+            del (self._propBox)
+
         for group in self._widgetGroups:
             box = QGroupBox()
             box_layout = QVBoxLayout(box)
@@ -236,6 +251,18 @@ class EditPanelWidgets(QDialog):
                 button_on_input.setText(self._widgetButtons[v_high])
             if v_low in self._widgetButtons:
                 button_off_input.setText(self._widgetButtons[v_low])
+
+        self._propBox = QGroupBox(self.tr("Prop board control"))
+        box_layout = QVBoxLayout(self._propBox)
+        box_layout.setSpacing(12)
+        #self._groupBoxes[group] = box
+        main_layout.addWidget(self._propBox)
+        relaunch_button = QPushButton(self.tr("Relaunch"))
+        reboot_button = QPushButton(self.tr("Reboot"))
+        box_layout.addWidget(relaunch_button)
+        box_layout.addWidget(reboot_button)
+        #self._widgetGroups.append(group)
+
 
     # __________________________________________________________________
     def buildUi(self):
