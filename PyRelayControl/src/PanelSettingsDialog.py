@@ -69,7 +69,7 @@ class PanelSettingsDialog(QDialog):
         json_browse_button.setIconSize(QSize(16, 16))
         json_browse_button.setFixedSize(QSize(20, 20))
 
-        json_layout.addWidget(QLabel("JSON file"))
+        json_layout.addWidget(QLabel(tr("JSON file")))
         json_layout.addWidget(self._jsonInput)
         json_layout.addWidget(json_browse_button)
 
