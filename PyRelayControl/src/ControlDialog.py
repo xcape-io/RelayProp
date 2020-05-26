@@ -7,8 +7,8 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 Dialog to control PanelProps app running on Raspberry.
 """
 
-import os, yaml
-import re
+import os, re, yaml
+from netmiko import Netmiko
 
 from constants import *
 try:
@@ -49,7 +49,8 @@ class ControlDialog(AppletDialog):
         self._propSettings = prop_settings
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
-        self._widgetImages, self._widgetButtons = PropPanel.loadPanelJson(logger)
+        self._widgetImages, self._widgetButtons, \
+        self._relaunchCommand, self._rebootCommand = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -337,8 +338,8 @@ class ControlDialog(AppletDialog):
 
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
                                   self._widgetGroups, self._widgetTitles,
-                                  self._widgetVariables, self._widgetImages,
-                                  self._widgetButtons, self._logger)
+                                  self._widgetVariables, self._widgetImages, self._widgetButtons,
+                                  self._relaunchCommand, self._rebootCommand, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
@@ -377,11 +378,53 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def rebootProp(self):
 
-        pass
+        if self._rebootCommand:
+            ssh = self._rebootCommand
+        elif self._propSettings['prop']['board'] == 'mega':
+            ssh = "reset-mcu && reboot -n -f"
+        else:
+            ssh = "sudo reboot -f"
 
+        self._logger.info("Send SSH command : {}".format(ssh))
+
+        prop = {
+            "host": "192.168.1.23",
+            "username": "root",
+            "password": "dragino",
+            "device_type": "linux",
+        }
+
+        net_connect = Netmiko(**prop)
+        net_connect.send_command(ssh)
+        net_connect.disconnect()
 
     # __________________________________________________________________
     @pyqtSlot()
     def relaunchProp(self):
 
-        pass
+        broker = ''
+        if 'broker_address' in self._propSettings['prop']:
+            broker = self._propSettings['prop']['broker_address']
+            
+        if self._relaunchCommand:
+            ssh = self._relaunchCommand
+        elif self._propSettings['prop']['board'] == 'mega':
+            ssh = "echo %BROKER%> /root/broker && reset-mcu"
+        else:
+            ssh = "ps aux | grep python | grep -v \"grep python\" | grep PiPyCentralProp/src/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PiPyCentralProp/src/main.py -s %BROKER%"
+            
+        if broker:
+            ssh = ssh.replace('%BROKER%', broker)
+
+        self._logger.info("Send SSH command : {}".format(ssh))
+
+        prop = {
+            "host": "192.168.1.23",
+            "username": "root",
+            "password": "dragino",
+            "device_type": "linux",
+        }
+
+        net_connect = Netmiko(**prop)
+        net_connect.send_command(ssh)
+        net_connect.disconnect()

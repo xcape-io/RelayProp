@@ -1,9 +1,9 @@
 {
   "groups": [
-    null,
-    "smoke",
     "doors",
-    "maglocks"
+    "smoke",
+    "maglocks",
+    null
   ],
   "titles": {
     "doors/": "Portes"

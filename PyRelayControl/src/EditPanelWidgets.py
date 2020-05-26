@@ -25,8 +25,8 @@ class EditPanelWidgets(QDialog):
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings,
                  widget_groups, widget_titles,
-                 widget_variables, widget_images,
-                 widget_buttons, logger):
+                 widget_variables, widget_images, widget_buttons,
+                 relaunch, reboot, logger):
 
         self._logger = logger
         self._propSettings = prop_settings
@@ -37,6 +37,8 @@ class EditPanelWidgets(QDialog):
         self._widgetVariables = widget_variables
         self._widgetImages = widget_images
         self._widgetButtons = widget_buttons
+        self._relaunchCommand = relaunch
+        self._rebootCommand = reboot
 
         self._imageSelections = {}
         self._labelInputs = {}

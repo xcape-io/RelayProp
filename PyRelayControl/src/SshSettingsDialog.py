@@ -40,26 +40,17 @@ class SshSettingsDialog(QDialog):
     def buildUi(self):
 
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(6)
-
-        settings_box = QGroupBox(self.tr("Prop settings"))
-        settings_box_layout = QVBoxLayout(settings_box)
-        main_layout.addWidget(settings_box)
+        main_layout.setSpacing(12)
 
         ssh_layout = QHBoxLayout()
-        settings_box_layout.addLayout(ssh_layout)
+        main_layout.addLayout(ssh_layout)
 
         self._sshInput = QLineEdit()
+        self._sshInput.setAlignment(Qt.AlignTop)
         self._sshInput.setFixedHeight(76)
 
-        ssh_layout.addWidget(QLabel(self.tr("SSH command")))
-        ssh_layout.addWidget(self._sshInput, Qt.AlignTop)
-
-        self._settingsWidget = QWidget()
-        self._settingsWidget.setContentsMargins(0, 0, 0, 0)
-        settings_layout = QGridLayout(self._settingsWidget)
-        settings_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.addWidget(self._settingsWidget)
+        ssh_layout.addWidget(QLabel(self.tr("SSH command")), 0, Qt.AlignTop)
+        ssh_layout.addWidget(self._sshInput)
 
         apply_button = QPushButton(self.tr("Apply"))
         apply_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
