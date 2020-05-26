@@ -276,6 +276,10 @@ class EditPanelWidgets(QDialog):
         box_layout.addWidget(relaunch_button)
         box_layout.addWidget(reboot_button)
 
+        if self._propSettings['prop']['board'] == 'mega':
+            relaunch_button.setDisabled(True)
+            reboot_button.setDisabled(True)
+
         relaunch_button.released.connect(self.onRelaunch)
         reboot_button.released.connect(self.onReboot)
 
