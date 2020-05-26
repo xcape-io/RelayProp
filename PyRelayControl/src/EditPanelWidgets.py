@@ -174,7 +174,13 @@ class EditPanelWidgets(QDialog):
             self._propBox.deleteLater()
             del (self._propBox)
 
+        top_group = None
+        bottom_group = None
+
         for group in self._widgetGroups:
+            if top_group is None:
+                top_group = group
+            bottom_group = group
             box = QGroupBox()
             box_layout = QVBoxLayout(box)
             box_layout.setSpacing(12)
@@ -213,6 +219,13 @@ class EditPanelWidgets(QDialog):
         for group in list(self._groupBoxes.keys()):
             title, title_input, move_up_button, move_down_button = self._groupEditor(group)
             self._groupBoxes[group].layout().insertWidget(0, title)
+
+            if group == top_group:
+                move_up_button.setEnabled(False)
+                move_up_button.setToolTip('')
+            if group == bottom_group:
+                move_down_button.setEnabled(False)
+                move_down_button.setToolTip('')
 
             self._titleInputs[title_input] = group + '/' if group is not None else None
             self._moveUpButtons[move_up_button] = group
