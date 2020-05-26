@@ -268,14 +268,14 @@ class EditPanelWidgets(QDialog):
         self._propBox = QGroupBox(self.tr("Prop board control"))
         box_layout = QVBoxLayout(self._propBox)
         box_layout.setSpacing(12)
-        #self._groupBoxes[group] = box
         main_layout.addWidget(self._propBox)
         relaunch_button = QPushButton(self.tr("Relaunch"))
         reboot_button = QPushButton(self.tr("Reboot"))
         box_layout.addWidget(relaunch_button)
         box_layout.addWidget(reboot_button)
-        #self._widgetGroups.append(group)
 
+        relaunch_button.released.connect(self.onRelaunch)
+        reboot_button.released.connect(self.onReboot)
 
     # __________________________________________________________________
     def buildUi(self):
@@ -379,6 +379,18 @@ class EditPanelWidgets(QDialog):
             self.reorder.emit()
             PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles,
                                     self._widgetVariables, self._widgetImages, self._widgetButtons)
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onRelaunch(self):
+
+        button = self.sender()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onReboot(self):
+
+        button = self.sender()
 
     # __________________________________________________________________
     @pyqtSlot()

@@ -8,6 +8,18 @@ Dialog to configure control parameters.
 """
 
 from HelpDialog import HelpDialog
+from constants import *
+
+try:
+    MEGA_YUN_ONLY
+    MEGA_YUN_SUPPORTED = MEGA_YUN_ONLY
+except NameError:
+    MEGA_YUN_SUPPORTED = True
+try:
+    PI_MPC23017_NOT_SUPPORTED
+    PI_MPC23017_SUPPORTED = not PI_MPC23017_NOT_SUPPORTED
+except NameError:
+    PI_MPC23017_SUPPORTED = True
 
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout, QSizePolicy
@@ -157,26 +169,26 @@ class ControlSettingsDialog(QDialog):
         if 'board' not in prop_settings['prop']:
             self._paramWidget.setDisabled(True)
             self._loadButton.setEnabled(True)
-            self._boardMegaYunButton.setDisabled(True)
+            self._boardMegaYunButton.setDisabled(True or not MEGA_YUN_SUPPORTED)  # True
             self._boardPiExpanderButton.setDisabled(True)
         else:
             self._loadButton.setDisabled(True)
             if prop_settings['prop']['board'] == 'mega':
                 self._boardMegaButton.setChecked(True)
-                self._boardMegaYunButton.setEnabled(True)
+                self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
                 self._boardPiExpanderButton.setEnabled(False)
             else:
                 self._boardPiButton.setChecked(True)
-                self._boardPiExpanderButton.setEnabled(True)
+                self._boardPiExpanderButton.setEnabled(PI_MPC23017_SUPPORTED)  # True
                 self._boardMegaYunButton.setEnabled(False)
 
             if 'mega_bridge' in prop_settings['prop'] and prop_settings['prop']['mega_bridge'] == '1':
                 self._boardMegaYunButton.setChecked(True)
             else:
-                self._boardMegaYunButton.setChecked(False)
+                self._boardMegaYunButton.setChecked(not MEGA_YUN_SUPPORTED)  # False
 
             if 'pi_expander' in prop_settings['prop'] and prop_settings['prop']['pi_expander'] == '1':
-                self._boardPiExpanderButton.setChecked(True)
+                self._boardPiExpanderButton.setChecked(PI_MPC23017_SUPPORTED)  # True
             else:
                 self._boardPiExpanderButton.setChecked(False)
 
@@ -345,7 +357,7 @@ class ControlSettingsDialog(QDialog):
 
         self._logger.info(self.tr("Settings : set 'Mega' board"))
         self.setWindowIcon(QIcon('./images/arduino.svg'))
-        self._boardMegaYunButton.setEnabled(True)
+        self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
         self._boardPiExpanderButton.setEnabled(False)
         if not self._paramWidget.isEnabled():
             self._paramWidget.setEnabled(True)
@@ -359,7 +371,7 @@ class ControlSettingsDialog(QDialog):
 
         self._logger.info(self.tr("Settings : set 'Pi' board"))
         self.setWindowIcon(QIcon('./images/raspberry-pi.svg'))
-        self._boardPiExpanderButton.setEnabled(True)
+        self._boardPiExpanderButton.setEnabled(PI_MPC23017_SUPPORTED)  # True
         self._boardMegaYunButton.setEnabled(False)
         if not self._paramWidget.isEnabled():
             self._paramWidget.setEnabled(True)

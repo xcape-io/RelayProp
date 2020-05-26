@@ -11,6 +11,17 @@ import os, yaml
 import re
 
 from constants import *
+try:
+    MEGA_YUN_ONLY
+    MEGA_YUN_SUPPORTED = MEGA_YUN_ONLY
+except NameError:
+    MEGA_YUN_SUPPORTED = True
+try:
+    PI_MPC23017_NOT_SUPPORTED
+    PI_MPC23017_SUPPORTED = not PI_MPC23017_NOT_SUPPORTED
+except NameError:
+    PI_MPC23017_SUPPORTED = True
+
 from PropPanel import PropPanel
 from ControlSettingsDialog import ControlSettingsDialog
 from PanelSettingsDialog import PanelSettingsDialog

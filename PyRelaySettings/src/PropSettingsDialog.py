@@ -8,6 +8,18 @@ Dialog to configure panel parameters.
 """
 
 from HelpDialog import HelpDialog
+from constants import *
+
+try:
+    MEGA_YUN_ONLY
+    MEGA_YUN_SUPPORTED = MEGA_YUN_ONLY
+except NameError:
+    MEGA_YUN_SUPPORTED = True
+try:
+    PI_MPC23017_NOT_SUPPORTED
+    PI_MPC23017_SUPPORTED = not PI_MPC23017_NOT_SUPPORTED
+except NameError:
+    PI_MPC23017_SUPPORTED = True
 
 from PyQt5.QtCore import Qt, pyqtSlot
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout, QSizePolicy
@@ -53,7 +65,7 @@ class PropSettingsDialog(QDialog):
 
         self._boardMegaButton = QRadioButton(self.tr("Arduino Mega 2560"))
         self._boardMegaYunButton = QCheckBox(self.tr("Arduino Mega 2560 with Dragino Yún shield"))
-        self._boardMegaYunButton.setEnabled(False)
+        self._boardMegaYunButton.setEnabled(not MEGA_YUN_SUPPORTED)  # False
         self._boardPiButton = QRadioButton(self.tr("Raspberry Pi"))
         self._boardPiExpanderButton = QCheckBox(self.tr("Raspberry Pi with MCP23017 expander"))
         self._boardPiExpanderButton.setEnabled(False)
@@ -134,20 +146,20 @@ class PropSettingsDialog(QDialog):
         else:
             if self._propSettings['prop']['board'] == 'mega':
                 self._boardMegaButton.setChecked(True)
-                self._boardMegaYunButton.setEnabled(True)
+                self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
                 self._boardPiExpanderButton.setEnabled(False)
             else:
                 self._boardPiButton.setChecked(True)
-                self._boardPiExpanderButton.setEnabled(True)
+                self._boardPiExpanderButton.setEnabled(PI_MPC23017_SUPPORTED)  # True
                 self._boardMegaYunButton.setEnabled(False)
 
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 self._boardMegaYunButton.setChecked(True)
             else:
-                self._boardMegaYunButton.setChecked(False)
+                self._boardMegaYunButton.setChecked(not MEGA_YUN_SUPPORTED)  # False
 
             if 'pi_expander' in self._propSettings['prop'] and self._propSettings['prop']['pi_expander'] == '1':
-                self._boardPiExpanderButton.setChecked(True)
+                self._boardPiExpanderButton.setChecked(PI_MPC23017_SUPPORTED)  # True
             else:
                 self._boardPiExpanderButton.setChecked(False)
 
@@ -264,7 +276,7 @@ class PropSettingsDialog(QDialog):
 
         self._logger.info(self.tr("Settings : set 'Mega' board"))
         self.setWindowIcon(QIcon('./images/arduino.svg'))
-        self._boardMegaYunButton.setEnabled(True)
+        self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
         self._boardPiExpanderButton.setEnabled(False)
         if not self._paramWidget.isEnabled():
             self._paramWidget.setEnabled(True)
@@ -279,8 +291,8 @@ class PropSettingsDialog(QDialog):
 
         self._logger.info(self.tr("Settings : set 'Pi' board"))
         self.setWindowIcon(QIcon('./images/raspberry-pi.svg'))
-        self._boardPiExpanderButton.setEnabled(True)
-        self._boardMegaYunButton.setEnabled(False)
+        self._boardPiExpanderButton.setEnabled(PI_MPC23017_SUPPORTED)  # True
+        self._boardMegaYunButton.setEnabled(not MEGA_YUN_SUPPORTED)  # False
         if not self._paramWidget.isEnabled():
             self._paramWidget.setEnabled(True)
             self._propNameInput.setText('Relay Pi')

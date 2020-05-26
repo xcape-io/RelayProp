@@ -44,3 +44,6 @@ SWITCH_IMAGES['relay'] = ('./images/relay_closed.svg', './images/relay_opened.sv
 
 GPIO_LOW = 0
 GPIO_HIGH = 1
+
+MEGA_YUN_ONLY = True
+PI_MPC23017_NOT_SUPPORTED = True
