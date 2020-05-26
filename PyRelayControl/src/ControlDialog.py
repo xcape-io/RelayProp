@@ -51,7 +51,7 @@ class ControlDialog(AppletDialog):
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
         self._widgetImages, self._widgetButtons, \
-        self._relaunchCommand, self._rebootCommand = PropPanel.loadPanelJson(logger)
+        self._relaunchCommand = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -340,7 +340,7 @@ class ControlDialog(AppletDialog):
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
                                   self._widgetGroups, self._widgetTitles,
                                   self._widgetVariables, self._widgetImages, self._widgetButtons,
-                                  self._relaunchCommand, self._rebootCommand, self._logger)
+                                  self._relaunchCommand, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
@@ -379,10 +379,12 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def rebootProp(self):
 
-        if self._rebootCommand:
-            ssh = self._rebootCommand
-        elif self._propSettings['prop']['board'] == 'mega':
-            ssh = "reset-mcu && reboot -d 1 -f"
+        if self._propSettings['prop']['board'] == 'mega':
+            if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
+                ssh = "reset-mcu && reboot -d 1 -f"
+            else:
+                self._logger.warning("Relaunch ignored : {}".format('ssh not supported for this board'))
+                return
         else:
             ssh = "sudo reboot -f"
 
@@ -412,13 +414,18 @@ class ControlDialog(AppletDialog):
         if 'broker_address' in self._propSettings['prop']:
             broker = self._propSettings['prop']['broker_address']
             
-        if self._relaunchCommand:
-            ssh = self._relaunchCommand
-        elif self._propSettings['prop']['board'] == 'mega':
-            ssh = "echo %BROKER%> /root/broker && reset-mcu"
+        if self._propSettings['prop']['board'] == 'mega':
+            if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
+                ssh = "echo %BROKER%> /root/broker && reset-mcu"
+            else:
+                self._logger.warning("Relaunch ignored : {}".format('ssh not supported for this board'))
+                return
         else:
-            ssh = "ps aux | grep python | grep -v \"grep python\" | grep PiPyCentralProp/src/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PiPyCentralProp/src/main.py -s %BROKER%"
-            
+            if self._relaunchCommand:
+                ssh = self._relaunchCommand
+            else:
+                ssh = "ps aux | grep python | grep -v \"grep python\" | grep PiPyCentralProp/src/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PiPyCentralProp/src/main.py -s %BROKER%"
+
         if broker:
             ssh = ssh.replace('%BROKER%', broker)
 
