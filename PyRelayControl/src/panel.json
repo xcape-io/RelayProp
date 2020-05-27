@@ -34,7 +34,8 @@
     "doors/*:0": false,
     "__RELAUNCH__": false,
     "doors": false,
-    "__REBOOT__": false
+    "__REBOOT__": false,
+    "null": false
   },
   "relaunch": ""
 }
