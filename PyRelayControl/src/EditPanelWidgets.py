@@ -284,10 +284,26 @@ class EditPanelWidgets(QDialog):
         box_layout = QVBoxLayout(self._propBox)
         box_layout.setSpacing(12)
         main_layout.addWidget(self._propBox)
+
         relaunch_button = QPushButton(self.tr("Relaunch"))
+        hide_relaunch = QCheckBox()
+        hide_relaunch.setToolTip(self.tr("Hide widget"))
+        relaunch_layout = QHBoxLayout()
+        relaunch_layout.setContentsMargins(0, 0, 0, 0)
+        relaunch_layout.setSpacing(8)
+        relaunch_layout.addWidget(relaunch_button, 1)
+        relaunch_layout.addWidget(hide_relaunch, 0, Qt.AlignRight)
+        box_layout.addLayout(relaunch_layout)
+
         reboot_button = QPushButton(self.tr("Reboot"))
-        box_layout.addWidget(relaunch_button)
-        box_layout.addWidget(reboot_button)
+        hide_reboot = QCheckBox()
+        hide_reboot.setToolTip(self.tr("Hide widget"))
+        reboot_layout = QHBoxLayout()
+        reboot_layout.setContentsMargins(0, 0, 0, 0)
+        reboot_layout.setSpacing(8)
+        reboot_layout.addWidget(reboot_button, 1)
+        reboot_layout.addWidget(hide_reboot, 0, Qt.AlignRight)
+        box_layout.addLayout(reboot_layout)
 
         if self._propSettings['prop']['board'] == 'mega':
             relaunch_button.setDisabled(True)
