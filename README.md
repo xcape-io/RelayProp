@@ -10,7 +10,7 @@
 * More checking on startup (borker/topics) to create prop.ini
 * Merge PyRelaySettings and PyRelayControl in one app PyRelay
 * Add MPC23017 support
-* Add Mega witput bridge support
+* Add Mega without bridge support
 
 <hr>
 
