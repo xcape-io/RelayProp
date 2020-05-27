@@ -1,8 +1,8 @@
 {
   "groups": [
     "doors",
-    "smoke",
     "maglocks",
+    "smoke",
     null
   ],
   "titles": {
@@ -28,5 +28,13 @@
   "buttons": {
     "doors/*:1": "Fermer les portes",
     "doors/*:0": "Ouvrir les portes"
-  }
+  },
+  "hiddens": {
+    "smoke": false,
+    "doors/*:0": false,
+    "__RELAUNCH__": false,
+    "doors": false,
+    "__REBOOT__": false
+  },
+  "relaunch": ""
 }
