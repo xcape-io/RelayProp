@@ -13,6 +13,8 @@
 * Add MPC23017 support
 * Add Mega witput bridge support
 
+<hr>
+
 
 This repository contains 4 projects:
 * [MegaRelayProp: Room Relay Prop on Arduino Mega 2560](./MegaRelayProp)
