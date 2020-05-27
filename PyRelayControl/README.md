@@ -1,6 +1,8 @@
-﻿
+
 # PyRelayControl
 *<a href="https://www.learnpyqt.com/" target="_blank">PyQt5</a> relay control applet.*
+
+<img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
 
  
 ## Installation
