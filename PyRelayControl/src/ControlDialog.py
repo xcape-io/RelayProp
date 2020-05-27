@@ -31,8 +31,8 @@ from PinGroupButton import PinGroupButton
 from PinSwitch import PinSwitch
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog, QMessageBox
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint, QTimer
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog
 
 
 class ControlDialog(AppletDialog):
@@ -50,7 +50,7 @@ class ControlDialog(AppletDialog):
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
         self._widgetImages, self._widgetButtons, \
-        self._relaunchCommand = PropPanel.loadPanelJson(logger)
+        self._widgetHiddens, self._relaunchCommand = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -97,6 +97,8 @@ class ControlDialog(AppletDialog):
             box_layout.setSpacing(12)
             self._groupBoxes[group] = box
             self._mainLayout.addWidget(box)
+            if group in self._widgetHiddens and self._widgetHiddens[group]:
+                box.setVisible(False)
 
         for v, pin in self._propVariables.items():
             if '/' in v:
@@ -136,6 +138,8 @@ class ControlDialog(AppletDialog):
                 box_layout.addWidget(switch)
             switch.publishMessage.connect(self.publishMessage)
             self.propDataReveived.connect(switch.onDataReceived)
+            if v in self._widgetHiddens and self._widgetHiddens[v]:
+                switch.setVisible(False)
 
         for group in list(self._groupBoxes.keys()):
             if group is None: continue
@@ -152,6 +156,11 @@ class ControlDialog(AppletDialog):
                 button_on.setCaption(self._widgetButtons[v_high])
             if v_low in self._widgetButtons:
                 button_off.setCaption(self._widgetButtons[v_low])
+
+            if v_high in self._widgetHiddens and self._widgetHiddens[v_high]:
+                button_on.setVisible(False)
+            if v_low in self._widgetHiddens and self._widgetHiddens[v_low]:
+                button_off.setVisible(False)
 
             button_on.publishMessage.connect(self.publishMessage)
             button_off.publishMessage.connect(self.publishMessage)
@@ -173,10 +182,16 @@ class ControlDialog(AppletDialog):
         box_layout.addWidget(button_relaunch)
         box_layout.addWidget(button_reboot)
 
+        if '__RELAUNCH__' in self._widgetHiddens and self._widgetHiddens['__RELAUNCH__']:
+            button_relaunch.setVisible(False)
+        if '__REBOOT__' in self._widgetHiddens and self._widgetHiddens['__REBOOT__']:
+            button_reboot.setVisible(False)
+
         button_relaunch.released.connect(self.relaunchProp)
         button_reboot.released.connect(self.rebootProp)
 
         self.publishMessage.emit(self._propSettings['prop']['prop_inbox'], 'app:data')
+        QTimer.singleShot(0, self.onRebuild)
 
     # __________________________________________________________________
     def _buildUi(self):
@@ -339,7 +354,7 @@ class ControlDialog(AppletDialog):
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
                                   self._widgetGroups, self._widgetTitles,
                                   self._widgetVariables, self._widgetImages, self._widgetButtons,
-                                  self._relaunchCommand, self._logger)
+                                  self._widgetHiddens, self._relaunchCommand, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
@@ -373,6 +388,10 @@ class ControlDialog(AppletDialog):
         else:
             self._settingsButton.setIcon(QIcon('./images/raspberry-pi.svg'))
 
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onRebuild(self):
+        self.resize(self.width(), 50)
 
     # __________________________________________________________________
     @pyqtSlot()

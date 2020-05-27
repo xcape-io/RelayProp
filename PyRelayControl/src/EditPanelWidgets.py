@@ -26,7 +26,7 @@ class EditPanelWidgets(QDialog):
     def __init__(self, prop_variables, prop_settings,
                  widget_groups, widget_titles,
                  widget_variables, widget_images, widget_buttons,
-                 relaunch, logger):
+                 widget_hiddens, relaunch, logger):
 
         self._logger = logger
         self._propSettings = prop_settings
@@ -37,6 +37,7 @@ class EditPanelWidgets(QDialog):
         self._widgetVariables = widget_variables
         self._widgetImages = widget_images
         self._widgetButtons = widget_buttons
+        self._widgetHiddens = widget_hiddens
         self._relaunchCommand = relaunch
 
         self._imageSelections = {}
@@ -219,6 +220,8 @@ class EditPanelWidgets(QDialog):
                 idx = image_selector.findData(self._widgetImages[v])
                 if idx > 0:
                     image_selector.setCurrentIndex(idx)
+            if v in self._widgetHiddens and self._widgetHiddens[v]:
+                hide_check.setChecked(True)
             label_input.editingFinished.connect(self.onLabelEdition)
             image_selector.currentIndexChanged.connect(self.onImageSelection)
             hide_check.released.connect(self.onHideCheck)
@@ -250,6 +253,9 @@ class EditPanelWidgets(QDialog):
             self._moveDownButtons[move_down_button] = group
             self._hideChecks[hide_check] = group
 
+            if group in self._widgetHiddens and self._widgetHiddens[group]:
+                hide_check.setChecked(True)
+
             title_input.editingFinished.connect(self.onTitleEdition)
             move_up_button.released.connect(self.onMoveGroupUp)
             move_down_button.released.connect(self.onMoveGroupDown)
@@ -273,6 +279,11 @@ class EditPanelWidgets(QDialog):
                 button_on_input.setText(self._widgetButtons[v_high])
             if v_low in self._widgetButtons:
                 button_off_input.setText(self._widgetButtons[v_low])
+
+            if v_high in self._widgetHiddens and self._widgetHiddens[v_high]:
+                hide_check_on.setChecked(True)
+            if v_low in self._widgetHiddens and self._widgetHiddens[v_low]:
+                hide_check_off.setChecked(True)
 
             button_on_input.editingFinished.connect(self.onButtonEdition)
             button_off_input.editingFinished.connect(self.onButtonEdition)
@@ -305,6 +316,9 @@ class EditPanelWidgets(QDialog):
         relaunch_layout.addWidget(hide_relaunch, 0, Qt.AlignRight)
         box_layout.addLayout(relaunch_layout)
 
+        if '__RELAUNCH__' in self._widgetHiddens and self._widgetHiddens['__RELAUNCH__']:
+            hide_relaunch.setChecked(True)
+
         reboot_button = QPushButton(self.tr("Reboot"))
         hide_reboot = QCheckBox()
         hide_reboot.setToolTip(self.tr("Hide widget"))
@@ -314,6 +328,9 @@ class EditPanelWidgets(QDialog):
         reboot_layout.addWidget(reboot_button, 1)
         reboot_layout.addWidget(hide_reboot, 0, Qt.AlignRight)
         box_layout.addLayout(reboot_layout)
+
+        if '__REBOOT__' in self._widgetHiddens and self._widgetHiddens['__REBOOT__']:
+            hide_reboot.setChecked(True)
 
         if self._propSettings['prop']['board'] == 'mega':
             relaunch_button.setDisabled(True)
@@ -349,7 +366,8 @@ class EditPanelWidgets(QDialog):
         variable = self._groupButtons[input]
         self._widgetButtons[variable] = input.text().strip()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
-                                self._widgetImages, self._widgetButtons, self._relaunchCommand)
+                                self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                self._relaunchCommand)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -362,7 +380,11 @@ class EditPanelWidgets(QDialog):
             return
 
         variable = self._hideChecks[checkbox]
-        pass
+        self._widgetHiddens[variable] = checkbox.isChecked()
+        PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
+                                self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                self._relaunchCommand)
+        self.rebuild.emit()
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -376,7 +398,8 @@ class EditPanelWidgets(QDialog):
         variable = self._imageSelections[combobox]
         self._widgetImages[variable] = combobox.currentData()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
-                                self._widgetImages, self._widgetButtons, self._relaunchCommand)
+                                self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                self._relaunchCommand)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -391,7 +414,8 @@ class EditPanelWidgets(QDialog):
         variable = self._labelInputs[input]
         self._widgetVariables[variable] = input.text().strip()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
-                                self._widgetImages, self._widgetButtons, self._relaunchCommand)
+                                self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                self._relaunchCommand)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -414,7 +438,8 @@ class EditPanelWidgets(QDialog):
             self._widgetGroups.pop(i)
             self._widgetGroups.insert(i+1, group)
             PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
-                                    self._widgetImages, self._widgetButtons, self._relaunchCommand)
+                                    self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                    self._relaunchCommand)
             self.rebuild.emit()
             self.reorder.emit()
 
@@ -440,7 +465,8 @@ class EditPanelWidgets(QDialog):
             self.rebuild.emit()
             self.reorder.emit()
             PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
-                                    self._widgetImages, self._widgetButtons, self._relaunchCommand)
+                                    self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                    self._relaunchCommand)
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -475,5 +501,6 @@ class EditPanelWidgets(QDialog):
         self._widgetTitles[variable] = input.text().strip()
         self.rebuild.emit()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
-                                self._widgetImages, self._widgetButtons, self._relaunchCommand)
+                                self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                self._relaunchCommand)
 
