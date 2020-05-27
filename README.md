@@ -4,7 +4,6 @@
 <img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
 
 #### TODO
-* Add show/hide widgets in panel
 * Add password for configuration
 * Relaunch/Reboot for Pi
 * Add prop IP address, username and password in settings for SSH
