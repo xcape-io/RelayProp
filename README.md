@@ -1,6 +1,19 @@
 ﻿# Relay Prop
 *Relay Prop for Escape Room with Arduino or Raspberry Pi board.*
 
+<img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
+
+#### TODO
+* Add show/hide widgets in panel
+* Add password for configuration
+* Relaunch/Reboot for Pi
+* Add prop IP address, username and password in settings for SSH
+* More check on startup (borker/topics) to create prop.ini
+* Merge PyRelaySettings and PyRelayControl in one app PyRelay
+* Add MPC23017 support
+* Add Mega witput bridge support
+
+
 This repository contains 4 projects:
 * [MegaRelayProp: Room Relay Prop on Arduino Mega 2560](./MegaRelayProp)
 * [PiPyRelayProp: Room Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp)
