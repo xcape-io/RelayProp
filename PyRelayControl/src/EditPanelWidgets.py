@@ -118,7 +118,7 @@ class EditPanelWidgets(QDialog):
         move_down_button.setIcon(QIcon('./images/caret-bottom'))
 
         hide_check = QCheckBox()
-        hide_check.setToolTip(self.tr("Hide widget"))
+        hide_check.setToolTip(self.tr("Hide group"))
 
         layout.addWidget(move_up_button)
         layout.addWidget(move_down_button)
