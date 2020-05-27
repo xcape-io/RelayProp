@@ -12,9 +12,9 @@ from PropPanel import PropPanel
 from SshSettingsDialog import SshSettingsDialog
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QSizePolicy
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
 from PyQt5.QtWidgets import QDialog, QComboBox, QGroupBox, QPushButton
-from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFrame
+from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFrame, QCheckBox
 from PyQt5.QtGui import QIcon
 
 
@@ -70,13 +70,18 @@ class EditPanelWidgets(QDialog):
         action_widget = QLineEdit(action)
         action_widget.setFrame(QFrame.NoFrame)
         action_widget.setReadOnly(True)
+
         caption_input = QLineEdit(variable.capitalize())
+
+        hide_check = QCheckBox()
+        hide_check.setToolTip(self.tr("Hide widget"))
 
         layout.addWidget(QLabel(self.tr("Button")))
         layout.addWidget(action_widget)
         layout.addWidget(caption_input)
+        layout.addWidget(hide_check)
 
-        return (ew, caption_input)
+        return (ew, caption_input, hide_check)
 
     # __________________________________________________________________
     def _groupEditor(self, group):
@@ -112,10 +117,14 @@ class EditPanelWidgets(QDialog):
         move_down_button.setFixedSize(QSize(28, 28))
         move_down_button.setIcon(QIcon('./images/caret-bottom'))
 
+        hide_check = QCheckBox()
+        hide_check.setToolTip(self.tr("Hide widget"))
+
         layout.addWidget(move_up_button)
         layout.addWidget(move_down_button)
+        layout.addWidget(hide_check)
 
-        return (ew, caption_input, move_up_button, move_down_button)
+        return (ew, caption_input, move_up_button, move_down_button, hide_check)
 
     # __________________________________________________________________
     def _switchEditor(self, action, variable):
@@ -137,12 +146,16 @@ class EditPanelWidgets(QDialog):
         image_selector.addItem(self.tr("Plug"), 'plug')
         image_selector.addItem(self.tr("Relay"), 'relay')
 
+        hide_check = QCheckBox()
+        hide_check.setToolTip(self.tr("Hide widget"))
+
         layout.addWidget(QLabel(self.tr("Switch")))
         layout.addWidget(action_widget)
         layout.addWidget(label_input)
         layout.addWidget(image_selector)
+        layout.addWidget(hide_check)
 
-        return (ew, label_input, image_selector)
+        return (ew, label_input, image_selector, hide_check)
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -195,7 +208,7 @@ class EditPanelWidgets(QDialog):
             else:
                 group = None
                 variable = v
-            switch, label_input, image_selector = self._switchEditor(pin.getVariable(), variable)
+            switch, label_input, image_selector, hide_check = self._switchEditor(pin.getVariable(), variable)
             self._labelInputs[label_input] = v
             self._imageSelections[image_selector] = v
             if v in self._widgetVariables:
@@ -219,7 +232,7 @@ class EditPanelWidgets(QDialog):
                 self._widgetGroups.append(group)
 
         for group in list(self._groupBoxes.keys()):
-            title, title_input, move_up_button, move_down_button = self._groupEditor(group)
+            title, title_input, move_up_button, move_down_button, hide_check = self._groupEditor(group)
             self._groupBoxes[group].layout().insertWidget(0, title)
 
             if group == top_group:
@@ -244,11 +257,11 @@ class EditPanelWidgets(QDialog):
             if group is None: continue
 
             v_high = '{}/*:{}'.format(group, str(GPIO_HIGH))
-            button_on, button_on_input = self._buttonEditor(v_high, group)
+            button_on, button_on_input, hide_check = self._buttonEditor(v_high, group)
             self._groupBoxes[group].layout().addWidget(button_on)
 
             v_low = '{}/*:{}'.format(group, str(GPIO_LOW))
-            button_off, button_off_input = self._buttonEditor(v_low, group)
+            button_off, button_off_input, hide_check = self._buttonEditor(v_low, group)
             self._groupBoxes[group].layout().addWidget(button_off)
 
             if v_high in self._widgetButtons:
