@@ -11,6 +11,7 @@
 * Merge PyRelaySettings and PyRelayControl in one app PyRelay
 * Add MPC23017 support
 * Add Mega without bridge support
+* Make Pi to Mega and reverse easier for user
 
 <hr>
 
