@@ -235,7 +235,8 @@ class ControlSettingsDialog(QDialog):
                 self._connectionStatusHiddenButton.setChecked(True)
             else:
                 self._connectionStatusHiddenButton.setChecked(False)
-
+            if 'admin_password' in prop_settings['options']:
+                self._adminPasswordInput.setText(self._propSettings['options']['admin_password'])
 
     # __________________________________________________________________
     def forceBoardModel(self):
@@ -301,6 +302,8 @@ class ControlSettingsDialog(QDialog):
             self._propSettings['options']['connection_status'] = '0'
         else:
             self._propSettings['options']['connection_status'] = '1'
+
+        self._propSettings['options']['admin_password'] = self._adminPasswordInput.text().strip()
 
         with open('prop.ini', 'w') as configfile:
             self._propSettings.write(configfile)
