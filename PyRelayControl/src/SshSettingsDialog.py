@@ -4,7 +4,7 @@
 SshSettingsDialog.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
-Dialog to configure control parameters.
+Dialog to configure SSH credentials.
 """
 
 from PropPanel import PropPanel
