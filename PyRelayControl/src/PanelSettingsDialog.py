@@ -54,7 +54,8 @@ class PanelSettingsDialog(QDialog):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(6)
 
-        settings_box = QGroupBox(self.tr("Prop settings"))
+        settings_box = QGroupBox(self.tr("Panel settings"))
+        settings_box.setToolTip(self.tr("JSON file from Relay Settings app"))
         settings_box_layout = QVBoxLayout(settings_box)
         main_layout.addWidget(settings_box)
 
@@ -84,11 +85,10 @@ class PanelSettingsDialog(QDialog):
         build_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         settings_box_layout.addWidget(build_button)
 
-        self._settingsWidget = QWidget()
-        self._settingsWidget.setContentsMargins(0, 0, 0, 0)
-        settings_layout = QGridLayout(self._settingsWidget)
-        settings_layout.setContentsMargins(0, 0, 0, 0)
-        main_layout.addWidget(self._settingsWidget)
+        credentials_box = QGroupBox(self.tr("SSH credentials"))
+        credentials_box.setToolTip(self.tr("Credentials for relaunch and reboot SSH commands"))
+        credentials_box_box_layout = QVBoxLayout(credentials_box)
+        main_layout.addWidget(credentials_box)
 
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
