@@ -60,7 +60,7 @@ class Applet(MqttApplet):
         if 'prop_outbox' in self._propSettings['prop']:
             self._mqttSubscriptions.append(self._propSettings['prop']['prop_outbox'])
 
-        self._MainDialog = MainDialog(self.tr("Relay Settings"), './x-settings.png',
+        self._MainDialog = MainDialog(self.tr("Settings"), './x-settings.png',
                                         self._propSettings,
                                         self._logger)
         self._MainDialog.aboutToClose.connect(self.exitOnClose)

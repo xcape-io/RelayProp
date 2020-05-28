@@ -13,7 +13,7 @@ ORGANIZATIONNAME = "xcape.io"
 
 CONFIG_FILE = '.config.yml'
 
-APPLICATION = "Prop"
+APPLICATION = "Relay Prop"
 
 MQTT_DEFAULT_HOST = 'localhost'
 MQTT_DEFAULT_PORT = 1883

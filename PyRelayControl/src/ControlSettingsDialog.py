@@ -40,7 +40,7 @@ class ControlSettingsDialog(QDialog):
         self._propSettings = prop_settings
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        self.setWindowTitle(self.tr("Prop configuration"))
+        self.setWindowTitle(self.tr("Configuration"))
 
         if 'board' not in self._propSettings['prop']:
             self.setWindowIcon(QIcon('./mqtticon.png'))
