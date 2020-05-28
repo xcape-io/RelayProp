@@ -205,7 +205,6 @@ class ControlDialog(AppletDialog):
             prop_name = 'Prop'
 
         self._led = LedWidget(prop_name, QSize(40, 20))
-        self._led.setRedAsBold(True)
         self._led.setRedAsRed(True)
         self._led.switchOn('gray')
 
@@ -324,12 +323,12 @@ class ControlDialog(AppletDialog):
                 if 'options' in self._propSettings:
                     if 'connection_status' in self._propSettings['options'] and self._propSettings['options'][
                         'connection_status'] == '0':
-                        self._led.switchOn('yellow', self._propSettings['prop']['prop_name'])
+                        self._led.switchOn('red', self._propSettings['prop']['prop_name'])
                     else:
-                        self._led.switchOn('yellow', "{} ({}) ".format(self._propSettings['prop']['prop_name'],
+                        self._led.switchOn('red', "{} ({}) ".format(self._propSettings['prop']['prop_name'],
                                                                        self.tr("disconnected")))
             else:
-                self._led.switchOn('yellow')
+                self._led.switchOn('red')
         else:
             if self._led.color() != 'green':
                 if 'prop_name' in self._propSettings['prop']:

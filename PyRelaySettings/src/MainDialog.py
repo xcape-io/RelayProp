@@ -306,10 +306,10 @@ class MainDialog(AppletDialog):
 
         if message.startswith("DISCONNECTED"):
             if 'prop_name' in self._propSettings['prop']:
-                self._led.switchOn('yellow', "{} ({}) ".format(self._propSettings['prop']['prop_name'],
+                self._led.switchOn('red', "{} ({}) ".format(self._propSettings['prop']['prop_name'],
                                                                self.tr("disconnected")))
             else:
-                self._led.switchOn('yellow')
+                self._led.switchOn('red')
         else:
             if self._led.color() != 'green':
                 if 'prop_name' in self._propSettings['prop']:
