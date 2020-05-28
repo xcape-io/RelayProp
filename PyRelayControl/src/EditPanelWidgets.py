@@ -10,7 +10,6 @@ Dialog to edit caption and indicators.
 from constants import *
 from PropPanel import PropPanel
 from RelaunchSettingsDialog import RelaunchSettingsDialog
-from SshSettingsDialog import SshSettingsDialog
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
