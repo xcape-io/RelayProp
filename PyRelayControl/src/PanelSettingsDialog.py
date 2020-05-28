@@ -12,7 +12,7 @@ from PropPanel import PropPanel
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout, QSizePolicy
-from PyQt5.QtWidgets import QDialog, QPushButton, QGroupBox
+from PyQt5.QtWidgets import QDialog, QPushButton, QGroupBox, QSpacerItem
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QMessageBox, QFileDialog
 from PyQt5.QtGui import QIcon
 import os
@@ -93,10 +93,12 @@ class PanelSettingsDialog(QDialog):
         self._addrInput = QLineEdit()
         credentials_box_layout.addWidget(QLabel(self.tr("IP address")), credentials_box_layout.rowCount(), 0)
         credentials_box_layout.addWidget(self._addrInput, credentials_box_layout.rowCount() - 1, 1)
+        credentials_box_layout.addItem(QSpacerItem(200, 5), credentials_box_layout.rowCount() - 1, 2)
 
         self._userInput = QLineEdit()
         credentials_box_layout.addWidget(QLabel(self.tr("User")), credentials_box_layout.rowCount(), 0)
         credentials_box_layout.addWidget(self._userInput, credentials_box_layout.rowCount() - 1, 1)
+        credentials_box_layout.addItem(QSpacerItem(200, 5), credentials_box_layout.rowCount() - 1, 2)
 
         self._paswInput = QLineEdit()
         credentials_box_layout.addWidget(QLabel(self.tr("Password")), credentials_box_layout.rowCount(), 0)
