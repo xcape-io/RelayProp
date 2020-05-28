@@ -337,7 +337,7 @@ class EditPanelWidgets(QDialog):
             reboot_button.setDisabled(True)
 
         relaunch_button.released.connect(self.onRelaunch)
-        reboot_button.released.connect(self.onReboot)
+        reboot_button.setDisabled(True)
 
         self._hideChecks[hide_relaunch] = '__RELAUNCH__'
         self._hideChecks[hide_reboot] = '__REBOOT__'
@@ -480,12 +480,6 @@ class EditPanelWidgets(QDialog):
         #dlg.rebuildWidgets.connect(self._buildPropWidgets)
 
         dlg.exec()
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onReboot(self):
-
-        button = self.sender()
 
     # __________________________________________________________________
     @pyqtSlot()
