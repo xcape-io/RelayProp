@@ -13,11 +13,13 @@
     "doors/front": "Entrée",
     "maglocks/1": "Drawer top",
     "maglocks/2": "Drawer middle",
-    "maglocks/3": "Drawer bottom"
+    "maglocks/3": "Drawer bottom",
+    "smoke/mach": "Machine",
+    "smoke/fog": "Release fog"
   },
   "images": {
     "props": "plug",
-    "smoke/mach": "smoke",
+    "smoke/mach": "plug",
     "smoke/fog": "smoke",
     "doors/front": "door",
     "doors/exit": "door",
@@ -27,7 +29,11 @@
   },
   "buttons": {
     "doors/*:1": "Fermer les portes",
-    "doors/*:0": "Ouvrir les portes"
+    "doors/*:0": "Ouvrir les portes",
+    "maglocks/*:1": "Lock drawers",
+    "maglocks/*:0": "Unlock drawers",
+    "smoke/*:1": "Switch smoke up",
+    "smoke/*:0": "Shut smoke down"
   },
   "hiddens": {
     "smoke": false,

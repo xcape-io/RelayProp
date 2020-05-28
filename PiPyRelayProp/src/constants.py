@@ -13,6 +13,7 @@ PYPROPS_CORELIBPATH = './pyprops-core'
 PUBLISHALLDATA_PERIOD = 30.0
 
 USE_GPIO = True
+GPIO_CLEANUP = False  # if board is used exclusively as Relay Prop
 
 #__________________________________________________________________
 # Required by MqttApp
@@ -26,9 +27,6 @@ MQTT_KEEPALIVE = 15 # 15 seconds is default MQTT_KEEPALIVE in Arduino PubSubClie
 
 #__________________________________________________________________
 # Required by PiPyRelayProp
-import os
-if USE_GPIO and os.path.isfile('/opt/vc/include/bcm_host.h'):
-	import RPi.GPIO as GPIO
 
 #   Addr(BIN)      Addr(hex)
 #XXX X  A2 A1 A0
@@ -45,7 +43,6 @@ if USE_GPIO and os.path.isfile('/opt/vc/include/bcm_host.h'):
 
 BOARD_PI = 'Pi'
 BOARD_PI_MCP23017 = 'Pi MCP23017'
-GPIO_CLEANUP = False  # if board is used exclusively as Relay Prop
 GPIO_LOW = 0
 GPIO_HIGH = 1
 NULL_DATE = '- - -'
