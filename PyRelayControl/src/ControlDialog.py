@@ -409,15 +409,24 @@ class ControlDialog(AppletDialog):
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
+        addr = '192.168.1.42'
+        user = 'pi'
+        pasw = '12345678'
+
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
+            #client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
+            client.connect(addr, username=user, password=pasw, timeout=5)
             s = client.get_transport().open_session()
             paramiko.agent.AgentRequestHandler(s)
             client.exec_command(ssh, timeout=3)
+            self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
+        except IndexError as e:
+            self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
         except Exception as e:
-            print(e) # show failed message box
+            print(e)
+            self._logger.warning("Exception when SSH command sent to {} (user={}, pasw={}) : {}".format(addr, user, pasw, str(e)))
         finally:
             client.close()
         return
@@ -441,7 +450,7 @@ class ControlDialog(AppletDialog):
             if self._relaunchCommand:
                 ssh = self._relaunchCommand
             else:
-                ssh = "ps aux | grep python | grep -v \"grep python\" | grep PiPyCentralProp/src/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PiPyCentralProp/src/main.py -s %BROKER%"
+                ssh = "ps aux | grep python | grep -v \"grep python\" | grep PiPyRelayProp/src/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PiPyRelayProp/src/main.py -s %BROKER%"
 
         if broker:
             ssh = ssh.replace('%BROKER%', broker)
@@ -450,14 +459,23 @@ class ControlDialog(AppletDialog):
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
+        addr = '192.168.1.42'
+        user = 'pi'
+        pasw = '12345678'
+
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
+            #client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
+            client.connect(addr, username=user, password=pasw, timeout=5.0)
             s = client.get_transport().open_session()
             paramiko.agent.AgentRequestHandler(s)
-            client.exec_command(ssh, timeout=3)
+            client.exec_command(ssh, timeout=3.0)
+            self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
+        except IndexError as e:
+            self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
         except Exception as e:
-            print(e) # show failed message box
+            print(e)
+            self._logger.warning("Exception when SSH command sent to {} (user={}, pasw={}) : {}".format(addr, user, pasw, str(e)))
         finally:
             client.close()
