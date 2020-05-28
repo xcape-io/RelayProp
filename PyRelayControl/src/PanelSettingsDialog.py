@@ -104,6 +104,10 @@ class PanelSettingsDialog(QDialog):
         credentials_box_layout.addWidget(QLabel(self.tr("Password")), credentials_box_layout.rowCount(), 0)
         credentials_box_layout.addWidget(self._paswInput, credentials_box_layout.rowCount() - 1, 1)
 
+        self._addrInput.editingFinished.connect(self.onCredentialsEdition)
+        self._userInput.editingFinished.connect(self.onCredentialsEdition)
+        self._paswInput.editingFinished.connect(self.onCredentialsEdition)
+
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
@@ -195,6 +199,13 @@ class PanelSettingsDialog(QDialog):
                 with open('prop.ini', 'w') as configfile:
                     self._propSettings.write(configfile)
 
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onCredentialsEdition(self):
+
+        addr = self._addrInput.text().strip()
+        user = self._userInput.text().strip()
+        pasw = self._paswInput.text().strip()
 
     # __________________________________________________________________
     @pyqtSlot()
