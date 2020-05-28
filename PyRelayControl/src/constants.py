@@ -13,7 +13,7 @@ ORGANIZATIONNAME = "xcape.io"
 
 CONFIG_FILE = '.config.yml'
 
-APPLICATION = "Control"
+APPLICATION = "Relay Prop"
 
 PYPROPS_CORELIBPATH = '../core' # however ./core is preferred if present
 

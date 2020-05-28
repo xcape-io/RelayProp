@@ -32,7 +32,7 @@ from PinSwitch import PinSwitch
 
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint, QTimer
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog, QMessageBox
 
 
 class ControlDialog(AppletDialog):
@@ -50,7 +50,7 @@ class ControlDialog(AppletDialog):
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
         self._widgetImages, self._widgetButtons, \
-        self._widgetHiddens, self._relaunchCommand = PropPanel.loadPanelJson(logger)
+        self._widgetHiddens, self._relaunchCommand, self._sshCredentials = PropPanel.loadPanelJson(logger)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -353,7 +353,7 @@ class ControlDialog(AppletDialog):
         dlg = PanelSettingsDialog(self._propVariables, self._propSettings,
                                   self._widgetGroups, self._widgetTitles,
                                   self._widgetVariables, self._widgetImages, self._widgetButtons,
-                                  self._widgetHiddens, self._relaunchCommand, self._logger)
+                                  self._widgetHiddens, self._relaunchCommand, self._sshCredentials, self._logger)
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
@@ -396,6 +396,20 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def rebootProp(self):
 
+        addr = self._sshCredentials['addr']
+        user = self._sshCredentials['user']
+        pasw = self._sshCredentials['pasw']
+
+        if not addr or not user or not pasw:
+            msg = QMessageBox()
+            msg.setWindowIcon(self.windowIcon())
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText(self.tr("Prop SSH credentials are not complete."))
+            msg.setWindowTitle("Wrong credentials")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+            return
+
         if self._propSettings['prop']['board'] == 'mega':
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 ssh = "reset-mcu && reboot -d 1 -f"
@@ -409,14 +423,9 @@ class ControlDialog(AppletDialog):
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
-        addr = '192.168.1.42'
-        user = 'pi'
-        pasw = '12345678'
-
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            #client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
             client.connect(addr, username=user, password=pasw, timeout=5)
             s = client.get_transport().open_session()
             paramiko.agent.AgentRequestHandler(s)
@@ -435,6 +444,20 @@ class ControlDialog(AppletDialog):
     # __________________________________________________________________
     @pyqtSlot()
     def relaunchProp(self):
+
+        addr = self._sshCredentials['addr']
+        user = self._sshCredentials['user']
+        pasw = self._sshCredentials['pasw']
+
+        if not addr or not user or not pasw:
+            msg = QMessageBox()
+            msg.setWindowIcon(self.windowIcon())
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText(self.tr("Prop SSH credentials are not complete."))
+            msg.setWindowTitle("Wrong credentials")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+            return
 
         broker = ''
         if 'broker_address' in self._propSettings['prop']:
@@ -459,14 +482,9 @@ class ControlDialog(AppletDialog):
 
         self._logger.info("Send SSH command : {}".format(ssh))
 
-        addr = '192.168.1.42'
-        user = 'pi'
-        pasw = '12345678'
-
         try:
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            #client.connect('192.168.1.23', username='root', password='dragino', timeout=5.0)
             client.connect(addr, username=user, password=pasw, timeout=5.0)
             s = client.get_transport().open_session()
             paramiko.agent.AgentRequestHandler(s)

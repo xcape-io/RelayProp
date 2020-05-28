@@ -26,7 +26,7 @@ class EditPanelWidgets(QDialog):
     def __init__(self, prop_variables, prop_settings,
                  widget_groups, widget_titles,
                  widget_variables, widget_images, widget_buttons,
-                 widget_hiddens, relaunch, logger):
+                 widget_hiddens, relaunch_command, ssh_credentials, logger):
 
         self._logger = logger
         self._propSettings = prop_settings
@@ -38,7 +38,8 @@ class EditPanelWidgets(QDialog):
         self._widgetImages = widget_images
         self._widgetButtons = widget_buttons
         self._widgetHiddens = widget_hiddens
-        self._relaunchCommand = relaunch
+        self._relaunchCommand = relaunch_command
+        self._sshCredentials = ssh_credentials
 
         self._imageSelections = {}
         self._labelInputs = {}
@@ -367,7 +368,7 @@ class EditPanelWidgets(QDialog):
         self._widgetButtons[variable] = input.text().strip()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                 self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                self._relaunchCommand)
+                                self._relaunchCommand, self._sshCredentials)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -383,7 +384,7 @@ class EditPanelWidgets(QDialog):
         self._widgetHiddens[variable] = checkbox.isChecked()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                 self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                self._relaunchCommand)
+                                self._relaunchCommand, self._sshCredentials)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -399,7 +400,7 @@ class EditPanelWidgets(QDialog):
         self._widgetImages[variable] = combobox.currentData()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                 self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                self._relaunchCommand)
+                                self._relaunchCommand, self._sshCredentials)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -415,7 +416,7 @@ class EditPanelWidgets(QDialog):
         self._widgetVariables[variable] = input.text().strip()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                 self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                self._relaunchCommand)
+                                self._relaunchCommand, self._sshCredentials)
         self.rebuild.emit()
 
     # __________________________________________________________________
@@ -439,7 +440,7 @@ class EditPanelWidgets(QDialog):
             self._widgetGroups.insert(i+1, group)
             PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                     self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                    self._relaunchCommand)
+                                    self._relaunchCommand, self._sshCredentials)
             self.rebuild.emit()
             self.reorder.emit()
 
@@ -466,7 +467,7 @@ class EditPanelWidgets(QDialog):
             self.reorder.emit()
             PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                     self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                    self._relaunchCommand)
+                                    self._relaunchCommand, self._sshCredentials)
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -496,5 +497,5 @@ class EditPanelWidgets(QDialog):
         self.rebuild.emit()
         PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
                                 self._widgetImages, self._widgetButtons, self._widgetHiddens,
-                                self._relaunchCommand)
+                                self._relaunchCommand, self._sshCredentials)
 

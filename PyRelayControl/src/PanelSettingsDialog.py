@@ -25,7 +25,7 @@ class PanelSettingsDialog(QDialog):
     def __init__(self, prop_variables, prop_settings,
                  widget_groups, widget_titles,
                  widget_variables, widget_images, widget_buttons,
-                 widget_hiddens, relaunch, logger):
+                 widget_hiddens, relaunch_command, ssh_credentials, logger):
 
         super(PanelSettingsDialog, self).__init__()
 
@@ -38,7 +38,8 @@ class PanelSettingsDialog(QDialog):
         self._widgetImages = widget_images
         self._widgetButtons = widget_buttons
         self._widgetHiddens = widget_hiddens
-        self._relaunchCommand = relaunch
+        self._relaunchCommand = relaunch_command
+        self._sshCredentials = ssh_credentials
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.setWindowTitle(self.tr("Panel configuration"))
@@ -207,6 +208,14 @@ class PanelSettingsDialog(QDialog):
         user = self._userInput.text().strip()
         pasw = self._paswInput.text().strip()
 
+        self._sshCredentials['addr'] = addr
+        self._sshCredentials['user'] = user
+        self._sshCredentials['pasw'] = pasw
+
+        PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
+                                self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                self._relaunchCommand, self._sshCredentials)
+
     # __________________________________________________________________
     @pyqtSlot()
     def onEdit(self):
@@ -214,7 +223,7 @@ class PanelSettingsDialog(QDialog):
         dlg = EditPanelWidgets(self._propVariables, self._propSettings,
                                self._widgetGroups, self._widgetTitles,
                                self._widgetVariables, self._widgetImages, self._widgetButtons,
-                               self._widgetHiddens, self._relaunchCommand, self._logger)
+                               self._widgetHiddens, self._relaunchCommand, self._sshCredentials, self._logger)
         dlg.setModal(True)
 
         dlg.rebuild.connect(self.rebuildWidgets)
