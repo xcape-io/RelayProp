@@ -163,7 +163,7 @@ class PiRelayApp(AsyncioProp):
         if topic == self._definitions['mqtt-sub-settings']:
             self.processSettingsMessage(message)
         else:
-            if message == "app:startup":
+            if message == "app:startup" or message == "app:data":
                 self.sendAllData()
                 self.sendDone(message)
             else:
