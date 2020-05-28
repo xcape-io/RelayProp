@@ -85,10 +85,22 @@ class PanelSettingsDialog(QDialog):
         build_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         settings_box_layout.addWidget(build_button)
 
-        credentials_box = QGroupBox(self.tr("SSH credentials"))
+        credentials_box = QGroupBox(self.tr("Prop SSH credentials"))
         credentials_box.setToolTip(self.tr("Credentials for relaunch and reboot SSH commands"))
-        credentials_box_box_layout = QVBoxLayout(credentials_box)
+        credentials_box_layout = QGridLayout(credentials_box)
         main_layout.addWidget(credentials_box)
+
+        self._addrInput = QLineEdit()
+        credentials_box_layout.addWidget(QLabel(self.tr("IP address")), credentials_box_layout.rowCount(), 0)
+        credentials_box_layout.addWidget(self._addrInput, credentials_box_layout.rowCount() - 1, 1)
+
+        self._userInput = QLineEdit()
+        credentials_box_layout.addWidget(QLabel(self.tr("User")), credentials_box_layout.rowCount(), 0)
+        credentials_box_layout.addWidget(self._userInput, credentials_box_layout.rowCount() - 1, 1)
+
+        self._paswInput = QLineEdit()
+        credentials_box_layout.addWidget(QLabel(self.tr("Password")), credentials_box_layout.rowCount(), 0)
+        credentials_box_layout.addWidget(self._paswInput, credentials_box_layout.rowCount() - 1, 1)
 
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
