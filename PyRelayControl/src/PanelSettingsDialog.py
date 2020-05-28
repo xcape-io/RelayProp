@@ -76,9 +76,9 @@ class PanelSettingsDialog(QDialog):
         json_layout.addWidget(json_browse_button)
 
         if self._propVariables:
-            button = self.tr("Rebuild widgets from new settings")
+            button = self.tr("Rebuild panel from new settings")
         else:
-            button = self.tr("Build widgets from new settings")
+            button = self.tr("Build panel from settings")
 
         build_button = QPushButton(" {} ".format(button))
         build_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
