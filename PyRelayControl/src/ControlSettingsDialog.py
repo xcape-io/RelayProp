@@ -131,6 +131,14 @@ class ControlSettingsDialog(QDialog):
         self._connectionStatusHiddenButton = QCheckBox(self.tr("Hide connection status"))
         options_box_layout.addWidget(self._connectionStatusHiddenButton)
 
+        admin_layout = QHBoxLayout()
+        options_box_layout.addLayout(admin_layout)
+
+        self._adminPasswordInput = QLineEdit()
+        admin_layout.addWidget(self._adminPasswordInput)
+        admin_layout.addWidget(QLabel(self.tr("Admin password")))
+        admin_layout.addStretch(1)
+
         apply_button = QPushButton(self.tr("Apply"))
         apply_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
