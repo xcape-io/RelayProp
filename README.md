@@ -5,8 +5,6 @@
 
 #### TODO
 * Add password for configuration
-* Relaunch/Reboot for Pi
-* Add prop IP address, username and password in settings for SSH
 * More checking on startup (borker/topics) to create prop.ini
 * Merge PyRelaySettings and PyRelayControl in one app PyRelay
 * Add MPC23017 support
