@@ -46,7 +46,7 @@
   "relaunch": "",
   "credentials": {
     "addr": "192.168.1.42",
-    "user": "",
-    "pasw": ""
+    "user": "pi",
+    "pasw": "12345678"
   }
 }
