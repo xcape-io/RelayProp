@@ -55,6 +55,14 @@ class PanelSettingsDialog(QDialog):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(6)
 
+        wiring_button = QPushButton(self.tr("Wiring configuration"))
+        wiring_button.setToolTip(self.tr("Open wiring configuration"))
+        wiring_button.setFocusPolicy(Qt.NoFocus)
+
+        main_layout.addWidget(wiring_button)
+
+        wiring_button.released.connect(self.onWiringButton)
+
         settings_box = QGroupBox(self.tr("Panel settings"))
         settings_box.setToolTip(self.tr("JSON file from Relay Settings app"))
         settings_box_layout = QVBoxLayout(settings_box)
@@ -84,6 +92,7 @@ class PanelSettingsDialog(QDialog):
 
         build_button = QPushButton(" {} ".format(button))
         build_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        build_button.setFocusPolicy(Qt.NoFocus)
         settings_box_layout.addWidget(build_button)
 
         credentials_box = QGroupBox(self.tr("Prop SSH credentials"))
@@ -115,9 +124,11 @@ class PanelSettingsDialog(QDialog):
 
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        close_button.setFocusPolicy(Qt.NoFocus)
 
         edit_button = QPushButton(' {} '.format(self.tr("Edit captions and indicators")))
         edit_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        edit_button.setFocusPolicy(Qt.NoFocus)
         edit_button.setEnabled(len(self._propVariables))
 
         button_layout = QHBoxLayout()
@@ -233,3 +244,10 @@ class PanelSettingsDialog(QDialog):
         dlg.rebuild.connect(self.rebuildWidgets)
 
         dlg.exec()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onWiringButton(self):
+
+        pass
+
