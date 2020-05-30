@@ -46,6 +46,7 @@ class ControlDialog(AppletDialog):
     def __init__(self, title, icon, prop_settings, logger):
 
         # members required by _buildUi() must be set before calling super().__init__()
+        self._adminMode = False
         self._propSettings = prop_settings
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
@@ -227,6 +228,7 @@ class ControlDialog(AppletDialog):
         self._editButton.setIconSize(QSize(16, 16))
         self._editButton.setFixedSize(QSize(20, 20))
         self._editButton.released.connect(self.onPanelEdition)
+        self._editButton.setVisible(self._adminMode)
 
         header_layout = QHBoxLayout()
         header_layout.setSpacing(2)
@@ -238,7 +240,7 @@ class ControlDialog(AppletDialog):
 
         if 'options' in self._propSettings:
             if 'edit' in self._propSettings['options'] and self._propSettings['options']['edit'] == '0':
-                self._editButton.setVisible(False)
+                self._editButton.setVisible(self._adminMode)
 
         self._mainLayout.addStretch(0)
 
@@ -364,6 +366,9 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def onPropConfiguration(self):
 
+        if not self._adminMode:
+            return
+
         dlg = ControlSettingsDialog(self._propSettings, self._logger)
         dlg.setModal(True)
         if dlg.exec() == QDialog.Accepted:
@@ -380,7 +385,7 @@ class ControlDialog(AppletDialog):
             if 'edit' in self._propSettings['options'] and self._propSettings['options']['edit'] == '0':
                 self._editButton.setVisible(False)
             else:
-                self._editButton.setVisible(True)
+                self._editButton.setVisible(self._adminMode)
 
         if self._propSettings['prop']['board'] == 'mega':
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
