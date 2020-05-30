@@ -16,6 +16,7 @@ from PyQt5.QtWidgets import QDialog, QPushButton, QGroupBox, QSpacerItem
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QMessageBox, QFileDialog
 from PyQt5.QtGui import QIcon
 import os
+from textwrap import wrap
 
 
 class PanelSettingsDialog(QDialog):
@@ -116,7 +117,12 @@ class PanelSettingsDialog(QDialog):
 
         self._addrInput.setText(self._sshCredentials['addr'])
         self._userInput.setText(self._sshCredentials['user'])
-        self._paswInput.setText(self._sshCredentials['pasw'])
+
+        if len(self._sshCredentials['pasw']):
+            r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
+            self._paswInput.setText(''.join(r))
+        else:
+            self._paswInput.setText(self._sshCredentials['pasw'])
 
         self._addrInput.editingFinished.connect(self.onCredentialsEdition)
         self._userInput.editingFinished.connect(self.onCredentialsEdition)
@@ -223,6 +229,10 @@ class PanelSettingsDialog(QDialog):
         user = self._userInput.text().strip()
         pasw = self._paswInput.text().strip()
 
+        if pasw:
+            r = list(map(lambda x: hex(256 - x)[2:], pasw.encode('utf-8')))
+            pasw = ''.join(r)
+
         self._sshCredentials['addr'] = addr
         self._sshCredentials['user'] = user
         self._sshCredentials['pasw'] = pasw
@@ -249,5 +259,5 @@ class PanelSettingsDialog(QDialog):
     @pyqtSlot()
     def onWiringButton(self):
 
-        pass
+        pass  # exec script ...
 

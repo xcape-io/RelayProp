@@ -398,7 +398,8 @@ class ControlDialog(AppletDialog):
 
         addr = self._sshCredentials['addr']
         user = self._sshCredentials['user']
-        pasw = self._sshCredentials['pasw']
+        r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
+        pasw = ''.join(r)
 
         if not addr or not user or not pasw:
             msg = QMessageBox()
@@ -447,7 +448,8 @@ class ControlDialog(AppletDialog):
 
         addr = self._sshCredentials['addr']
         user = self._sshCredentials['user']
-        pasw = self._sshCredentials['pasw']
+        r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
+        pasw = ''.join(r)
 
         if not addr or not user or not pasw:
             msg = QMessageBox()
