@@ -33,7 +33,7 @@ from PinGroupButton import PinGroupButton
 from PinSwitch import PinSwitch
 
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint, QTimer
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint, QTimer, QThread
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog, QMessageBox
 
 
@@ -451,6 +451,7 @@ class ControlDialog(AppletDialog):
             paramiko.agent.AgentRequestHandler(s)
             client.exec_command(ssh, timeout=3)
             self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
+            QThread.sleep(1)
         except IndexError as e:
             self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
         except Exception as e:
