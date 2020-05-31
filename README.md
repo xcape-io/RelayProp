@@ -5,7 +5,6 @@
 
 #### TODO
 * Rename Control to Panel and Settings to Wiring
-* Fix Pi reboot
 * More checking on startup (borker/topics) to create prop.ini
 * Merge PyRelaySettings and PyRelayControl in one app PyRelay
 * Add MPC23017 support
