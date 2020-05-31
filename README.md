@@ -4,7 +4,8 @@
 <img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
 
 #### TODO
-* Add password for configuration
+* Rename Control to Panel and Settings to Wiring
+* Fix Pi reboot
 * More checking on startup (borker/topics) to create prop.ini
 * Merge PyRelaySettings and PyRelayControl in one app PyRelay
 * Add MPC23017 support

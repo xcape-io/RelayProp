@@ -32,11 +32,12 @@ import codecs, configparser
 class ControlSettingsDialog(QDialog):
 
     # __________________________________________________________________
-    def __init__(self, prop_settings, logger):
+    def __init__(self, admin_mode, prop_settings, logger):
 
         super(ControlSettingsDialog, self).__init__()
 
         self._logger = logger
+        self._adminMode = admin_mode  # mutable
         self._propSettings = prop_settings
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
@@ -139,6 +140,11 @@ class ControlSettingsDialog(QDialog):
         admin_layout.addWidget(QLabel(self.tr("Admin password")))
         admin_layout.addStretch(1)
 
+        if self._adminMode == 1:
+            exit_admin_button = QPushButton(' {} '.format(self.tr("Exit admin mode")))
+            admin_layout.addWidget(exit_admin_button)
+            exit_admin_button.released.connect(self.exitAdminMode)
+
         apply_button = QPushButton(self.tr("Apply"))
         apply_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
@@ -170,6 +176,13 @@ class ControlSettingsDialog(QDialog):
     def closeEvent(self, e):
 
         self.onClose()
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def exitAdminMode(self):
+
+        self._adminMode.set(0)
+        self.accept()
 
     # __________________________________________________________________
     def fillSettings(self, prop_settings):
@@ -311,6 +324,13 @@ class ControlSettingsDialog(QDialog):
         if self._adminPasswordInput.text().strip():
             r = list(map(lambda x: hex(256 - x)[2:], password.encode('utf-8')))
             password = ''.join(r)
+
+        if self._adminMode == 1 and password:
+            if 'admin_password' not in self._propSettings['options'] or not self._propSettings['options']['admin_password']:
+                self._adminMode.set(0)
+
+        if not password:
+            self._adminMode.set(1)
 
         self._propSettings['options']['admin_password'] = password
 

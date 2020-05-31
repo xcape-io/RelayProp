@@ -1,36 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-RelaunchSettingsDialog.py
+AdminModeDialog.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
-Dialog to configure SSH command to relaunch the prop.
+Dialog to enter admin password.
 """
 
-from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QSizePolicy
 from PyQt5.QtWidgets import QDialog, QPushButton
 from PyQt5.QtWidgets import QLabel, QLineEdit
 from PyQt5.QtGui import QIcon
 
 
-class RelaunchSettingsDialog(QDialog):
+class AdminModeDialog(QDialog):
     rebuildWidgets = pyqtSignal()
 
     # __________________________________________________________________
-    def __init__(self, title, ssh, logger):
+    def __init__(self, admin_mode, prop_settings, logger):
 
-        super(RelaunchSettingsDialog, self).__init__()
+        super(AdminModeDialog, self).__init__()
 
         self._logger = logger
-        self._sshCommand = ssh
+        self._adminMode = admin_mode  # mutable
+        self._propSettings = prop_settings
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        self.setWindowTitle(title)
+        self.setWindowTitle(self.tr("Admin mode"))
 
-        self.setWindowIcon(QIcon('./images/cog-black.svg'))
+        self.setWindowIcon(QIcon('./x-relay.png'))
 
-        self.setMinimumWidth(400)
         self.buildUi()
 
     # __________________________________________________________________
@@ -39,20 +39,19 @@ class RelaunchSettingsDialog(QDialog):
         main_layout = QVBoxLayout()
         main_layout.setSpacing(12)
 
-        ssh_layout = QHBoxLayout()
-        main_layout.addLayout(ssh_layout)
+        pasw_layout = QHBoxLayout()
+        main_layout.addLayout(pasw_layout)
 
-        self._sshInput = QLineEdit()
-        self._sshInput.setAlignment(Qt.AlignTop)
-        self._sshInput.setFixedHeight(76)
+        self._paswInput = QLineEdit()
+        self._paswInput.setEchoMode(QLineEdit.Password)
 
-        ssh_layout.addWidget(QLabel(self.tr("SSH command")), 0, Qt.AlignTop)
-        ssh_layout.addWidget(self._sshInput)
+        pasw_layout.addWidget(QLabel(self.tr("Password :")))
+        pasw_layout.addWidget(self._paswInput)
 
         apply_button = QPushButton(self.tr("Apply"))
         apply_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
-        cancel_button = QPushButton(self.tr("Cancel"))
+        cancel_button = QPushButton(self.tr("Ignore"))
         cancel_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         button_layout = QHBoxLayout()
@@ -70,4 +69,11 @@ class RelaunchSettingsDialog(QDialog):
     @pyqtSlot()
     def onApply(self):
 
-        pass
+        r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._propSettings['options']['admin_password'])))
+        password = ''.join(r)
+
+        if password == self._paswInput.text().strip():
+            self._adminMode.set(1)
+
+        self.accept()
+

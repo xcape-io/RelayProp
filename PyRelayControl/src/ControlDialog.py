@@ -9,6 +9,7 @@ Dialog to control PanelProps app running on Raspberry.
 
 import os, re, yaml
 import paramiko
+from mutableint import MutableInt
 
 from constants import *
 try:
@@ -23,6 +24,7 @@ except NameError:
     PI_MPC23017_SUPPORTED = True
 
 from PropPanel import PropPanel
+from AdminModeDialog import AdminModeDialog
 from ControlSettingsDialog import ControlSettingsDialog
 from PanelSettingsDialog import PanelSettingsDialog
 from AppletDialog import AppletDialog
@@ -46,12 +48,15 @@ class ControlDialog(AppletDialog):
     def __init__(self, title, icon, prop_settings, logger):
 
         # members required by _buildUi() must be set before calling super().__init__()
-        self._adminMode = False
+        self._adminMode = MutableInt(1)
         self._propSettings = prop_settings
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
         self._widgetImages, self._widgetButtons, \
         self._widgetHiddens, self._relaunchCommand, self._sshCredentials = PropPanel.loadPanelJson(logger)
+
+        if 'admin_password' in self._propSettings['options'] and len(self._propSettings['options']['admin_password']):
+            self._adminMode.set(0)
 
         if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
             self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
@@ -228,7 +233,7 @@ class ControlDialog(AppletDialog):
         self._editButton.setIconSize(QSize(16, 16))
         self._editButton.setFixedSize(QSize(20, 20))
         self._editButton.released.connect(self.onPanelEdition)
-        self._editButton.setVisible(self._adminMode)
+        self._editButton.setVisible(self._adminMode == 1)
 
         header_layout = QHBoxLayout()
         header_layout.setSpacing(2)
@@ -240,7 +245,7 @@ class ControlDialog(AppletDialog):
 
         if 'options' in self._propSettings:
             if 'edit' in self._propSettings['options'] and self._propSettings['options']['edit'] == '0':
-                self._editButton.setVisible(self._adminMode)
+                self._editButton.setVisible(self._adminMode == 1)
 
         self._mainLayout.addStretch(0)
 
@@ -366,10 +371,19 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def onPropConfiguration(self):
 
-        if not self._adminMode:
-            return
+        if 'admin_password' in self._propSettings['options'] and len(self._propSettings['options']['admin_password']):
+            if self._adminMode == 0:
+                dlg = AdminModeDialog(self._adminMode, self._propSettings, self._logger)
+                dlg.setModal(True)
+                if dlg.exec() == QDialog.Accepted:
+                    pass
 
-        dlg = ControlSettingsDialog(self._propSettings, self._logger)
+        if self._adminMode == 0:
+            return
+        else:
+            self._editButton.setVisible(True)
+
+        dlg = ControlSettingsDialog(self._adminMode, self._propSettings, self._logger)
         dlg.setModal(True)
         if dlg.exec() == QDialog.Accepted:
             if 'prop_name' in self._propSettings['prop']:
@@ -385,7 +399,7 @@ class ControlDialog(AppletDialog):
             if 'edit' in self._propSettings['options'] and self._propSettings['options']['edit'] == '0':
                 self._editButton.setVisible(False)
             else:
-                self._editButton.setVisible(self._adminMode)
+                self._editButton.setVisible(self._adminMode == 1)
 
         if self._propSettings['prop']['board'] == 'mega':
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
