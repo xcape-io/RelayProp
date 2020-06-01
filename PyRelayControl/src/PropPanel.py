@@ -49,7 +49,7 @@ class PropPanel:
         images = {}
         buttons = {}
         hiddens = {}
-        relaunch = ''
+        relaunch = {}  # must be mutable
         credentials = {}
         if os.path.isfile('panel.json'):
             try:

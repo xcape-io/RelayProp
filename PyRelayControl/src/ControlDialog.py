@@ -415,10 +415,17 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def rebootProp(self):
 
-        addr = self._sshCredentials['addr']
-        user = self._sshCredentials['user']
-        r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
-        pasw = ''.join(r)
+        addr = ""
+        user = ""
+        pasw = ""
+
+        if 'addr' in self._sshCredentials:
+            addr = self._sshCredentials['addr']
+        if 'user' in self._sshCredentials:
+            user = self._sshCredentials['user']
+        if 'pasw' in self._sshCredentials:
+            r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
+            pasw = ''.join(r)
 
         if not addr or not user or not pasw:
             msg = QMessageBox()
@@ -466,10 +473,17 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def relaunchProp(self):
 
-        addr = self._sshCredentials['addr']
-        user = self._sshCredentials['user']
-        r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
-        pasw = ''.join(r)
+        addr = ""
+        user = ""
+        pasw = ""
+
+        if 'addr' in self._sshCredentials:
+            addr = self._sshCredentials['addr']
+        if 'user' in self._sshCredentials:
+            user = self._sshCredentials['user']
+        if 'pasw' in self._sshCredentials:
+            r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
+            pasw = ''.join(r)
 
         if not addr or not user or not pasw:
             msg = QMessageBox()
@@ -485,15 +499,15 @@ class ControlDialog(AppletDialog):
         if 'broker_address' in self._propSettings['prop']:
             broker = self._propSettings['prop']['broker_address']
             
-        if self._propSettings['prop']['board'] == 'mega':
+        if 'board' in self._propSettings['prop'] and self._propSettings['prop']['board'] == 'mega':
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 ssh = "echo %BROKER%> /root/broker && reset-mcu"
             else:
                 self._logger.warning("Relaunch ignored : {}".format('ssh not supported for this board'))
                 return
         else:
-            if self._relaunchCommand:
-                ssh = self._relaunchCommand
+            if 'command' in self._relaunchCommand:
+                ssh = self._relaunchCommand['command']
             else:
                 ssh = "ps aux | grep python | grep -v \"grep python\" | grep PiPyRelayProp/src/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PiPyRelayProp/src/main.py -s %BROKER%"
 

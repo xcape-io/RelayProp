@@ -115,14 +115,17 @@ class PanelSettingsDialog(QDialog):
         credentials_box_layout.addWidget(QLabel(self.tr("Password")), credentials_box_layout.rowCount(), 0)
         credentials_box_layout.addWidget(self._paswInput, credentials_box_layout.rowCount() - 1, 1)
 
-        self._addrInput.setText(self._sshCredentials['addr'])
-        self._userInput.setText(self._sshCredentials['user'])
+        if 'addr' in self._sshCredentials:
+            self._addrInput.setText(self._sshCredentials['addr'])
+        if 'user' in self._sshCredentials:
+            self._userInput.setText(self._sshCredentials['user'])
 
-        if len(self._sshCredentials['pasw']):
-            r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
-            self._paswInput.setText(''.join(r))
-        else:
-            self._paswInput.setText(self._sshCredentials['pasw'])
+        if 'pasw' in self._sshCredentials:
+            if len(self._sshCredentials['pasw']):
+                r = list(map(lambda x: chr(256 - int(x)), bytearray.fromhex(self._sshCredentials['pasw'])))
+                self._paswInput.setText(''.join(r))
+            else:
+                self._paswInput.setText(self._sshCredentials['pasw'])
 
         self._addrInput.editingFinished.connect(self.onCredentialsEdition)
         self._userInput.editingFinished.connect(self.onCredentialsEdition)

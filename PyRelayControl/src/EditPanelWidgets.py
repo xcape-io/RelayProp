@@ -473,14 +473,15 @@ class EditPanelWidgets(QDialog):
     @pyqtSlot()
     def onRelaunch(self):
 
-        ssh = 'ahah'
-
-        dlg = RelaunchSettingsDialog(self.tr("Relaunch command"), ssh, self._logger)
+        dlg = RelaunchSettingsDialog(self.tr("Relaunch command"),
+                                     self._relaunchCommand,
+                                     self._propSettings, self._logger)
         dlg.setModal(True)
-
-        #dlg.rebuildWidgets.connect(self._buildPropWidgets)
-
-        dlg.exec()
+        if dlg.exec() == QDialog.Accepted:
+            self.rebuild.emit()
+            PropPanel.savePanelJson(self._widgetGroups, self._widgetTitles, self._widgetVariables,
+                                    self._widgetImages, self._widgetButtons, self._widgetHiddens,
+                                    self._relaunchCommand, self._sshCredentials)
 
     # __________________________________________________________________
     @pyqtSlot()
