@@ -110,13 +110,13 @@ At first start, when choosing board model:
 
 Click on a pin button to configure:
 
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-pin.png?raw=true)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaysettings-pin.png?raw=true)
 
 > To move a configuration to another pin, select an available pin in the output field.
 
 To configure the relay prop, click the configure button (in main dialog top right):
 
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-prop.png?raw=true)
+![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelaysettings-prop.png?raw=true)
 
 
 ## Author
