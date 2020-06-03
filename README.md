@@ -108,7 +108,7 @@ See [PiPyRelayProp: Room Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp)
 ## PyRelayControl project
 [PyRelayControl](./PyRelayControl) is the prop control panel for the Relay Prop, it's a PyQt5 GUI application to configure the Relay Prop.
 
-We usually run PyRelaySettings <a href="./PyRelayControl#installation-on-windows" target="_blank">on Windows</a> but you can install and run it <a href="https://www.learnpyqt.com/installation/installation-linux/" target="_blank">on Linux</a> and Mac, <a href="https://www.learnpyqt.com/installation/installation-mac/" target="_blank">PyQt5 installation on Mac</a> can be tricky.
+We usually run PyRelayControl <a href="./PyRelayControl#installation-on-windows" target="_blank">on Windows</a> but you can install and run it <a href="https://www.learnpyqt.com/installation/installation-linux/" target="_blank">on Linux</a> and Mac, <a href="https://www.learnpyqt.com/installation/installation-mac/" target="_blank">PyQt5 installation on Mac</a> can be tricky.
 
 You can run [PyRelayControl](./PyRelayControl) as a *plugin for <a href="https://xcape.io/" target="_blank">xcape.io</a> Room*.
 
