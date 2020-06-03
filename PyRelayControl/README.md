@@ -88,7 +88,7 @@ PyQt5 installation on Mac can be tricky, see <a href="https://www.learnpyqt.com/
 ## Usage
 At fisrt start, configure the relay prop:
 
-![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-control.png)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-control.png?raw=true)
 
 To configure the relay prop:
 
@@ -106,17 +106,17 @@ At first start, when choosing board model:
 
 
 ## Wiring settings
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-main.png)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaysettings-main.png?raw=true)
 
 Click on a pin button to configure:
 
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-pin.png)
+![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-pin.png?raw=true)
 
 > To move a configuration to another pin, select an available pin in the output field.
 
 To configure the relay prop, click the configure button (in main dialog top right):
 
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-prop.png)
+![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelayrettings-prop.png?raw=true)
 
 
 ## Author
