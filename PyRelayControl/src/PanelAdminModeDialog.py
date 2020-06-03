@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AdminModeDialog.py
+PanelAdminModeDialog.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
 Dialog to enter admin password.
@@ -14,13 +14,13 @@ from PyQt5.QtWidgets import QLabel, QLineEdit
 from PyQt5.QtGui import QIcon
 
 
-class AdminModeDialog(QDialog):
+class PanelAdminModeDialog(QDialog):
     rebuildWidgets = pyqtSignal()
 
     # __________________________________________________________________
     def __init__(self, admin_mode, prop_settings, logger):
 
-        super(AdminModeDialog, self).__init__()
+        super(PanelAdminModeDialog, self).__init__()
 
         self._logger = logger
         self._adminMode = admin_mode  # mutable

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-RelaunchSettingsDialog.py
+PanelRelaunchSettingsDialog.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
 Dialog to configure SSH command to relaunch the prop.
@@ -16,13 +16,13 @@ from PyQt5.QtWidgets import QLabel, QTextEdit
 from PyQt5.QtGui import QIcon
 
 
-class RelaunchSettingsDialog(QDialog):
+class PanelRelaunchSettingsDialog(QDialog):
     rebuildWidgets = pyqtSignal()
 
     # __________________________________________________________________
     def __init__(self, title, relaunch_command, prop_settings, logger):
 
-        super(RelaunchSettingsDialog, self).__init__()
+        super(PanelRelaunchSettingsDialog, self).__init__()
 
         self._logger = logger
         self._propSettings = prop_settings
@@ -31,7 +31,7 @@ class RelaunchSettingsDialog(QDialog):
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.setWindowTitle(title)
 
-        self.setWindowIcon(QIcon('./images/cog-black.svg'))
+        self.setWindowIcon(QIcon('./x-settings.png'))
 
         self.setMinimumWidth(400)
         self.buildUi()

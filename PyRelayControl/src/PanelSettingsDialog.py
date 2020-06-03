@@ -7,6 +7,7 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 Dialog to configure control parameters.
 """
 
+from constants import *
 from EditPanelWidgets import EditPanelWidgets
 from PropPanel import PropPanel
 
@@ -15,12 +16,11 @@ from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QGridLayout, QSizePolicy
 from PyQt5.QtWidgets import QDialog, QPushButton, QGroupBox, QSpacerItem
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QMessageBox, QFileDialog
 from PyQt5.QtGui import QIcon
-import os
-from textwrap import wrap
 
 
 class PanelSettingsDialog(QDialog):
     rebuildWidgets = pyqtSignal()
+    wiringButtonReleased = pyqtSignal()
 
     # __________________________________________________________________
     def __init__(self, prop_variables, prop_settings,
@@ -43,9 +43,9 @@ class PanelSettingsDialog(QDialog):
         self._sshCredentials = ssh_credentials
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
-        self.setWindowTitle(self.tr("Panel configuration"))
+        self.setWindowTitle(self.tr("Settings"))
 
-        self.setWindowIcon(QIcon('./images/cog-black.svg'))
+        self.setWindowIcon(QIcon('./x-settings.png'))
 
         self.setMinimumWidth(400)
         self.buildUi()
@@ -57,12 +57,13 @@ class PanelSettingsDialog(QDialog):
         main_layout.setSpacing(6)
 
         wiring_button = QPushButton(self.tr("Wiring configuration"))
-        wiring_button.setToolTip(self.tr("Open wiring configuration"))
+        wiring_button.setToolTip(self.tr("Show/Hide wiring configuration"))
         wiring_button.setFocusPolicy(Qt.NoFocus)
 
         main_layout.addWidget(wiring_button)
 
-        wiring_button.released.connect(self.onWiringButton)
+        wiring_button.released.connect(self.wiringButtonReleased)
+        wiring_button.released.connect(self.accept)
 
         settings_box = QGroupBox(self.tr("Panel settings"))
         settings_box.setToolTip(self.tr("JSON file from Relay Settings app"))
@@ -71,20 +72,6 @@ class PanelSettingsDialog(QDialog):
 
         json_layout = QHBoxLayout()
         settings_box_layout.addLayout(json_layout)
-
-        self._jsonInput = QLineEdit()
-        self._jsonInput.setDisabled(True)
-
-        json_browse_button = QPushButton()
-        json_browse_button.setIcon(QIcon('./images/folder.svg'))
-        json_browse_button.setFlat(True)
-        json_browse_button.setToolTip(self.tr("Browse to select JSON file"))
-        json_browse_button.setIconSize(QSize(16, 16))
-        json_browse_button.setFixedSize(QSize(20, 20))
-
-        json_layout.addWidget(QLabel(self.tr("JSON file")))
-        json_layout.addWidget(self._jsonInput)
-        json_layout.addWidget(json_browse_button)
 
         if self._propVariables:
             button = self.tr("Rebuild panel from new settings")
@@ -151,26 +138,23 @@ class PanelSettingsDialog(QDialog):
         close_button.released.connect(self.accept)
         edit_button.released.connect(self.onEdit)
         build_button.released.connect(self.onBuild)
-        json_browse_button.released.connect(self.onBrowse)
-
-        if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
-            self._jsonInput.setText(os.path.basename(self._propSettings['prop']['json']))
 
     # __________________________________________________________________
     @pyqtSlot()
     def onBuild(self):
 
-        if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
-            prop_variables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], self._logger)
+        if self._propSettings['prop']['board'] == 'mega':
+            if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
+                local_json = LOCAL_ARDUINO_MEGA2560_BRIDGE_JSON
+            else:
+                local_json = LOCAL_ARDUINO_MEGA2560_JSON
         else:
-            msg = QMessageBox()
-            msg.setWindowIcon(self.windowIcon())
-            msg.setIcon(QMessageBox.Warning)
-            msg.setText(self.tr("There is no JSON file from prop settings, select one."))
-            msg.setWindowTitle("Missing JSON")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec_()
-            return
+            if 'pi_expander' in self._propSettings['prop'] and self._propSettings['prop']['pi_expander'] == '1':
+                local_json = LOCAL_PI_MCP23017_JSON
+            else:
+                local_json = LOCAL_PI_JSON
+
+        prop_variables = PropPanel.getVariablesJson(local_json, self._logger)
 
         new_variables = []
         for variable in prop_variables:
@@ -189,40 +173,7 @@ class PanelSettingsDialog(QDialog):
             self._propVariables[variable] = prop_variables[variable]
 
         self.rebuildWidgets.emit()
-
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onBrowse(self):
-
-        if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
-            json_path = self._propSettings['prop']['json']
-            json_dir = os.path.dirname(json_path)
-        else:
-            json_path = None
-            json_dir = os.getcwd()
-
-        dlg = QFileDialog(self,
-                          self.tr("Select prop settings JSON file"),
-                          json_dir,
-                          self.tr("JSON files (*.json);; All files (*.*)"))
-
-        dlg.setViewMode(QFileDialog.Detail)
-        dlg.setFileMode(QFileDialog.ExistingFile)
-
-        if json_path:
-            dlg.selectFile(os.path.basename(json_path))
-
-        ret = dlg.exec()
-
-        if QDialog.Accepted == ret and len(dlg.selectedFiles()) == 1:
-            returned_path = dlg.selectedFiles()[0]
-
-            if os.path.isfile(returned_path):
-                self._propSettings['prop']['json'] = returned_path
-                self._jsonInput.setText(os.path.basename(returned_path))
-                with open('prop.ini', 'w') as configfile:
-                    self._propSettings.write(configfile)
+        self.accept()
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -258,9 +209,4 @@ class PanelSettingsDialog(QDialog):
 
         dlg.exec()
 
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onWiringButton(self):
-
-        pass  # exec script ...
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ControlSettingsDialog.py
+PropConfigurationDialog.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
 Dialog to configure control parameters.
@@ -29,12 +29,12 @@ from PyQt5.QtGui import QIcon
 import re, sys, os
 import codecs, configparser
 
-class ControlSettingsDialog(QDialog):
+class PropConfigurationDialog(QDialog):
 
     # __________________________________________________________________
     def __init__(self, admin_mode, prop_settings, logger):
 
-        super(ControlSettingsDialog, self).__init__()
+        super(PropConfigurationDialog, self).__init__()
 
         self._logger = logger
         self._adminMode = admin_mode  # mutable
@@ -72,10 +72,6 @@ class ControlSettingsDialog(QDialog):
         board_box_layout.addWidget(self._boardPiButton)
         board_box_layout.addWidget(self._boardPiExpanderButton)
 
-        self._loadButton = QPushButton(" {} ".format(self.tr("Load from prop configuration")))
-        self._loadButton.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        board_box_layout.addWidget(self._loadButton)
-
         self._paramWidget = QWidget()
         self._paramWidget.setContentsMargins(0, 0, 0, 0)
         param_layout = QGridLayout(self._paramWidget)
@@ -99,10 +95,10 @@ class ControlSettingsDialog(QDialog):
         self._propOutboxInput = QLineEdit()
         param_layout.addWidget(self._propOutboxInput, param_layout.rowCount() - 1, 1)
 
-        prop_settings_label = QLabel(self.tr("Prop settings"))
-        param_layout.addWidget(prop_settings_label, param_layout.rowCount(), 0)
-        self._propSettingsInput = QLineEdit()
-        param_layout.addWidget(self._propSettingsInput, param_layout.rowCount() - 1, 1)
+        prop_wiring_label = QLabel(self.tr("Prop wiring"))
+        param_layout.addWidget(prop_wiring_label, param_layout.rowCount(), 0)
+        self._propWiringInput = QLineEdit()
+        param_layout.addWidget(self._propWiringInput, param_layout.rowCount() - 1, 1)
 
         broker_box = QGroupBox(self.tr("MQTT broker"))
         broker_box.setFlat(True)
@@ -141,9 +137,11 @@ class ControlSettingsDialog(QDialog):
         admin_layout.addStretch(1)
 
         if self._adminMode == 1:
-            exit_admin_button = QPushButton(' {} '.format(self.tr("Exit admin mode")))
-            admin_layout.addWidget(exit_admin_button)
-            exit_admin_button.released.connect(self.exitAdminMode)
+            if 'options' in self._propSettings and 'admin_password' in self._propSettings['options'] and len(
+                    self._propSettings['options']['admin_password']):
+                exit_admin_button = QPushButton(' {} '.format(self.tr("Exit admin mode")))
+                admin_layout.addWidget(exit_admin_button)
+                exit_admin_button.released.connect(self.exitAdminMode)
 
         apply_button = QPushButton(self.tr("Apply"))
         apply_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -165,10 +163,10 @@ class ControlSettingsDialog(QDialog):
 
         self._boardMegaButton.released.connect(self.onBoardMegaButton)
         self._boardPiButton.released.connect(self.onBoardPiButton)
+        self._brokerIpAddressInput.editingFinished.connect(self.onBrokerAddressEdited)
         apply_button.released.connect(self.onApply)
         cancel_button.released.connect(self.onClose)
         help_button.released.connect(self.onHelp)
-        self._loadButton.released.connect(self.onLoad)
 
         self.fillSettings(self._propSettings )
 
@@ -189,11 +187,9 @@ class ControlSettingsDialog(QDialog):
 
         if 'board' not in prop_settings['prop']:
             self._paramWidget.setDisabled(True)
-            self._loadButton.setEnabled(True)
             self._boardMegaYunButton.setDisabled(True or not MEGA_YUN_SUPPORTED)  # True
             self._boardPiExpanderButton.setDisabled(True)
         else:
-            self._loadButton.setDisabled(True)
             if prop_settings['prop']['board'] == 'mega':
                 self._boardMegaButton.setChecked(True)
                 self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
@@ -222,8 +218,8 @@ class ControlSettingsDialog(QDialog):
             if 'prop_outbox' in prop_settings['prop']:
                 self._propOutboxInput.setText(prop_settings['prop']['prop_outbox'])
 
-            if 'prop_settings' in prop_settings['prop']:
-                self._propSettingsInput.setText(prop_settings['prop']['prop_settings'])
+            if 'prop_wiring' in prop_settings['prop']:
+                self._propWiringInput.setText(prop_settings['prop']['prop_wiring'])
 
             if 'broker_address' in prop_settings['prop']:
                 self._brokerIpAddressInput.setText(prop_settings['prop']['broker_address'])
@@ -267,11 +263,26 @@ class ControlSettingsDialog(QDialog):
         msg.exec_()
 
     # __________________________________________________________________
+    def forceBrokerAddress(self):
+
+        msg = QMessageBox()
+        msg.setWindowIcon(self.windowIcon())
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText(self.tr("Please set MQTT broker IP address."))
+        msg.setWindowTitle(self.tr("Broker address required"))
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec_()
+
+    # __________________________________________________________________
     @pyqtSlot()
     def onApply(self):
 
         if not self._boardMegaButton.isChecked() and not self._boardPiButton.isChecked():
             self.forceBoardModel()
+            return
+
+        if len(self._brokerIpAddressInput.text().strip()) == 0:
+            self.forceBrokerAddress()
             return
 
         if self._boardMegaButton.isChecked():
@@ -292,7 +303,7 @@ class ControlSettingsDialog(QDialog):
         self._propSettings['prop']['prop_name'] = self._propNameInput.text().strip()
         self._propSettings['prop']['prop_inbox'] = self._propInboxInput.text().strip()
         self._propSettings['prop']['prop_outbox'] = self._propOutboxInput.text().strip()
-        self._propSettings['prop']['prop_settings'] = self._propSettingsInput.text().strip()
+        self._propSettings['prop']['prop_wiring'] = self._propWiringInput.text().strip()
 
         self._propSettings['prop']['broker_address'] = self._brokerIpAddressInput.text().strip()
 
@@ -300,7 +311,7 @@ class ControlSettingsDialog(QDialog):
         if broker_port.isdigit():
             self._propSettings['prop']['broker_port'] = broker_port
         else:
-            self._propSettings['prop']['broker_port'] = ""
+            self._propSettings['prop']['broker_port'] = '1883'
 
         if 'options' not in self._propSettings.sections():
             self._propSettings.add_section('options')
@@ -341,6 +352,14 @@ class ControlSettingsDialog(QDialog):
 
     # __________________________________________________________________
     @pyqtSlot()
+    def onBrokerAddressEdited(self):
+
+        broker_port = self._brokerIpPortInput.text().strip()
+        if not broker_port.isdigit():
+            self._brokerIpPortInput.setText('1883')
+
+    # __________________________________________________________________
+    @pyqtSlot()
     def onClose(self):
 
         if not self._boardMegaButton.isChecked() and not self._boardPiButton.isChecked():
@@ -352,44 +371,8 @@ class ControlSettingsDialog(QDialog):
     @pyqtSlot()
     def onHelp(self):
 
-        dlg = HelpDialog(self.tr("Configure the central prop"), './help/configure.html')
+        dlg = HelpDialog(self.tr("Configure the prop"), './help/configure.html')
         dlg.exec()
-
-    # __________________________________________________________________
-    @pyqtSlot()
-    def onLoad(self):
-
-        dlg = QFileDialog(self,
-                          self.tr("Select prop configuration .ini file"),
-                          os.getcwd(),
-                          self.tr("Configuration files (*.ini);; All files (*.*)"))
-
-        dlg.setViewMode(QFileDialog.Detail)
-        dlg.setFileMode(QFileDialog.ExistingFile)
-        dlg.selectFile('prop.ini')
-
-        ret = dlg.exec()
-
-        if QDialog.Accepted == ret and len(dlg.selectedFiles()) == 1:
-            returned_path = dlg.selectedFiles()[0]
-        else:
-            return
-
-        if os.path.isfile(returned_path):
-            prop_settings = configparser.ConfigParser()
-            prop_settings.read_file(codecs.open(returned_path, 'r', 'utf8'))
-            if 'prop' not in prop_settings.sections():
-                return
-            
-            self._propSettings = prop_settings
-
-            with open('prop.ini', 'w') as configfile:
-                self._propSettings.write(configfile)
-    
-            self.fillSettings(self._propSettings)
-            if not self._paramWidget.isEnabled():
-                self._paramWidget.setEnabled(True)
-                self._loadButton.setDisabled(True)
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -398,10 +381,10 @@ class ControlSettingsDialog(QDialog):
         self._logger.info(self.tr("Settings : set 'Mega' board"))
         self.setWindowIcon(QIcon('./images/arduino.svg'))
         self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
+        self._boardMegaYunButton.setChecked(True)  # MEGA_YUN_ONLY
         self._boardPiExpanderButton.setEnabled(False)
         if not self._paramWidget.isEnabled():
             self._paramWidget.setEnabled(True)
-            self._loadButton.setDisabled(True)
             self._propNameInput.setText('Relay Mega')
             self.onPropNameEditingFinished()
 
@@ -412,10 +395,10 @@ class ControlSettingsDialog(QDialog):
         self._logger.info(self.tr("Settings : set 'Pi' board"))
         self.setWindowIcon(QIcon('./images/raspberry-pi.svg'))
         self._boardPiExpanderButton.setEnabled(PI_MPC23017_SUPPORTED)  # True
+        self._boardPiExpanderButton.setChecked(not PI_MPC23017_NOT_SUPPORTED)  # PI_MPC23017_NOT_SUPPORTED
         self._boardMegaYunButton.setEnabled(False)
         if not self._paramWidget.isEnabled():
             self._paramWidget.setEnabled(True)
-            self._loadButton.setDisabled(True)
             self._propNameInput.setText('Relay Pi')
             self.onPropNameEditingFinished()
 
@@ -449,11 +432,11 @@ class ControlSettingsDialog(QDialog):
                 self._propOutboxInput.setText(
                     outbox.replace("/{}/outbox".format(previous[0]), "/{}/outbox".format(prop_name)))
 
-        if not self._propSettingsInput.text().strip():
-            self._propSettingsInput.setText('Room/My room/Props/' + prop_name + '/settings')
+        if not self._propWiringInput.text().strip():
+            self._propWiringInput.setText('Room/My room/Props/' + prop_name + '/wiring')
         else:
-            settings = self._propSettingsInput.text()
-            previous = re.findall(r'([\s\w]+)/settings$', settings)
+            wiring = self._propWiringInput.text()
+            previous = re.findall(r'([\s\w]+)/wiring$', wiring)
             if previous:
-                self._propSettingsInput.setText(
-                    settings.replace("/{}/settings".format(previous[0]), "/{}/settings".format(prop_name)))
+                self._propWiringInput.setText(
+                    wiring.replace("/{}/wiring".format(previous[0]), "/{}/wiring".format(prop_name)))

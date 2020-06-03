@@ -9,7 +9,7 @@ Dialog to edit caption and indicators.
 
 from constants import *
 from PropPanel import PropPanel
-from RelaunchSettingsDialog import RelaunchSettingsDialog
+from PanelRelaunchSettingsDialog import PanelRelaunchSettingsDialog
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
@@ -56,7 +56,7 @@ class EditPanelWidgets(QDialog):
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.setWindowTitle(self.tr("Edit captions and indicators"))
 
-        self.setWindowIcon(QIcon('./images/cog-black.svg'))
+        self.setWindowIcon(QIcon('./x-settings.png'))
 
         self.buildUi()
 
@@ -473,7 +473,7 @@ class EditPanelWidgets(QDialog):
     @pyqtSlot()
     def onRelaunch(self):
 
-        dlg = RelaunchSettingsDialog(self.tr("Relaunch command"),
+        dlg = PanelRelaunchSettingsDialog(self.tr("Relaunch command"),
                                      self._relaunchCommand,
                                      self._propSettings, self._logger)
         dlg.setModal(True)

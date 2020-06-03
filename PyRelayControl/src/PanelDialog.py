@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ControlDialog.py
+PanelDialog.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
-Dialog to control PanelProps app running on Raspberry.
+Relay prop control panel dialog.
 """
 
-import os, re, yaml
-import paramiko
-from mutableint import MutableInt
+import os
+import re
 
+import paramiko
+import yaml
 from constants import *
+
 try:
     MEGA_YUN_ONLY
     MEGA_YUN_SUPPORTED = MEGA_YUN_ONLY
@@ -24,8 +26,8 @@ except NameError:
     PI_MPC23017_SUPPORTED = True
 
 from PropPanel import PropPanel
-from AdminModeDialog import AdminModeDialog
-from ControlSettingsDialog import ControlSettingsDialog
+from PanelAdminModeDialog import PanelAdminModeDialog
+from PropConfigurationDialog import PropConfigurationDialog
 from PanelSettingsDialog import PanelSettingsDialog
 from AppletDialog import AppletDialog
 from LedWidget import LedWidget
@@ -37,33 +39,47 @@ from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize, QPoint, QTimer, QThrea
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QPushButton, QGroupBox, QDialog, QMessageBox
 
 
-class ControlDialog(AppletDialog):
+class PanelDialog(AppletDialog):
     aboutToClose = pyqtSignal()
     propDataReveived = pyqtSignal(dict)
     publishMessage = pyqtSignal(str, str)
+    propChanged = pyqtSignal()
     resetBrokerConnection = pyqtSignal()
     switchLed = pyqtSignal(str, str)
 
     # __________________________________________________________________
-    def __init__(self, title, icon, prop_settings, logger):
+    def __init__(self, title, icon, admin_mode, prop_settings, wiring_dialog, layout_file, logger):
 
         # members required by _buildUi() must be set before calling super().__init__()
-        self._adminMode = MutableInt(1)
+        self._adminMode = admin_mode
         self._propSettings = prop_settings
+        self._wiringDialog = wiring_dialog
         self._groupBoxes = {}
         self._widgetGroups, self._widgetTitles, self._widgetVariables, \
         self._widgetImages, self._widgetButtons, \
         self._widgetHiddens, self._relaunchCommand, self._sshCredentials = PropPanel.loadPanelJson(logger)
 
-        if 'admin_password' in self._propSettings['options'] and len(self._propSettings['options']['admin_password']):
+        if 'options' in self._propSettings and 'admin_password' in self._propSettings['options'] and len(
+                self._propSettings['options']['admin_password']):
             self._adminMode.set(0)
 
-        if 'prop' in self._propSettings and 'json' in self._propSettings['prop']:
-            self._propVariables = PropPanel.getVariablesJson(self._propSettings['prop']['json'], logger)
+        if self._propSettings['prop']['board'] == 'mega':
+            if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
+                local_json = LOCAL_ARDUINO_MEGA2560_BRIDGE_JSON
+            else:
+                local_json = LOCAL_ARDUINO_MEGA2560_JSON
+        else:
+            if 'pi_expander' in self._propSettings['prop'] and self._propSettings['prop']['pi_expander'] == '1':
+                local_json = LOCAL_PI_MCP23017_JSON
+            else:
+                local_json = LOCAL_PI_JSON
+
+        if os.path.isfile(local_json):
+            self._propVariables = PropPanel.getVariablesJson(local_json, logger)
         else:
             self._propVariables = {}
 
-        super().__init__(title, icon, logger)
+        super().__init__(title, icon, layout_file, logger)
 
         self._reDataSplitValues = re.compile(r'[^\s]+\s*=')
         self._reDataVariables = re.compile(r'([^\s]+)\s*=')
@@ -171,7 +187,8 @@ class ControlDialog(AppletDialog):
             button_on.publishMessage.connect(self.publishMessage)
             button_off.publishMessage.connect(self.publishMessage)
 
-        board = self._propSettings['prop']['prop_name'] if 'prop_name' in self._propSettings['prop'] else self.tr("Prop")
+        board = self._propSettings['prop']['prop_name'] if 'prop_name' in self._propSettings['prop'] else self.tr(
+            "Prop")
 
         box = QGroupBox(board)
         box_layout = QVBoxLayout(box)
@@ -180,10 +197,10 @@ class ControlDialog(AppletDialog):
         self._mainLayout.addWidget(box)
 
         button_relaunch = QPushButton(self.tr("Relaunch"))
-        self._groupBoxes[group].layout().addWidget(button_relaunch)
+        self._groupBoxes['__prop__'].layout().addWidget(button_relaunch)
 
         button_reboot = QPushButton(self.tr("Reboot"))
-        self._groupBoxes[group].layout().addWidget(button_reboot)
+        self._groupBoxes['__prop__'].layout().addWidget(button_reboot)
 
         box_layout.addWidget(button_relaunch)
         box_layout.addWidget(button_reboot)
@@ -279,7 +296,7 @@ class ControlDialog(AppletDialog):
                 i = 0
                 for var in m:
                     variables[var] = vars[i].strip()
-                    i = i+1
+                    i = i + 1
         except Exception as e:
             self._logger.debug(e)
 
@@ -314,7 +331,8 @@ class ControlDialog(AppletDialog):
 
         if 'prop_name' in self._propSettings['prop']:
             if 'options' in self._propSettings:
-                if 'connection_status' in self._propSettings['options'] and self._propSettings['options']['connection_status'] == '0':
+                if 'connection_status' in self._propSettings['options'] and self._propSettings['options'][
+                    'connection_status'] == '0':
                     self._led.switchOn('red', '')
                 else:
                     self._led.switchOn('red', self.tr("MQTT broker not connected"))
@@ -333,7 +351,7 @@ class ControlDialog(AppletDialog):
                         self._led.switchOn('red', self._propSettings['prop']['prop_name'])
                     else:
                         self._led.switchOn('red', "{} ({}) ".format(self._propSettings['prop']['prop_name'],
-                                                                       self.tr("disconnected")))
+                                                                    self.tr("disconnected")))
             else:
                 self._led.switchOn('red')
         else:
@@ -345,7 +363,7 @@ class ControlDialog(AppletDialog):
                             self._led.switchOn('green', self._propSettings['prop']['prop_name'])
                         else:
                             self._led.switchOn('green', "{} ({}) ".format(self._propSettings['prop']['prop_name'],
-                                                                           self.tr("connected")))
+                                                                          self.tr("connected")))
                 else:
                     self._led.switchOn('green')
 
@@ -364,6 +382,7 @@ class ControlDialog(AppletDialog):
         dlg.setModal(True)
 
         dlg.rebuildWidgets.connect(self._buildPropWidgets)
+        dlg.wiringButtonReleased.connect(self.onWiringButtonReleased)
 
         dlg.exec()
 
@@ -371,9 +390,10 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def onPropConfiguration(self):
 
-        if 'admin_password' in self._propSettings['options'] and len(self._propSettings['options']['admin_password']):
+        if 'options' in self._propSettings and 'admin_password' in self._propSettings['options'] and len(
+                self._propSettings['options']['admin_password']):
             if self._adminMode == 0:
-                dlg = AdminModeDialog(self._adminMode, self._propSettings, self._logger)
+                dlg = PanelAdminModeDialog(self._adminMode, self._propSettings, self._logger)
                 dlg.setModal(True)
                 if dlg.exec() == QDialog.Accepted:
                     pass
@@ -383,16 +403,19 @@ class ControlDialog(AppletDialog):
         else:
             self._editButton.setVisible(True)
 
-        dlg = ControlSettingsDialog(self._adminMode, self._propSettings, self._logger)
+        dlg = PropConfigurationDialog(self._adminMode, self._propSettings, self._logger)
         dlg.setModal(True)
         if dlg.exec() == QDialog.Accepted:
             if 'prop_name' in self._propSettings['prop']:
                 self._led._defaultText = self._propSettings['prop']['prop_name']
                 if 'options' in self._propSettings:
-                    if 'connection_status' in self._propSettings['options'] and self._propSettings['options']['connection_status'] == '0':
+                    if 'connection_status' in self._propSettings['options'] and self._propSettings['options'][
+                        'connection_status'] == '0':
                         self._led.switchOn('red', '')
                     else:
                         self._led.switchOn('red', self.tr("MQTT broker not connected"))
+            self._buildPropWidgets()
+            self.propChanged.emit()
             self.resetBrokerConnection.emit()
 
         if 'options' in self._propSettings:
@@ -410,6 +433,12 @@ class ControlDialog(AppletDialog):
     @pyqtSlot()
     def onRebuild(self):
         self.resize(self.width(), 50)
+
+    # __________________________________________________________________
+    @pyqtSlot()
+    def onWiringButtonReleased(self):
+
+        self._wiringDialog.setVisible(not self._wiringDialog.isVisible())
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -463,11 +492,11 @@ class ControlDialog(AppletDialog):
             self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
         except Exception as e:
             print(e)
-            self._logger.warning("Exception when SSH command sent to {} (user={}, pasw={}) : {}".format(addr, user, pasw, str(e)))
+            self._logger.warning(
+                "Exception when SSH command sent to {} (user={}, pasw={}) : {}".format(addr, user, pasw, str(e)))
         finally:
             client.close()
         return
-
 
     # __________________________________________________________________
     @pyqtSlot()
@@ -498,7 +527,7 @@ class ControlDialog(AppletDialog):
         broker = ''
         if 'broker_address' in self._propSettings['prop']:
             broker = self._propSettings['prop']['broker_address']
-            
+
         if 'board' in self._propSettings['prop'] and self._propSettings['prop']['board'] == 'mega':
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 ssh = "echo %BROKER%> /root/broker && reset-mcu"
@@ -530,6 +559,7 @@ class ControlDialog(AppletDialog):
             self._logger.info("SSH command sent to {} (user={}, pasw={})".format(addr, user, pasw))
         except Exception as e:
             print(e)
-            self._logger.warning("Exception when SSH command sent to {} (user={}, pasw={}) : {}".format(addr, user, pasw, str(e)))
+            self._logger.warning(
+                "Exception when SSH command sent to {} (user={}, pasw={}) : {}".format(addr, user, pasw, str(e)))
         finally:
             client.close()

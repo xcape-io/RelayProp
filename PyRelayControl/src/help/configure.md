@@ -1,15 +1,13 @@
-﻿Click the **`Load from prop configuration`** button to load the configuration from a Relay prop whose settings you have already configured with the ***Relay Settings*** applet.
-
-To configure the central prop:
+﻿To configure the Relay prop:
 
 1. Choose Arduino or Raspberry board model
-2. Set board option if any
-3. Edit props MQTT topic
+2. Set board option if any (Dragino Yún shield or MCP23017 expander)
+3. Edit prop MQTT topics (inbosd/outbox/wiring)
 4. Set MQTT broker IP address and port 
 
 At first start, when choosing board model:
 
 * prop name is filled with a default name
-* inbox is filled with *xcape.io* recommandation
-* outbox is filled as well
-* settings is filled too
+* inbox topic is filled with *xcape.io* recommandations
+* outbox topic is filled as well
+* wiring topic is filled too

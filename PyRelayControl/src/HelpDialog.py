@@ -24,7 +24,6 @@ class HelpDialog(QDialog):
         self.setWindowTitle(title)
 
         self.setWindowIcon(QIcon(self.style().standardIcon(QStyle.SP_MessageBoxQuestion)))
-        self.resize(360, 390)
 
         self.buildUi()
 
@@ -35,6 +34,8 @@ class HelpDialog(QDialog):
             help = helpfile.read()
             help = "<style>{}></style>\n\n<body>{}</body>".format(css, help)
             self._browser.setHtml(help)
+
+        self.resize(480, 380)
 
     # __________________________________________________________________
     def buildUi(self):

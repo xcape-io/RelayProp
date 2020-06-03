@@ -90,3 +90,15 @@ class LedWidget(QWidget):
         self._ledStatus.setText(text)
 
         self.switched.emit(color, text)
+
+    # __________________________________________________________________
+    def updateDefaultText(self, text):
+
+        status = self._ledStatus.text()
+        if self._defaultText in status:
+            self._ledStatus.setText(status.replace(self._defaultText, text))
+        else:
+            self._ledStatus.setText(text)
+
+        self._defaultText = text
+

@@ -22,10 +22,11 @@ import os, yaml
 class AppletDialog(QDialog):
 
     # __________________________________________________________________
-    def __init__(self, title, icon, logger):
+    def __init__(self, title, icon, layout_file, logger):
 
         super().__init__()
 
+        self._layoutFile = layout_file
         self._logger = logger
 
         self._logger.info(self.tr("GUI started"))
@@ -63,8 +64,8 @@ class AppletDialog(QDialog):
         layout['position'] = QPoint(200, 200)
         layout['size'] = QSize(400, 400)
 
-        if os.path.isfile(LAYOUT_FILE):
-            with open(LAYOUT_FILE, 'r') as layoutfile:
+        if os.path.isfile(self._layoutFile):
+            with open(self._layoutFile, 'r') as layoutfile:
                 layout = yaml.load(layoutfile, Loader=yaml.SafeLoader)
 
         self.move(QPoint(layout['x'], layout['y']))
@@ -80,7 +81,7 @@ class AppletDialog(QDialog):
         layout['w'] = self.size().width()
         layout['h'] = self.size().height()
 
-        with open(LAYOUT_FILE, 'w') as layoutfile:
+        with open(self._layoutFile, 'w') as layoutfile:
             yaml.dump(layout, layoutfile, default_flow_style=False)
 
     # __________________________________________________________________

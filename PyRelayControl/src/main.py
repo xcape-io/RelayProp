@@ -35,9 +35,7 @@ else:
 	except NameError:
 		pass
 
-from PyQt5.QtGui import QIcon
-
-from ControlApplet import ControlApplet
+from RelayApplet import RelayApplet
 from Singleton import Singleton, SingletonException
 
 
@@ -51,7 +49,7 @@ except BaseException as e:
 
 mqtt_client = mqtt.Client(uuid.uuid4().urn, clean_session=True, userdata=None)
 
-applet = ControlApplet(sys.argv,  mqtt_client,  debugging_mqtt=True)
+applet = RelayApplet(sys.argv,  mqtt_client,  debugging_mqtt=True)
 
 if applet.logger:
 	applet.logger.info(applet.tr("Session started"))
