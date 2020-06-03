@@ -4,12 +4,8 @@
 <img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
 
 #### TODO
-* Rename Control to Panel and Settings to Wiring
-* More checking on startup (borker/topics) to create prop.ini
-* Merge PyRelaySettings and PyRelayControl in one app PyRelay
 * Add MPC23017 support
 * Add Mega without bridge support
-* Make Pi to Mega and reverse easier for user
 
 <hr>
 
@@ -118,35 +114,14 @@ example:
 See [PiPyRelayProp: Room Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp).
 
 
-## PyRelaySettings project
-[PyRelaySettings](./PyRelaySettings) is a PyQt5 GUI application to configure the Relay Prop.
-
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelaysettings-main.png)
-
-We usually run PyRelaySettings <a href="./PyRelaySettings#installation-on-windows" target="_blank">on Windows</a> but you can install and run it <a href="https://www.learnpyqt.com/installation/installation-linux/" target="_blank">on Linux</a> and Mac, <a href="https://www.learnpyqt.com/installation/installation-mac/" target="_blank">PyQt5 installation on Mac</a> can be tricky.
-
-The Relay Prop configuration is publishe in a MQTT topic with twi sub-topics:
-```csharp
-Room/[escape room name]/Props/[props name]/settings/json
-Room/[escape room name]/Props/[props name]/settings/stamp
-
-example:
-    /Room/My Room/Props/Relay Mega/settings/json
-    /Room/My Room/Props/Relay Mega/settings/stamp
-    
-    /Room/My Room/Props/Relay Pi/settings/json
-    /Room/My Room/Props/Relay Pi/settings/stamp
-```
-
-See [PyRelaySettings: GUI configurator for Room Relay Prop](./PyRelaySettings).
-
-
 ## PyRelayControl project
 [PyRelayControl](./PyRelayControl) is the prop control panel for the Relay Prop, it's a PyQt5 GUI application to configure the Relay Prop.
 
 We usually run PyRelaySettings <a href="./PyRelayControl#installation-on-windows" target="_blank">on Windows</a> but you can install and run it <a href="https://www.learnpyqt.com/installation/installation-linux/" target="_blank">on Linux</a> and Mac, <a href="https://www.learnpyqt.com/installation/installation-mac/" target="_blank">PyQt5 installation on Mac</a> can be tricky.
 
 You can run [PyRelayControl](./PyRelayControl) as a *plugin for <a href="https://xcape.io/" target="_blank">xcape.io</a> Room*.
+
+![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelaysettings-main.png)
 
 
 ## Author
