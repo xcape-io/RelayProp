@@ -10,22 +10,13 @@
 <hr>
 
 
-This repository contains 4 projects:
-* [MegaRelayProp: Room Relay Prop on Arduino Mega 2560](./MegaRelayProp)
-* [PiPyRelayProp: Room Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp)
-* [PyRelaySettings: GUI configurator for Room Relay Prop](./PyRelaySettings)
-* [PyRelayControl: control panel for Room Relay Prop](./PyRelayControl)
+This repository contains 3 projects:
+* [MegaRelayProp: Relay Prop on Arduino Mega 2560](./MegaRelayProp)
+* [PiPyRelayProp: Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp)
+* [PyRelayControl: control panel for Relay Prop](./PyRelayControl)
 
 And a guide for relay modules:
 * [RELAY_MODULES.md](./RELAY_MODULES.md)
-
-##### Dev notes
-- how to identify Pi4 for GPIO (same as Pi3 ?)
-- config is published as JSON + anoter topic with its ID mhen updated
-- `/Room/My Room/Props/Relay Pi/inbox`
-- `/Room/My Room/Props/Relay Pi/outbox`
-- `/Room/My Room/Props/Relay Pi/settings`
-
 
 
 ## Why do we need a Relay prop in our Escape Room?
