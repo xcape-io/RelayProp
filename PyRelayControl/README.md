@@ -88,23 +88,28 @@ At fisrt start (`prop.ini` not created yet), configure the relay prop:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-prop.png?raw=true)
 
-To configure the relay prop:
+To configure the Relay prop:
 
 1. Choose Arduino or Raspberry board model
-2. Set board option if any
-3. Edit props MQTT topic
+2. Set board option if any (Dragino Yún shield or MCP23017 expander)
+3. Edit prop MQTT topics (inbosd/outbox/wiring)
 4. Set MQTT broker IP address and port 
 
 At first start, when choosing board model:
 
 * prop name is filled with a default name
-* inbox is filled with *xcape.io* recommandation
-* outbox is filled as well
-* settings is filled too
+* inbox topic is filled with *xcape.io* recommandations
+* outbox topic is filled as well
+* wiring topic is filled too
+
+When you apply the prop settings, the control panel appears as well as the wiring dialog (because, it' first start).
+
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-prop-apply.png?raw=true)
 
 
 ## Wiring settings
-![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaysettings-main.png?raw=true)
+
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/wiring-start.png?raw=true)
 
 Click on a pin button to configure:
 
@@ -112,9 +117,13 @@ Click on a pin button to configure:
 
 > To move a configuration to another pin, select an available pin in the output field.
 
-To configure the relay prop, click the configure button (in main dialog top right):
+When all pins are configured (they are saved to a local JSON file), you have to **Upload wiring to broker** so the prop receives the wiring and setup itself its GPIO and commands.
 
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelaysettings-prop.png?raw=true)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/wiring.png?raw=true)
+
+
+
+
 
 
 ## Author
