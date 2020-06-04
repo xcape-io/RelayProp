@@ -107,7 +107,7 @@ When you apply the prop settings, the control panel appears as well as the wirin
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-prop-apply.png?raw=true)
 
 
-## Wiring settings
+### Wiring settings
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/wiring-start.png?raw=true)
 
