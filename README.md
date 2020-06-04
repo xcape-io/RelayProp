@@ -30,8 +30,8 @@ And a guide for relay modules:
     * _<a href="https://mosquitto.org/download/" target="_blank">mosquitto</a>_ on a Raspberry Pi which is my preferred choice
     * _<a href="https://mosquitto.org/download/" target="_blank">mosquitto</a>_ on your desktop
 4. Install [PyRelayControl](./PyRelayControl) on your desktop
-5. Start [PyRelayControl](./PyRelayControl) GUI and configure your relay wiring (GPIO)
-6. Upload the wiring to th MQTT broker (one-click)
+5. Start [PyRelayControl](./PyRelayControl) GUI and configure your relays wiring (GPIO)
+6. Upload the wiring to the MQTT broker (one-click)
 7. Automatically build the control panel widgets (one-click)
 8. Customize the control panel widgets (labels and images)
 9. Enjoy controlling your relays from the control panel
