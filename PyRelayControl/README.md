@@ -106,8 +106,7 @@ When you apply the prop settings, the control panel appears as well as the wirin
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-prop-apply.png?raw=true)
 
-
-### Wiring settings
+### Wiring configuration
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/wiring-start.png?raw=true)
 
@@ -121,9 +120,11 @@ When all pins are configured (they are saved to a local JSON file), you have to 
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/wiring.png?raw=true)
 
+### Build the control panel
 
+This is done in one-click on **Rebuild panel from new wiring**:
 
-
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/build-panel.png?raw=true)
 
 
 ## Author
