@@ -45,7 +45,7 @@ Install dependencies
 pip3 install -r requirements.txt
 ```
 
-Edit `definitions.ini` to set MQTT topics for your Escape Room:
+Edit `definitions.ini` to set MQTT topics for your prop:
 ```ini
 [mqtt]
 ; mqtt-sub-* and app-inbox topics are subscribed by MqttConsoleApp
