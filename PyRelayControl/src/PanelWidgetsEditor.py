@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-EditPanelWidgets.py
+PanelWidgetsEditor.py
 MIT License (c) Marie Faure <dev at faure dot systems>
 
 Dialog to edit caption and indicators.
@@ -18,7 +18,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QFrame, QCheckBox
 from PyQt5.QtGui import QIcon
 
 
-class EditPanelWidgets(QDialog):
+class PanelWidgetsEditor(QDialog):
     rebuild = pyqtSignal()
     reorder = pyqtSignal()
 
@@ -51,7 +51,7 @@ class EditPanelWidgets(QDialog):
 
         self._propBox = None
 
-        super(EditPanelWidgets, self).__init__()
+        super(PanelWidgetsEditor, self).__init__()
 
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowContextHelpButtonHint)
         self.setWindowTitle(self.tr("Edit captions and indicators"))

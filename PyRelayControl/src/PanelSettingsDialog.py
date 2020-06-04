@@ -8,7 +8,7 @@ Dialog to configure control parameters.
 """
 
 from constants import *
-from EditPanelWidgets import EditPanelWidgets
+from PanelWidgetsEditor import PanelWidgetsEditor
 from PropPanel import PropPanel
 
 from PyQt5.QtCore import Qt, pyqtSignal, pyqtSlot, QSize
@@ -191,7 +191,7 @@ class PanelSettingsDialog(QDialog):
     @pyqtSlot()
     def onEdit(self):
 
-        dlg = EditPanelWidgets(self._propVariables, self._propSettings,
+        dlg = PanelWidgetsEditor(self._propVariables, self._propSettings,
                                self._widgetGroups, self._widgetTitles,
                                self._widgetVariables, self._widgetImages, self._widgetButtons,
                                self._widgetHiddens, self._relaunchCommand, self._sshCredentials, self._logger)
