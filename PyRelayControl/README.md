@@ -150,6 +150,14 @@ Eventually, the final control panel:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/panel.png?raw=true)
 
+For Raspberry Pi prop, **Relaunch** button edition is enabled:
+
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/edit-relaunch.png?raw=true)
+
+The SSH command is set by default for a for regular <a href="https://xcape.io/public/documentation/en/room/ConfigureMQTTintheapplication.html#relaunch_raspberry_gui" target="_blank">Raspberry Pi xcape.io prop</a>:
+
+ ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/edit-relaunch-command.png?raw=true)
+
 
 ## Author
 
