@@ -182,7 +182,7 @@ class PiRelayApp(AsyncioProp):
                         if gpio in self._pinPropData:
                             self._pinPropData[gpio].update(command)
                         else:
-                            self._logger.warning("Prop data noit found for '{}' output".format(gpio))
+                            self._logger.warning("Prop data not found for '{}' output".format(gpio))
                     self.sendDataChanges()
                     self.sendDone(message)
                 else:
