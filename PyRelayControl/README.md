@@ -142,7 +142,7 @@ The panel widgets editor after customization:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/panel-edition-2.png?raw=true)
 
-You can change captions and switch images, move the groups up and down and hide widgets or entire groups.
+You can **change** captions and switch images, **move** the groups up and down and **hide** widgets or entire groups.
 
 Eventually, the final control panel:
 
