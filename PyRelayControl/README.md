@@ -1,10 +1,8 @@
 
 # PyRelayControl
-*<a href="https://www.learnpyqt.com/" target="_blank">PyQt5</a> relay control applet.*
+*<a href="https://www.learnpyqt.com/" target="_blank">PyQt5</a> GUI app to configure the wiring and control the relays.*
 
-<img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
 
- 
 ## Installation
 
 ### Installation on Windows
@@ -86,7 +84,7 @@ PyQt5 installation on Mac can be tricky, see <a href="https://www.learnpyqt.com/
 
 
 ## Usage
-At fisrt start, configure the relay prop:
+At fisrt start (`prop.ini` not created yet), configure the relay prop:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-control.png?raw=true)
 
