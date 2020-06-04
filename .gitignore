@@ -2,7 +2,7 @@
 ~$*
 .config.yml
 .layout.yml
-.*_layout.yml
+PyRelayControl/src/.wiring_layout.yml
 PyRelayControl/src/panel.json
 PyRelayControl/src/prop.ini
 PyRelayControl/src/arduino_mega2560.json
@@ -139,4 +139,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-PyRelayControl/src/.wiring_layout.yml
