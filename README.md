@@ -37,7 +37,6 @@ And a guide for relay modules:
 9. Enjoy controlling your relays from the control panel
 
 
-
 ## Why do we need a Relay prop in our Escape Room?
 Our goal is to give most of the electrical control to a central accessory located near the Game Master's computer or in the room's central electric cabinet.
 
