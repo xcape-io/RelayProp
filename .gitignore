@@ -2,6 +2,8 @@
 ~$*
 .config.yml
 .layout.yml
+.*_layout.yml
+prop.ini
 arduino_mega2560.json
 arduino_mega2560_bridge.json
 raspberry_pi.json
