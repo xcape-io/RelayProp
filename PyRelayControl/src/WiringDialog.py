@@ -231,9 +231,9 @@ class WiringDialog(AppletDialog):
                         key = self.pinToKey(p['pin'])
                         if key is not None:
                             self._propPins[key] = PropPin(key, p['variable'], p['initial'], p['alias'])
-                            self._logger.info("Pin added from settings : {}".format(p))
+                            self._logger.info("Pin added from wiring : {}".format(p))
                     except Exception as e:
-                        self._logger.warning("Failed add pin from settings : {}".format(p))
+                        self._logger.warning("Failed add pin from wiring : {}".format(p))
                         self._logger.warning(e)
             except json.JSONDecodeError as jex:
                 self._logger.error("JSONDecodeError '{}' at {} in: {}".format(jex.msg, jex.pos, jex.doc))
@@ -520,8 +520,8 @@ class WiringDialog(AppletDialog):
                 pin_dict['alias'] = self._propPins[key]._alias
                 pin_list.append(pin_dict)
 
-        settings = json.dumps(pin_list, ensure_ascii=False)
-        self.publishRetainedMessage.emit(self._propSettings['prop']['prop_wiring'], settings)
+        wiring = json.dumps(pin_list, ensure_ascii=False)
+        self.publishRetainedMessage.emit(self._propSettings['prop']['prop_wiring'], wiring)
 
     # __________________________________________________________________
     @pyqtSlot()
