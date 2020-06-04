@@ -126,6 +126,8 @@ This is done in one-click on **Rebuild panel from new wiring**:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/build-panel.png?raw=true)
 
+Passing by, you may fill SSH credentials for **Relaunch** and **Reboot** button.
+
 All widgets are light switches and they are gouped  (for variable with `/` separtor like `maglocks/*`):
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/raw-build.png?raw=true)
