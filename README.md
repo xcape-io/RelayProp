@@ -1,7 +1,7 @@
 # Relay Prop
 *__No-code__ prop and control panel to command relays with Arduino Mega 2560 or Raspberry Pi board.*
 
-For eihter the Arduino Mega or the Raspberry Pi, you just have to install the code provided in [MegaRelayProp](./MegaRelayProp) or [PiPyRelayProp](./PiPyRelayProp).
+For either the Arduino Mega or the Raspberry Pi, you just have to install the code provided in [MegaRelayProp](./MegaRelayProp) or [PiPyRelayProp](./PiPyRelayProp).
 
 Use [PyRelayControl](./PyRelayControl) GUI app on Windows or Linux desktop (Mac OSX should work too) to configure the Arduino Mega or the Raspberry Pi board and your wiring.
 
