@@ -150,7 +150,7 @@ class WiringDialog(AppletDialog):
 
         upload_button = QPushButton(" {} ".format(self.tr(" Upload wiring to broker ")))
         upload_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        upload_button.setFocusPolicy(Qt.NoFocus)
+        upload_button.setFocusPolicy(Qt.StrongFocus)
 
         clear_button = QPushButton(self.tr("Clear"))
         clear_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
