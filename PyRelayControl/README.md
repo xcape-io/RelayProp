@@ -161,7 +161,7 @@ The SSH command is set by default for a for regular <a href="https://xcape.io/pu
 
 ## Author
 
-**Marie FAURE** (May 13th, 2020)
+**Marie FAURE** (Jun 4th, 2020)
 * company: FAURE SYSTEMS SAS
 * mail: *dev at faure dot systems*
 * github: <a href="https://github.com/fauresystems?tab=repositories" target="_blank">fauresystems</a>
