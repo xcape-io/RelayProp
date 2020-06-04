@@ -134,6 +134,15 @@ You can **Edit captions and indicators**:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/edit-panel.png?raw=true)
 
+The panel widgets editor before customization:
+
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/panel-edition-1.png?raw=true)
+
+The panel widgets editor after customization:
+
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/panel-edition-1.png?raw=true)
+
+You can change captions and switch images, move the groups up and down and hide wodgets or entire groups.
 
 
 ## Author
