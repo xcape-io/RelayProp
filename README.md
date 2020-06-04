@@ -1,4 +1,4 @@
-﻿# Relay Prop
+# Relay Prop
 *__No-code__ prop and control panel to command relays with Arduino Mega 2560 or Raspberry Pi board.*
 
 For eihter the Arduino Mega or the Raspberry Pi, you just have to install the code provided in [MegaRelayProp](./MegaRelayProp) or [PiPyRelayProp](./PiPyRelayProp).
@@ -18,6 +18,24 @@ This repository contains 3 projects:
 
 And a guide for relay modules:
 * [RELAY_MODULES.md](./RELAY_MODULES.md)
+
+
+## Usage
+
+1. Choose if you will use Arduino Mega or Raspberry Pi board
+2. Intall on your local network, either:
+    * [MegaRelayProp: Relay Prop on Arduino Mega 2560](./MegaRelayProp)
+    * [PiPyRelayProp: Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp)
+3. Install an <a href="https://xcape.io/public/documentation/en/room/MQTTserver.html" target="_blank">MQTT broker</a> on your local network, eihter:
+    * _<a href="https://mosquitto.org/download/" target="_blank">mosquitto</a>_ on a Raspberry Pi which is my preferred choice
+    * _<a href="https://mosquitto.org/download/" target="_blank">mosquitto</a>_ on your desktop
+4. Install [PyRelayControl](./PyRelayControl) on your desktop
+5. Start [PyRelayControl](./PyRelayControl) GUI and configure your relay wiring (GPIO)
+6. Upload the wiring to th MQTT broker (one-click)
+7. Automatically build the control panel widgets (one-click)
+8. Customize the control panel widgets (labels and images)
+9. Enjoy controlling your relays from the control panel
+
 
 
 ## Why do we need a Relay prop in our Escape Room?
@@ -113,18 +131,15 @@ We usually run PyRelayControl <a href="./PyRelayControl#installation-on-windows"
 
 You can run [PyRelayControl](./PyRelayControl) as a *plugin for <a href="https://xcape.io/" target="_blank">xcape.io</a> Room*.
 
-![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelaysettings-main.png)
 
-
-
-#### TODO
+## TODO
 * Add MPC23017 support
 * Add Mega without bridge support
 
 
 ## Author
 
-**Marie FAURE** (Apr 26th, 2020)
+**Marie FAURE** (Jun 4th, 2020)
 * company: FAURE SYSTEMS SAS
 * mail: *dev at faure dot systems*
 * github: <a href="https://github.com/xcape-io?tab=repositories" target="_blank">xcape-io</a>
