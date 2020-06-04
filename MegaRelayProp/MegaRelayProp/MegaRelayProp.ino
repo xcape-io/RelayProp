@@ -30,7 +30,7 @@ PropAction readRssiAction = PropAction(30000, readRssi);
 #endif
 
 PropDataText board(u8"board");
-PropDataInteger settings(u8"settings"); // number of outputs configured
+PropDataInteger wiring(u8"wiring"); // number of outputs configured
 
 void setup()
 {
@@ -42,7 +42,7 @@ void setup()
 #endif
 
   prop.addData(&board);
-  prop.addData(&settings);
+  prop.addData(&wiring);
 
   prop.begin(InboxMessage::run);
 
@@ -82,10 +82,10 @@ void readRssi()
 
 void InboxMessage::run(String a) {
 
-  if (a.startsWith(u8"{")) // pin JSON settings
+  if (a.startsWith(u8"{")) // pin JSON wiring
   {
     prop.addPin(a);
-    settings.setValue(prop.pinCount());
+    wiring.setValue(prop.pinCount());
     prop.sendAllData();
   }
   else if (a.startsWith(u8"clear:")) // pin to remove
@@ -99,7 +99,7 @@ void InboxMessage::run(String a) {
       prop.removePin(a);
       prop.sendDone(a);
     }
-    settings.setValue(prop.pinCount());
+    wiring.setValue(prop.pinCount());
     prop.sendAllData();
   }
   else if (a == u8"app:startup" || a == u8"app:data")
