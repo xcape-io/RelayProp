@@ -143,6 +143,10 @@ class PiRelayApp(AsyncioProp):
             except Exception as e:
                 self._logger.error("GPIO cleanup failed for pin {}".format(pin))
                 self._logger.debug(e)
+
+        for pin in list(self._pinPropData.keys()):
+            self.removeData(self._pinPropData[pin])
+            del self._pinPropData[pin]
         self._pinPropData = {}
         self._propPins = {}
 
@@ -161,7 +165,7 @@ class PiRelayApp(AsyncioProp):
         # extend as a virtual method
         print(topic, message)
         if topic == self._definitions['mqtt-sub-wiring']:
-            self.processSettingsMessage(message)
+            self.processWiringMessage(message)
         else:
             if message == "app:startup" or message == "app:data":
                 self.sendAllData()
@@ -186,7 +190,7 @@ class PiRelayApp(AsyncioProp):
                     self.sendOmit(message)
 
     # __________________________________________________________________
-    def processSettingsJson(self, json_list):
+    def processWiringJson(self, json_list):
 
         for p in json_list:
             try:
@@ -247,7 +251,7 @@ class PiRelayApp(AsyncioProp):
                 self._logger.warning(e)
 
     # __________________________________________________________________
-    def processSettingsMessage(self, wiring):
+    def processWiringMessage(self, wiring):
 
         try:
             self._wiring_p.update('NONE')
@@ -255,7 +259,7 @@ class PiRelayApp(AsyncioProp):
             self.sendDataChanges()
             self.cleanupGpioPins()
             json_list = json.loads(wiring)
-            self.processSettingsJson(json_list)
+            self.processWiringJson(json_list)
             with open(WIRING_JSON_FILE, 'w', encoding='utf-8') as fp:
                 fp.write(wiring)
             if self._wiring_p.value() == 'ERROR':
@@ -283,7 +287,7 @@ class PiRelayApp(AsyncioProp):
                 try:
                     with open(WIRING_JSON_FILE, 'r', encoding='utf-8') as fp:
                         json_list = json.load(fp)
-                    self.processSettingsJson(json_list)
+                    self.processWiringJson(json_list)
                 except json.JSONDecodeError as jex:
                     self._logger.error("JSONDecodeError '{}' at {} in: {}".format(jex.msg, jex.pos, jex.doc))
                 except Exception as e:

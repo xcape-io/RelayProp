@@ -294,6 +294,9 @@ class KivyProp(App):
 			self._periodicActions[title] = (func, time)
 			self._logger.info("New periodic action added '{0}' every {1} seconds".format(title, time))
 
+	# __________________________________________________________________
+	def removeData(self, data):
+		self._publishable.remove(data)
 
 	# __________________________________________________________________
 	def sendData(self, data):
