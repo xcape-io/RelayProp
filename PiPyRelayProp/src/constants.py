@@ -47,7 +47,7 @@ GPIO_LOW = 0
 GPIO_HIGH = 1
 NULL_DATE = '- - -'
 
-SETTINGS_JSON_FILE = './settings.json'
+WIRING_JSON_FILE = './wiring.json'
 
 COMMANDS_SYNONYMS_HIGH = ['on', 'close']
 COMMANDS_SYNONYMS_LOW = ['off', 'open']

@@ -7,7 +7,7 @@ In your Escape Room, *PiPyRelayProp* centralizes the control of your main relays
 * maglocks (doors)
 * smoke machines (warmp-up and shots)
 
-No coding is required, the relay outputs are configured with the [PyRelaySettings GUI](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pyrelaysettings) and the commands can be triggered with the [PyRelayControl GUI]([PyRelaySettings](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pyrelaysettings)) or a regular [control panel for *Room by xcape.io* users](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#prop-configuration-for-room-by-xcapeio).
+No coding is required, the relay outputs are configured and the commands can be triggered with the [PyRelayControl GUI app]((https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl)).
 
 <img src="https://github.com/xcape-io/RelayProp/blob/master/docs/pipyrelayprop.png" width="900">
 
@@ -15,7 +15,7 @@ No coding is required, the relay outputs are configured with the [PyRelaySetting
 * [Installation](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#installation)
 * [Usage](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#usage)
 * [SSH relaunch command](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#ssh-relaunch-command)
-* [Relay Prop settings](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#relay-prop-settings)
+* [Relay Prop wiring](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#relay-prop-wiring)
 * [Relay Prop panel](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#relay-prop-panel)
 * [Relay modules](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#relay-modules)
 * [Prop commands](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#prop-commands)
@@ -51,7 +51,7 @@ Edit `definitions.ini` to set MQTT topics for your Escape Room:
 ; mqtt-sub-* and app-inbox topics are subscribed by MqttConsoleApp
 app-inbox = Room/My room/Props/Relay Pi/inbox
 app-outbox = Room/My room/Props/Relay Pi/outbox
-mqtt-sub-settings = Room/My room/Props/Relay Pi/settings
+mqtt-sub-wiring = Room/My room/Props/Relay Pi/wiring
 
 ``` 
 
@@ -64,52 +64,52 @@ pi@raspberrypi:~ $ python3 ~/Room/Props/PiPyRelayProp/src/main.py -s 192.168.1.4
 Config: {'host': '192.168.1.42'}
 INFO - New periodic action added 'send all data' every 30.0 seconds
 INFO - New str Publishable 'board' with initial=Pi
-INFO - New str Publishable 'settings' with initial=NONE
-INFO - New str Publishable 'settings-date' with initial=- - -
+INFO - New str Publishable 'wiring' with initial=NONE
+INFO - New str Publishable 'wiring-date' with initial=- - -
 INFO - New periodic action added 'read JSON rescue' every 3 seconds
 INFO - Periodic task created 'send all data' every 30.0 seconds
 INFO - Periodic task created 'read JSON rescue' every 3 seconds
-WARNING - Program failed to send message (disconnected) : 'DATA board=Pi settings=NONE settings-date=- - -'
+WARNING - Program failed to send message (disconnected) : 'DATA board=Pi wiring=NONE wiring-date=- - -'
 INFO - Program connected to MQTT server
 INFO - Program sending message 'CONNECTED' (mid=1) on Room/My room/Props/Relay Pi/outbox
 INFO - Program subscribing to topic (mid=2) : Room/My room/Props/Relay Pi/inbox
-INFO - Program subscribing to topic (mid=3) : Room/My room/Props/Relay Pi/settings
-INFO - Program sending message 'DATA board=Pi settings=NONE settings-date=- - -' (mid=4) on Room/My room/Props/Relay Pi/outbox
+INFO - Program subscribing to topic (mid=3) : Room/My room/Props/Relay Pi/wiring
+INFO - Program sending message 'DATA board=Pi wiring=NONE wiring-date=- - -' (mid=4) on Room/My room/Props/Relay Pi/outbox
 DEBUG - MQTT message is published : mid=1 userdata={'host': '192.168.1.42', 'port': 1883}
 INFO - Message published (mid=1)
 DEBUG - MQTT topic is subscribed : mid=2 granted_qos=(1,)
 INFO - Program susbcribed to topic (mid=2) with QoS (1,)
 DEBUG - MQTT topic is subscribed : mid=3 granted_qos=(1,)
 INFO - Program susbcribed to topic (mid=3) with QoS (1,)
-INFO - Message received : '[{"pin": "GPIO2", "variable": "lights/corridor", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO3", "variable": "lights/lounge", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO4", "variable": "doors/lounge", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO5", "variable": "doors/exit", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO6", "variable": "smoke", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO7", "variable": "drawers/maglock1", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO8", "variable": "drawers/maglock2", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO9", "variable": "drawers/maglock3", "initial": 1, "alias": ["powered", "released"]}]' in Room/My room/Props/Relay Pi/settings
-Room/My room/Props/Relay Pi/settings [{"pin": "GPIO2", "variable": "lights/corridor", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO3", "variable": "lights/lounge", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO4", "variable": "doors/lounge", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO5", "variable": "doors/exit", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO6", "variable": "smoke", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO7", "variable": "drawers/maglock1", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO8", "variable": "drawers/maglock2", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO9", "variable": "drawers/maglock3", "initial": 1, "alias": ["powered", "released"]}]
+INFO - Message received : '[{"pin": "GPIO2", "variable": "lights/corridor", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO3", "variable": "lights/lounge", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO4", "variable": "doors/lounge", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO5", "variable": "doors/exit", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO6", "variable": "smoke", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO7", "variable": "drawers/maglock1", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO8", "variable": "drawers/maglock2", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO9", "variable": "drawers/maglock3", "initial": 1, "alias": ["powered", "released"]}]' in Room/My room/Props/Relay Pi/wiring
+Room/My room/Props/Relay Pi/wiring [{"pin": "GPIO2", "variable": "lights/corridor", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO3", "variable": "lights/lounge", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO4", "variable": "doors/lounge", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO5", "variable": "doors/exit", "initial": 1, "alias": ["locked", "unlocked"]}, {"pin": "GPIO6", "variable": "smoke", "initial": 0, "alias": ["on", "off"]}, {"pin": "GPIO7", "variable": "drawers/maglock1", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO8", "variable": "drawers/maglock2", "initial": 1, "alias": ["powered", "released"]}, {"pin": "GPIO9", "variable": "drawers/maglock3", "initial": 1, "alias": ["powered", "released"]}]
 /home/pi/Room/Props/PiPyRelayProp/src/PiRelayApp.py:307: RuntimeWarning: This channel is already in use, continuing anyway.  Use GPIO.setwarnings(False) to disable warnings.
   GPIO.setup(output, GPIO.OUT, initial=self._gpioLevel(initial))
 INFO - GPIO 2 set as output (initial=0)
-INFO - Pin added from settings : {'pin': 'GPIO2', 'variable': 'lights/corridor', 'initial': 0, 'alias': ['on', 'off']}
+INFO - Pin added from wiring : {'pin': 'GPIO2', 'variable': 'lights/corridor', 'initial': 0, 'alias': ['on', 'off']}
 INFO - New boolean Publishable 'lights/corridor' (on/off) with initial=0
 INFO - GPIO 3 set as output (initial=0)
-INFO - Pin added from settings : {'pin': 'GPIO3', 'variable': 'lights/lounge', 'initial': 0, 'alias': ['on', 'off']}
+INFO - Pin added from wiring : {'pin': 'GPIO3', 'variable': 'lights/lounge', 'initial': 0, 'alias': ['on', 'off']}
 INFO - New boolean Publishable 'lights/lounge' (on/off) with initial=0
 INFO - GPIO 4 set as output (initial=1)
-INFO - Pin added from settings : {'pin': 'GPIO4', 'variable': 'doors/lounge', 'initial': 1, 'alias': ['locked', 'unlocked']}
+INFO - Pin added from wiring : {'pin': 'GPIO4', 'variable': 'doors/lounge', 'initial': 1, 'alias': ['locked', 'unlocked']}
 INFO - New boolean Publishable 'doors/lounge' (locked/unlocked) with initial=1
 INFO - GPIO 5 set as output (initial=1)
-INFO - Pin added from settings : {'pin': 'GPIO5', 'variable': 'doors/exit', 'initial': 1, 'alias': ['locked', 'unlocked']}
+INFO - Pin added from wiring : {'pin': 'GPIO5', 'variable': 'doors/exit', 'initial': 1, 'alias': ['locked', 'unlocked']}
 INFO - New boolean Publishable 'doors/exit' (locked/unlocked) with initial=1
 INFO - GPIO 6 set as output (initial=0)
-INFO - Pin added from settings : {'pin': 'GPIO6', 'variable': 'smoke', 'initial': 0, 'alias': ['on', 'off']}
+INFO - Pin added from wiring : {'pin': 'GPIO6', 'variable': 'smoke', 'initial': 0, 'alias': ['on', 'off']}
 INFO - New boolean Publishable 'smoke' (on/off) with initial=0
 INFO - GPIO 7 set as output (initial=1)
-INFO - Pin added from settings : {'pin': 'GPIO7', 'variable': 'drawers/maglock1', 'initial': 1, 'alias': ['powered', 'released']}
+INFO - Pin added from wiring : {'pin': 'GPIO7', 'variable': 'drawers/maglock1', 'initial': 1, 'alias': ['powered', 'released']}
 INFO - New boolean Publishable 'drawers/maglock1' (powered/released) with initial=1
 INFO - GPIO 8 set as output (initial=1)
-INFO - Pin added from settings : {'pin': 'GPIO8', 'variable': 'drawers/maglock2', 'initial': 1, 'alias': ['powered', 'released']}
+INFO - Pin added from wiring : {'pin': 'GPIO8', 'variable': 'drawers/maglock2', 'initial': 1, 'alias': ['powered', 'released']}
 INFO - New boolean Publishable 'drawers/maglock2' (powered/released) with initial=1
 INFO - GPIO 9 set as output (initial=1)
-INFO - Pin added from settings : {'pin': 'GPIO9', 'variable': 'drawers/maglock3', 'initial': 1, 'alias': ['powered', 'released']}
+INFO - Pin added from wiring : {'pin': 'GPIO9', 'variable': 'drawers/maglock3', 'initial': 1, 'alias': ['powered', 'released']}
 INFO - New boolean Publishable 'drawers/maglock3' (powered/released) with initial=1
-INFO - Program sending message 'DATA board=Pi settings=OK settings-date=Sat May  9 10:10:22 2020 lights/corridor=off lights/lounge=off doors/lounge=locked doors/exit=locked smoke=off drawers/maglock1=powered drawers/maglock2=powered drawers/maglock3=powered' (mid=5) on Room/My room/Props/Relay Pi/outbox
+INFO - Program sending message 'DATA board=Pi wiring=OK wiring-date=Sat May  9 10:10:22 2020 lights/corridor=off lights/lounge=off doors/lounge=locked doors/exit=locked smoke=off drawers/maglock1=powered drawers/maglock2=powered drawers/maglock3=powered' (mid=5) on Room/My room/Props/Relay Pi/outbox
 DEBUG - MQTT message is published : mid=4 userdata={'host': '192.168.1.42', 'port': 1883}
 INFO - Message published (mid=4)
 INFO - Message received : '@PING' in Room/My room/Props/Relay Pi/inbox
@@ -130,15 +130,12 @@ $ ps aux | grep python | grep -v "grep python" | grep PiPyRelayProp/src/main.py 
 ```
 
 
-## Relay Prop settings
-All relay output are setup with the *PyRelaySettings* GUI:
+## Relay Prop wiring and control panel
+All relay output are setup with the *PyRelayControl* GUI:
 
-![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaysettings-main.png)
-
-See [PyRelaySettings](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pyrelaysettings)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaywiring-main.png)
 
 
-## Relay Prop panel
 See [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl)
 
 
@@ -147,7 +144,7 @@ See [RELAY_MODULES.md](https://github.com/xcape-io/RelayProp/blob/master/RELAY_M
 
 
 ## Prop commands
-Commands are implicitly defined with the *PyRelaySettings* GUI, you can create group commands by naming variables in groups with the `/` separator.
+Commands are implicitly defined with the *wiring* GUI, you can create group commands by naming variables in groups with the `/` separator.
 
 Relay commands are built from the variable name:
 
@@ -170,14 +167,14 @@ COMMANDS_SYNONYMS_LOW = ['off', 'open']
 
 
 ## Prop data messages
-Relay state variables are sent as defined with the *PyRelaySettings* GUI, as well as the board and settings informations:
+Relay state variables are sent as defined with the *wiring* GUI, as well as the board and wiring informations:
 
 ```python
-settings:
+wiring:
     NONE: not loaded
-    OFFLINE ERROR: error while loading offline settings
+    OFFLINE ERROR: error while loading offline wiring
     OFFLINE: loaded from local file
-    ONLINE ERROR: error while loading online settings
+    ONLINE ERROR: error while loading online wiring
     OK: loaded from MQTT broker
 
 board:
@@ -189,8 +186,8 @@ For example:
 
 ```bash
 board=Pi 
-settings=OK 
-settings-date=Sat May  9 10:10:22 2020
+wiring=OK 
+wiring-date=Sat May  9 10:10:22 2020
 ```
 
 ![Outbox messages](https://github.com/xcape-io/RelayProp/blob/master/PiPyRelayProp/screenshots/outbox-messages.png)
@@ -199,7 +196,7 @@ settings-date=Sat May  9 10:10:22 2020
 ## Prop configuration for *Room by xcape.io*
 *Room by xcape.io* users can add the Relay Pi prop to their props:
 
-![Room prop configuration](https://github.com/xcape-io/RelayProp/blob/master/PiPyRelayProp/screenshots/room-prop-settings.png)
+![Room prop configuration](https://github.com/xcape-io/RelayProp/blob/master/PiPyRelayProp/screenshots/room-prop-wiring.png)
 
 And create a regular control panel:
 

@@ -6,11 +6,11 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 
 Raspberry Pi Relay Prop extends AsyncioProp.
 
-settings:
+wiring:
     NONE: not loaded
-    OFFLINE ERROR: error while loading offline settings
+    OFFLINE ERROR: error while loading offline wiring
     OFFLINE: loaded from local file
-    ONLINE ERROR: error while loading online settings
+    ONLINE ERROR: error while loading online wiring
     OK: loaded form MQTT broker
 
 board:
@@ -63,11 +63,11 @@ class PiRelayApp(AsyncioProp):
         self._board_p = PropData('board', str, board_initial, logger=self._logger)
         self.addData(self._board_p)
 
-        self._settings_p = PropData('settings', str, 'NONE', logger=self._logger)
-        self.addData(self._settings_p)
+        self._wiring_p = PropData('wiring', str, 'NONE', logger=self._logger)
+        self.addData(self._wiring_p)
 
-        self._settings_date_p = PropData('settings-date', str, NULL_DATE, logger=self._logger)
-        self.addData(self._settings_date_p)
+        self._wiring_date_p = PropData('wiring-date', str, NULL_DATE, logger=self._logger)
+        self.addData(self._wiring_date_p)
 
         # no running loop is available at that time so we can't use asyncio.create_task()
         self.addPeriodicAction("read JSON rescue once", self.readJsonRescue, 3)
@@ -160,7 +160,7 @@ class PiRelayApp(AsyncioProp):
     def onMessage(self, topic, message):
         # extend as a virtual method
         print(topic, message)
-        if topic == self._definitions['mqtt-sub-settings']:
+        if topic == self._definitions['mqtt-sub-wiring']:
             self.processSettingsMessage(message)
         else:
             if message == "app:startup" or message == "app:data":
@@ -192,11 +192,11 @@ class PiRelayApp(AsyncioProp):
             try:
                 if self._mcp23017:
                     if p['pin'] == 'GPIO2' or p['pin'] == 'GPIO3':
-                        self._logger.info("Pin ignored from settings : {}".format(p))
+                        self._logger.info("Pin ignored from wiring : {}".format(p))
                     elif p['pin'].startswith('MCP23017'):
                         if self.setMcp23017PinOut(p['pin'], p['initial']):
                             self._propPins[p['pin']] = PropPin(p['pin'], p['variable'], p['initial'], p['alias'])
-                            self._logger.info("Pin added from settings : {}".format(p))
+                            self._logger.info("Pin added from wiring : {}".format(p))
                             prop_data = PropData(p['variable'], bool,
                                                  self._gpioLevel(p['initial']),
                                                  alias=p['alias'],
@@ -211,7 +211,7 @@ class PiRelayApp(AsyncioProp):
                     else:
                         if self.setGpioPinOut(p['pin'], p['initial']):
                             self._propPins[p['pin']] = PropPin(p['pin'], p['variable'], p['initial'], p['alias'])
-                            self._logger.info("Pin added from settings : {}".format(p))
+                            self._logger.info("Pin added from wiring : {}".format(p))
                             prop_data = PropData(p['variable'], bool,
                                                  self._gpioLevel(p['initial']),
                                                  alias=p['alias'],
@@ -225,11 +225,11 @@ class PiRelayApp(AsyncioProp):
                                 self._logger.debug(e)
                 else:
                     if p['pin'].startswith('MCP23017'):
-                        self._logger.info("Pin ignored from settings : {}".format(p))
+                        self._logger.info("Pin ignored from wiring : {}".format(p))
                     else:
                         if self.setGpioPinOut(p['pin'], p['initial']):
                             self._propPins[p['pin']] = PropPin(p['pin'], p['variable'], p['initial'], p['alias'])
-                            self._logger.info("Pin added from settings : {}".format(p))
+                            self._logger.info("Pin added from wiring : {}".format(p))
                             prop_data = PropData(p['variable'], bool,
                                                  self._gpioLevel(p['initial']),
                                                  alias=p['alias'],
@@ -242,46 +242,46 @@ class PiRelayApp(AsyncioProp):
                                 self._logger.error("Failed to parse '{}' output".format(p['pin']))
                                 self._logger.debug(e)
             except Exception as e:
-                self._settings_p.update('ERROR')
-                self._logger.warning("Failed add pin from settings : {}".format(p))
+                self._wiring_p.update('ERROR')
+                self._logger.warning("Failed add pin from wiring : {}".format(p))
                 self._logger.warning(e)
 
     # __________________________________________________________________
-    def processSettingsMessage(self, settings):
+    def processSettingsMessage(self, wiring):
 
         try:
-            self._settings_p.update('NONE')
-            self._settings_date_p.update(NULL_DATE)
+            self._wiring_p.update('NONE')
+            self._wiring_date_p.update(NULL_DATE)
             self.sendDataChanges()
             self.cleanupGpioPins()
-            json_list = json.loads(settings)
+            json_list = json.loads(wiring)
             self.processSettingsJson(json_list)
-            with open(SETTINGS_JSON_FILE, 'w', encoding='utf-8') as fp:
-                fp.write(settings)
-            if self._settings_p.value() == 'ERROR':
-                self._settings_p.update('ONLINE ERROR')
+            with open(WIRING_JSON_FILE, 'w', encoding='utf-8') as fp:
+                fp.write(wiring)
+            if self._wiring_p.value() == 'ERROR':
+                self._wiring_p.update('ONLINE ERROR')
             else:
-                self._settings_p.update('OK')
-            self._settings_date_p.update("%s" % time.ctime(os.path.getmtime(SETTINGS_JSON_FILE)))
+                self._wiring_p.update('OK')
+            self._wiring_date_p.update("%s" % time.ctime(os.path.getmtime(WIRING_JSON_FILE)))
             self.sendAllData()
         except json.JSONDecodeError as jex:
             self._logger.error("JSONDecodeError '{}' at {} in : {}".format(jex.msg, jex.pos, jex.doc))
         except Exception as e:
-            self._logger.error("Failed to parse JSON settings : {}".format(settings))
+            self._logger.error("Failed to parse JSON wiring : {}".format(wiring))
             self._logger.debug(e)
 
     # __________________________________________________________________
     async def readJsonRescue(self, wait):
 
         await asyncio.sleep(wait)
-        if self._settings_date_p.value() == NULL_DATE:
-            self._settings_p.update('NONE')
-            self._settings_date_p.update(NULL_DATE)
+        if self._wiring_date_p.value() == NULL_DATE:
+            self._wiring_p.update('NONE')
+            self._wiring_date_p.update(NULL_DATE)
             self.sendDataChanges()
             self.cleanupGpioPins()
-            if os.path.isfile(SETTINGS_JSON_FILE):
+            if os.path.isfile(WIRING_JSON_FILE):
                 try:
-                    with open(SETTINGS_JSON_FILE, 'r', encoding='utf-8') as fp:
+                    with open(WIRING_JSON_FILE, 'r', encoding='utf-8') as fp:
                         json_list = json.load(fp)
                     self.processSettingsJson(json_list)
                 except json.JSONDecodeError as jex:
@@ -289,11 +289,11 @@ class PiRelayApp(AsyncioProp):
                 except Exception as e:
                     self._logger.error("Failed to load JSON file '{0}'".format(self._localFile))
                     self._logger.debug(e)
-                if self._settings_p.value() == 'ERROR':
-                    self._settings_p.update('OFFLINE ERROR')
+                if self._wiring_p.value() == 'ERROR':
+                    self._wiring_p.update('OFFLINE ERROR')
                 else:
-                    self._settings_p.update('OFFLINE')
-                self._settings_date_p.update("%s" % time.ctime(os.path.getmtime(SETTINGS_JSON_FILE)))
+                    self._wiring_p.update('OFFLINE')
+                self._wiring_date_p.update("%s" % time.ctime(os.path.getmtime(WIRING_JSON_FILE)))
             self.sendAllData()
 
     # __________________________________________________________________
