@@ -1,5 +1,5 @@
 ﻿# Relay Prop
-*Relay Prop for Escape Room with Arduino or Raspberry Pi board.*
+*No-code prop and control panel to command relays with Arduino Mega 2560 or Raspberry Pi board.*
 
 <img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
 
