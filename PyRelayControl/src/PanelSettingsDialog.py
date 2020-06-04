@@ -65,23 +65,15 @@ class PanelSettingsDialog(QDialog):
         wiring_button.released.connect(self.wiringButtonReleased)
         wiring_button.released.connect(self.accept)
 
-        settings_box = QGroupBox(self.tr("Panel settings"))
-        settings_box.setToolTip(self.tr("JSON file from Relay Settings app"))
-        settings_box_layout = QVBoxLayout(settings_box)
-        main_layout.addWidget(settings_box)
-
-        json_layout = QHBoxLayout()
-        settings_box_layout.addLayout(json_layout)
-
         if self._propVariables:
-            button = self.tr("Rebuild panel from new settings")
+            button = self.tr("Rebuild panel from new wiring")
         else:
-            button = self.tr("Build panel from settings")
+            button = self.tr("Build panel from wiring")
 
         build_button = QPushButton(" {} ".format(button))
-        build_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         build_button.setFocusPolicy(Qt.NoFocus)
-        settings_box_layout.addWidget(build_button)
+
+        main_layout.addWidget(build_button)
 
         credentials_box = QGroupBox(self.tr("Prop SSH credentials"))
         credentials_box.setToolTip(self.tr("Credentials for relaunch and reboot SSH commands"))
