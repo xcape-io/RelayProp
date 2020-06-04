@@ -1,14 +1,15 @@
 ﻿# Relay Prop
 *No-code prop and control panel to command relays with Arduino Mega 2560 or Raspberry Pi board.*
 
-<img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Early development stage. A lot of changes to come yet...
+For eihter the Arduino Mega or the Raspberry Pi, you just have to install the code provided in [MegaRelayProp](./MegaRelayProp) or [PiPyRelayProp](./PiPyRelayProp).
 
-#### TODO
-* Add MPC23017 support
-* Add Mega without bridge support
+Use [PyRelayControl](./PyRelayControl) GUI app on Windows or Linux desktop (Mac OSX should work too) to configure the Arduino Mega or the Raspberry Pi board and your wiring.
+
+The configuration is stored locally in a JSON file and in a topic of the MQTT broker.
+
+![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/overview.png?raw=true)
 
 <hr>
-
 
 This repository contains 3 projects:
 * [MegaRelayProp: Relay Prop on Arduino Mega 2560](./MegaRelayProp)
@@ -113,6 +114,12 @@ We usually run PyRelayControl <a href="./PyRelayControl#installation-on-windows"
 You can run [PyRelayControl](./PyRelayControl) as a *plugin for <a href="https://xcape.io/" target="_blank">xcape.io</a> Room*.
 
 ![](https://github.com/xcape-io/relayprop/blob/master/docs/screenshots/pyrelaysettings-main.png)
+
+
+
+#### TODO
+* Add MPC23017 support
+* Add Mega without bridge support
 
 
 ## Author
