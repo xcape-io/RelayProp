@@ -95,13 +95,11 @@ Then upload the sktech to the Relay Mega board.
 > All I/O pins are available, the WiFi shield is connected to Arduino with SPI port.
 
 
-## Relay Prop settings
+## Relay Prop wiring and control panel
+All relay output are setup with the *PyRelayControl* GUI:
+
 ![](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/pyrelaysettings-main.png)
 
-See [PyRelaySettings](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pyrelaysettings)
-
-
-## Relay Prop panel
 See [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl)
 
 
