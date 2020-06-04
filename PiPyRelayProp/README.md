@@ -131,7 +131,7 @@ $ ps aux | grep python | grep -v "grep python" | grep PiPyRelayProp/src/main.py 
 
 
 ## Relay Prop wiring and control panel
-All relay output are setup with the *PyRelayControl* GUI:
+All relay outputs are setup with the *PyRelayControl* GUI:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaywiring-main.png)
 
