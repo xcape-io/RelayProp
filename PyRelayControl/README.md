@@ -86,7 +86,7 @@ PyQt5 installation on Mac can be tricky, see <a href="https://www.learnpyqt.com/
 ## Usage
 At fisrt start (`prop.ini` not created yet), configure the relay prop:
 
-![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-control.png?raw=true)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/configure-prop.png?raw=true)
 
 To configure the relay prop:
 
