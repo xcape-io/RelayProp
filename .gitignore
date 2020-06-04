@@ -3,12 +3,13 @@
 .config.yml
 .layout.yml
 .*_layout.yml
-prop.ini
-arduino_mega2560.json
-arduino_mega2560_bridge.json
-raspberry_pi.json
-raspberry_pi_23017.json
-settings.json
+PyRelayControl/src/panel.json
+PyRelayControl/src/prop.ini
+PyRelayControl/src/arduino_mega2560.json
+PyRelayControl/src/arduino_mega2560_bridge.json
+PyRelayControl/src/raspberry_pi.json
+PyRelayControl/src/raspberry_pi_23017.json
+PiPyRelayProp/src/wiring.json
 *.log
 *.log.*
 
@@ -137,4 +138,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-PyRelayControl/src/panel.json
+
