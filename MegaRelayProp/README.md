@@ -96,7 +96,7 @@ Then upload the sktech to the Relay Mega board.
 
 
 ## Relay Prop wiring and control panel
-All relay output are setup with the *PyRelayControl* GUI:
+All relay outputs are setup with the *PyRelayControl* GUI:
 
 ![](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/pyrelaysettings-main.png)
 
