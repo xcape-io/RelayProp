@@ -54,7 +54,7 @@ If you choose Raspberry Pi for your prop, you can install *mosquitto* on this Ra
 
 ## Author
 
-**Marie FAURE** (May 15th, 2020)
+**Faure Systems** (May 15th, 2020)
 * company: FAURE SYSTEMS SAS
 * mail: *dev at faure dot systems*
 * github: <a href="https://github.com/xcape-io?tab=repositories" target="_blank">xcape-io</a>

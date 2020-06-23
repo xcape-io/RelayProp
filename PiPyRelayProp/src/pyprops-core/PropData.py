@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PropData.py
-MIT License (c) Marie Faure <dev at faure dot systems>
+MIT License (c) Faure Systems <dev at faure dot systems>
 
 Class to track changes in variables and to publish them optimally in the props outbox.
 """

@@ -1,8 +1,8 @@
 /*
   Name:    MegaRelayProp.cpp
-  Author:  Marie Faure <dev at faure dot systems>
+  Author:  Faure Systems <dev at faure dot systems>
   Editor:  https://github.com/fauresystems
-  License: MIT License (c) Marie Faure <dev at faure dot systems>
+  License: MIT License (c) Faure Systems <dev at faure dot systems>
 
   Room Relay Prop on Arduino Mega 2560 with and Dragino Yun shield.
 */

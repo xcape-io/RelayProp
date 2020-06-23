@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 QtMqttApp.py
-MIT License (c) Marie Faure <dev at faure dot systems>
+MIT License (c) Faure Systems <dev at faure dot systems>
 
 App base class extending QCoreApplication or QApplication with Paho MQTT client:
 - make all app subscriptions (app-inbox and mqtt-sub-* topics)
