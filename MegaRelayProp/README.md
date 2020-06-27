@@ -43,7 +43,7 @@ MegaRelayProp prop(MegaRelayProp::Bridge,
               u8"Relay Mega", // as MQTT client id, should be unique per client for given broker
               u8"Room/My room/Props/Relay Mega/inbox",
               u8"Room/My room/Props/Relay Mega/outbox",
-              u8"Room/My room/Props/Relay Mega/settings/#",
+              u8"Room/My room/Props/Relay Mega/wiring/#",
               "192.168.1.53", // your MQTT server IP address
               1883); // your MQTT server port;
 ```
@@ -69,7 +69,7 @@ MegaRelayProp prop(MegaRelayProp::Ethernet,
               u8"Relay Mega", // as MQTT client id, should be unique per client for given broker
               u8"Room/My room/Props/Relay Mega/inbox",
               u8"Room/My room/Props/Relay Mega/outbox",
-              u8"Room/My room/Props/Relay Mega/settings/#",
+              u8"Room/My room/Props/Relay Mega/wiring/#",
               "192.168.1.53", // your MQTT server IP address
               1883); // your MQTT server port;
 ```
@@ -85,7 +85,7 @@ MegaRelayProp prop(MegaRelayProp::WiFi,
               u8"Relay Mega", // as MQTT client id, should be unique per client for given broker
               u8"Room/My room/Props/Relay Mega/inbox",
               u8"Room/My room/Props/Relay Mega/outbox",
-              u8"Room/My room/Props/Relay Mega/settings/#",
+              u8"Room/My room/Props/Relay Mega/wiring/#",
               "192.168.1.53", // your MQTT server IP address
               1883); // your MQTT server port;
 ```
