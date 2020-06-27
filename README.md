@@ -101,10 +101,12 @@ The Relay Prop inbox/outbox MQTT topics are:
 ```csharp
 Room/[escape room name]/Props/[props name]/inbox
 Room/[escape room name]/Props/[props name]/outbox
+Room/[escape room name]/Props/[props name]/settings/#
 
 example:
-    /Room/My Room/Props/Relay Mega/inbox
-    /Room/My Room/Props/Relay Mega/outbox
+    Room/My Room/Props/Relay Mega/inbox
+    Room/My Room/Props/Relay Mega/outbox
+    Room/My Room/Props/Relay Mega/settings/#
 ```
 
 `MegaRelayProp.ino` sketch supports:
@@ -124,10 +126,12 @@ The Relay Prop inbox/outbox MQTT topics are:
 ```csharp
 Room/[escape room name]/Props/[props name]/inbox
 Room/[escape room name]/Props/[props name]/outbox
+Room/[escape room name]/Props/[props name]/settings/#
 
 example:
-    /Room/My Room/Props/Relay Nucleo/inbox
-    /Room/My Room/Props/Relay Nucleo/outbox
+    Room/My Room/Props/Relay Nucleo/inbox
+    Room/My Room/Props/Relay Nucleo/outbox
+    Room/My Room/Props/Relay Nucleo/settings/#
 ```
 
 `NucleoRelayProp.ino` sketch supports:
@@ -143,10 +147,12 @@ The Relay Prop inbox/outbox MQTT topics are:
 ```python
 Room/[escape room name]/Props/[props name]/inbox
 Room/[escape room name]/Props/[props name]/outbox
+Room/[escape room name]/Props/[props name]/settings
 
 example:
-    /Room/My Room/Props/Relay Pi/inbox
-    /Room/My Room/Props/Relay Pi/outbox
+    Room/My Room/Props/Relay Pi/inbox
+    Room/My Room/Props/Relay Pi/outbox
+    Room/My Room/Props/Relay Pi/settings
 ```
 
 See [PiPyRelayProp: Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp).
