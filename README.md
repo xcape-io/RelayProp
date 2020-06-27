@@ -126,8 +126,8 @@ Room/[escape room name]/Props/[props name]/inbox
 Room/[escape room name]/Props/[props name]/outbox
 
 example:
-    /Room/My Room/Props/Relay Mega/inbox
-    /Room/My Room/Props/Relay Mega/outbox
+    /Room/My Room/Props/Relay Nucleo/inbox
+    /Room/My Room/Props/Relay Nucleo/outbox
 ```
 
 `NucleoRelayProp.ino` sketch supports:
