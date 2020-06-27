@@ -1,7 +1,7 @@
 # Relay Prop
-*__No-code__ prop and control panel to command relays with Arduino Mega 2560 or Raspberry Pi board.*
+*__No-code__ prop and control panel to command relays with Arduino Mega 2560 or STM32 Nucleo 144 or Raspberry Pi board.*
 
-For either the Arduino Mega or the Raspberry Pi, you just have to install the code provided in [MegaRelayProp](./MegaRelayProp) or [PiPyRelayProp](./PiPyRelayProp).
+For either the Arduino Mega or the Raspberry Pi, you just have to install the code provided in [MegaRelayProp](./MegaRelayProp) or [NucleoRelayProp](./NucleoRelayProp) or [PiPyRelayProp](./PiPyRelayProp).
 
 Use [PyRelayControl](./PyRelayControl) GUI app on Windows or Linux desktop (Mac OSX should work too) to configure the Arduino Mega or the Raspberry Pi board and your wiring.
 
@@ -11,8 +11,9 @@ The configuration is stored locally in a JSON file and in a topic of the MQTT br
 
 <hr>
 
-This repository contains 3 projects:
+This repository contains 4 projects:
 * [MegaRelayProp: Relay Prop on Arduino Mega 2560](./MegaRelayProp)
+* [NucleoRelayProp: Relay Prop on STM32 Nucleo 144](./NucleoRelayProp)
 * [PiPyRelayProp: Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp)
 * [PyRelayControl: control panel for Relay Prop](./PyRelayControl)
 
@@ -52,7 +53,7 @@ Our goal is to give most of the electrical control to a central accessory locate
 ### Recommended room network (star wiring)
 ![Room network](docs/room-network.png)
 
-### Raspberry Pi or Arduino Mega ?
+### Raspberry Pi or Arduino Mega  or STM32 Nucleo 144 ?
 For the Relay prop we recommend and provide code for Raspberry Pi and Arduino Mega.
 
 #### Raspberry Pi 
@@ -61,6 +62,7 @@ Good choice for Python enthusiasts because we need an MQTT broker for the Escape
 Raspberry Pi doesn't expose a lot of pins:
 * 25 pins available
 * 39 pins with one 16 Pins I/O Expanders with <a href="https://www.microchip.com/wwwproducts/en/MCP23017" target="_blank">MCP23017</a> connected thru I2C
+* Pins are 3.3V
 
 Examples of <a href="https://www.microchip.com/wwwproducts/en/MCP23017" target="_blank">MCP23017</a> expanders:
 * <a href="https://www.waveshare.com/wiki/MCP23017_IO_Expansion_Board" target="_blank">Waveshare MCP23017 IO Expansion Board</a>
@@ -82,6 +84,12 @@ With the Dragino Yún shield, you don't need a USB cable to program the Arduino 
 
 > D0 (RxD) and D1 (TxD) are used by the Arduino Bridge connection.
 > Ethernet and WiFi shield are connected to Arduino with SPI port.
+
+#### STM32 Nucleo 144
+Good choice to save money (Nucleo boards cost *$20* including Ethernet RJ45), tinkerers can code as simply as Arduinos with Arduino IDE with STM32duino libraries. Advanced IoT/embedded coders can use the power of the STM32 F7 with STM32CubeIDE.
+
+<a href="https://www.st.com/en/evaluation-tools/stm32-nucleo-boards.html" target="_blank">STM32 Nucleo-144</a> expose a lot of I/O: 
+* 73 pins available on ST Zio connector including support for Arduino Uno V3
 
 
 ## MegaRelayProp project
