@@ -112,7 +112,28 @@ example:
 * Arduino Mega 2560 + Ethernet Shield
 * Arduino Mega 2560 + WiFi Shield
 
-See [MegaRelayProp: Room Relay Prop on Arduino Mega 2560](./MegaRelayProp).
+See [MegaRelayProp: Relay Prop on Arduino Mega 2560](./MegaRelayProp).
+
+
+## NucleoRelayProp project
+For the Relay Prop Arduino sketch to run on STM32 Nucleo 144 see `NucleoRelayProp.ino` sketch in [NucleoRelayProp](./NucleoRelayProp).
+
+The `NucleoRelayProp.ino` sketch includes `NucleoRelayProp` class that extends `Props` class from <a href="https://github.com/xcape-io/ArduinoProps" target="_blank">ArduinoProps library</a>.
+
+The Relay Prop inbox/outbox MQTT topics are:
+```csharp
+Room/[escape room name]/Props/[props name]/inbox
+Room/[escape room name]/Props/[props name]/outbox
+
+example:
+    /Room/My Room/Props/Relay Mega/inbox
+    /Room/My Room/Props/Relay Mega/outbox
+```
+
+`NucleoRelayProp.ino` sketch supports:
+* STM32 Nucleo 144 (tested with STM32F767ZI)
+
+See [NucleoRelayProp: Relay Prop on STM32 Nucleo 144](./NucleoRelayProp).
 
 
 ## PiPyRelayProp project
@@ -128,7 +149,7 @@ example:
     /Room/My Room/Props/Relay Pi/outbox
 ```
 
-See [PiPyRelayProp: Room Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp).
+See [PiPyRelayProp: Relay Prop on Raspberry Pi (3B/3B+/4)](./PiPyRelayProp).
 
 
 ## PyRelayControl project
