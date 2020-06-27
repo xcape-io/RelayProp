@@ -43,6 +43,7 @@ PI_MPC23017_NOT_SUPPORTED = True
 
 LOCAL_ARDUINO_MEGA2560_JSON = 'arduino_mega2560.json'
 LOCAL_ARDUINO_MEGA2560_BRIDGE_JSON = 'arduino_mega2560_bridge.json'
+LOCAL_STM32_NUCLEO144_JSON = 'stm32_nucleo144.json'
 LOCAL_PI_JSON = 'raspberry_pi.json'
 LOCAL_PI_MCP23017_JSON = 'raspberry_pi_23017.json'
 

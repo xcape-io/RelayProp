@@ -63,7 +63,9 @@ class PanelDialog(AppletDialog):
                 self._propSettings['options']['admin_password']):
             self._adminMode.set(0)
 
-        if self._propSettings['prop']['board'] == 'mega':
+        if self._propSettings['prop']['board'] == 'nucleo':
+            local_json = LOCAL_STM32_NUCLEO144_JSON
+        elif self._propSettings['prop']['board'] == 'mega':
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 local_json = LOCAL_ARDUINO_MEGA2560_BRIDGE_JSON
             else:
@@ -210,6 +212,9 @@ class PanelDialog(AppletDialog):
         if '__REBOOT__' in self._widgetHiddens and self._widgetHiddens['__REBOOT__']:
             button_reboot.setVisible(False)
 
+        if self._propSettings['prop']['board'] == 'nucleo':
+            box.setVisible(False)
+
         button_relaunch.released.connect(self.relaunchProp)
         button_reboot.released.connect(self.rebootProp)
 
@@ -238,7 +243,9 @@ class PanelDialog(AppletDialog):
         self._settingsButton.setFixedSize(QSize(28, 28))
         self._settingsButton.released.connect(self.onPropConfiguration)
 
-        if self._propSettings['prop']['board'] == 'mega':
+        if self._propSettings['prop']['board'] == 'nucleo':
+            self._settingsButton.setIcon(QIcon('./images/nucleo_transparent.png'))
+        elif self._propSettings['prop']['board'] == 'mega':
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
         else:
             self._settingsButton.setIcon(QIcon('./images/raspberry-pi.svg'))
@@ -424,7 +431,9 @@ class PanelDialog(AppletDialog):
             else:
                 self._editButton.setVisible(self._adminMode == 1)
 
-        if self._propSettings['prop']['board'] == 'mega':
+        if self._propSettings['prop']['board'] == 'nucleo':
+            self._settingsButton.setIcon(QIcon('./images/nucleo_transparent.png'))
+        elif self._propSettings['prop']['board'] == 'mega':
             self._settingsButton.setIcon(QIcon('./images/arduino.svg'))
         else:
             self._settingsButton.setIcon(QIcon('./images/raspberry-pi.svg'))

@@ -1,0 +1,38 @@
+[
+  {
+    "pin": "D1",
+    "variable": "sw1",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  },
+  {
+    "pin": "D2",
+    "variable": "sw2",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  },
+  {
+    "pin": "D5",
+    "variable": "PORTE",
+    "initial": 0,
+    "alias": [
+      "CLOSED",
+      "OPENED"
+    ]
+  },
+  {
+    "pin": "D6",
+    "variable": "door",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  }
+]

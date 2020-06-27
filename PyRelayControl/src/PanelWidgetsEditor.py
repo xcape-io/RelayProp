@@ -337,6 +337,11 @@ class PanelWidgetsEditor(QDialog):
             relaunch_button.setDisabled(True)
             reboot_button.setDisabled(True)
 
+        if self._propSettings['prop']['board'] == 'nucleo':
+            relaunch_button.setVisible(False)
+            reboot_button.setVisible(False)
+            self._propBox.setVisible(False)
+
         relaunch_button.released.connect(self.onRelaunch)
         reboot_button.setDisabled(True)
 

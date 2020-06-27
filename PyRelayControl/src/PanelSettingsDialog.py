@@ -110,6 +110,9 @@ class PanelSettingsDialog(QDialog):
         self._userInput.editingFinished.connect(self.onCredentialsEdition)
         self._paswInput.editingFinished.connect(self.onCredentialsEdition)
 
+        if self._propSettings['prop']['board'] == 'nucleo':
+            credentials_box.setVisible(False)
+
         close_button = QPushButton(self.tr("Close"))
         close_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         close_button.setFocusPolicy(Qt.NoFocus)
@@ -135,7 +138,9 @@ class PanelSettingsDialog(QDialog):
     @pyqtSlot()
     def onBuild(self):
 
-        if self._propSettings['prop']['board'] == 'mega':
+        if self._propSettings['prop']['board'] == 'nucleo':
+            local_json = LOCAL_STM32_NUCLEO144_JSON
+        elif self._propSettings['prop']['board'] == 'mega':
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 local_json = LOCAL_ARDUINO_MEGA2560_BRIDGE_JSON
             else:

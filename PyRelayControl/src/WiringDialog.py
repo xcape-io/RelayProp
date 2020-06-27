@@ -64,6 +64,11 @@ class WiringDialog(AppletDialog):
         print("Mega", len(self._boardMegaPins), "pins", self._boardMegaPins)
         print("Mega with bridge", len(self._boardMegaWithBridgePins), "pins", self._boardMegaWithBridgePins)
 
+        self._boardNucleoPins = []
+        for digital in range(73):
+             self._boardNucleoPins.append(("D{}".format(digital), "D{}".format(digital)))
+        print("Nucleo (Zio)", len(self._boardNucleoPins), "pins", self._boardNucleoPins)
+
         self._boardPiPins = []
         self._boardPiWithExpanderPins = []
         for gpio in range(2, 26 + 1):
@@ -81,7 +86,10 @@ class WiringDialog(AppletDialog):
         print("Pi", len(self._boardPiPins), "pins", self._boardPiPins)
         print("Pi with MCP23017", len(self._boardPiWithExpanderPins), "pins", self._boardPiWithExpanderPins)
 
-        if self._propSettings['prop']['board'] == 'mega':
+        if self._propSettings['prop']['board'] == 'nucleo':
+            self._boardPins = self._boardNucleoPins
+            self._localFile = LOCAL_STM32_NUCLEO144_JSON
+        elif self._propSettings['prop']['board'] == 'mega':
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 self._boardPins = self._boardMegaWithBridgePins
                 self._localFile = LOCAL_ARDUINO_MEGA2560_BRIDGE_JSON
@@ -382,7 +390,10 @@ class WiringDialog(AppletDialog):
         if 'prop_name' in self._propSettings['prop']:
             self._led.updateDefaultText(self._propSettings['prop']['prop_name'])
 
-        if self._propSettings['prop']['board'] == 'mega':
+        if self._propSettings['prop']['board'] == 'nucleo':
+            self._boardPins = self._boardNucleoPins
+            self._localFile = LOCAL_STM32_NUCLEO144_JSON
+        elif self._propSettings['prop']['board'] == 'mega':
             self._boardPins = self._boardMegaPins
             if 'mega_bridge' in self._propSettings['prop'] and self._propSettings['prop']['mega_bridge'] == '1':
                 self._boardPins = self._boardMegaWithBridgePins
@@ -506,8 +517,8 @@ class WiringDialog(AppletDialog):
     @pyqtSlot()
     def upload(self):
 
-        if self._propSettings['prop']['board'] == 'mega':
-            self.uploadForMega()
+        if  self._propSettings['prop']['board'] == 'mega' or self._propSettings['prop']['board'] == 'nucleo':
+            self.uploadArduino()
             return
 
         pin_list = []
@@ -525,7 +536,7 @@ class WiringDialog(AppletDialog):
 
     # __________________________________________________________________
     @pyqtSlot()
-    def uploadForMega(self):
+    def uploadArduino(self):
 
         # to stress the Mega memory, configure all pins
         # self.uploadFullMega()

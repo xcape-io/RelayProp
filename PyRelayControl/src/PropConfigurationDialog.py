@@ -45,6 +45,8 @@ class PropConfigurationDialog(QDialog):
 
         if 'board' not in self._propSettings['prop']:
             self.setWindowIcon(QIcon('./mqtticon.png'))
+        elif self._propSettings['prop']['board'] == 'nucleo':
+            self.setWindowIcon(QIcon('./images/nucleo_transparent.png'))
         elif self._propSettings['prop']['board'] == 'mega':
             self.setWindowIcon(QIcon('./images/arduino.svg'))
         else:
@@ -65,12 +67,14 @@ class PropConfigurationDialog(QDialog):
 
         self._boardMegaButton = QRadioButton(self.tr("Arduino Mega 2560"))
         self._boardMegaYunButton = QCheckBox(self.tr("Arduino Mega 2560 with Dragino Yún shield"))
+        self._boardNucleoButton = QRadioButton(self.tr("STM32 Nucleo 144"))
         self._boardPiButton = QRadioButton(self.tr("Raspberry Pi"))
         self._boardPiExpanderButton = QCheckBox(self.tr("Raspberry Pi with MCP23017 expander"))
         board_box_layout.addWidget(self._boardMegaButton)
         board_box_layout.addWidget(self._boardMegaYunButton)
         board_box_layout.addWidget(self._boardPiButton)
         board_box_layout.addWidget(self._boardPiExpanderButton)
+        board_box_layout.addWidget(self._boardNucleoButton)
 
         self._paramWidget = QWidget()
         self._paramWidget.setContentsMargins(0, 0, 0, 0)
@@ -162,6 +166,7 @@ class PropConfigurationDialog(QDialog):
         self.setLayout(main_layout)
 
         self._boardMegaButton.released.connect(self.onBoardMegaButton)
+        self._boardNucleoButton.released.connect(self.onBoardNucleoButton)
         self._boardPiButton.released.connect(self.onBoardPiButton)
         self._brokerIpAddressInput.editingFinished.connect(self.onBrokerAddressEdited)
         apply_button.released.connect(self.onApply)
@@ -193,6 +198,10 @@ class PropConfigurationDialog(QDialog):
             if prop_settings['prop']['board'] == 'mega':
                 self._boardMegaButton.setChecked(True)
                 self._boardMegaYunButton.setEnabled(False and MEGA_YUN_SUPPORTED)  # True
+                self._boardPiExpanderButton.setEnabled(False)
+            elif prop_settings['prop']['board'] == 'nucleo':
+                self._boardNucleoButton.setChecked(True)
+                self._boardMegaYunButton.setEnabled(False)
                 self._boardPiExpanderButton.setEnabled(False)
             else:
                 self._boardPiButton.setChecked(True)
@@ -277,7 +286,7 @@ class PropConfigurationDialog(QDialog):
     @pyqtSlot()
     def onApply(self):
 
-        if not self._boardMegaButton.isChecked() and not self._boardPiButton.isChecked():
+        if not self._boardMegaButton.isChecked() and not self._boardNucleoButton.isChecked() and not self._boardPiButton.isChecked():
             self.forceBoardModel()
             return
 
@@ -287,6 +296,8 @@ class PropConfigurationDialog(QDialog):
 
         if self._boardMegaButton.isChecked():
             self._propSettings['prop']['board'] = "mega"
+        elif self._boardNucleoButton.isChecked():
+            self._propSettings['prop']['board'] = "nucleo"
         else:
             self._propSettings['prop']['board'] = "pi"
 
@@ -362,7 +373,9 @@ class PropConfigurationDialog(QDialog):
     @pyqtSlot()
     def onClose(self):
 
-        if not self._boardMegaButton.isChecked() and not self._boardPiButton.isChecked():
+        if not self._boardMegaButton.isChecked() and \
+                not self._boardNucleoButton.isChecked() and \
+                not self._boardPiButton.isChecked():
             sys.exit(-10)
 
         self.accept()
@@ -390,6 +403,20 @@ class PropConfigurationDialog(QDialog):
 
     # __________________________________________________________________
     @pyqtSlot()
+    def onBoardNucleoButton(self):
+
+        self._logger.info(self.tr("Settings : set 'Nucleo' board"))
+        self.setWindowIcon(QIcon('./images/nucleo_transparent.png'))
+        self._boardNucleoButton.setChecked(True)
+        self._boardMegaYunButton.setEnabled(False)
+        self._boardPiExpanderButton.setEnabled(False)
+        if not self._paramWidget.isEnabled():
+            self._paramWidget.setEnabled(True)
+            self._propNameInput.setText('Relay Nucleo')
+            self.onPropNameEditingFinished()
+
+    # __________________________________________________________________
+    @pyqtSlot()
     def onBoardPiButton(self):
 
         self._logger.info(self.tr("Settings : set 'Pi' board"))
@@ -409,6 +436,8 @@ class PropConfigurationDialog(QDialog):
         if not self._propNameInput.text():
             if self._boardMegaButton.isChecked():
                 self._propNameInput.setText('Relay Mega')
+            elif self._boardNucleoButton.isChecked():
+                self._propNameInput.setText('Relay Nucleo')
             else:
                 self._propNameInput.setText('Relay Pi')
 
