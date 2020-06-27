@@ -3,7 +3,7 @@
 """
 constants.py
 
-Contains all the control applet constants.
+Contains all applet constants.
 """
 
 # __________________________________________________________________
