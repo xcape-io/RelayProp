@@ -1,11 +1,6 @@
 # NucleoRelayProp
 *Universal Relay Prop for Escape Room with STM32 Nucleo-144  connected with Ethernet.*
 
-> Notes: pins are 3.3V, pins on Zio port: D0..D72 
-
-![](screenshots/stm32-nucleo-144-zio.png)
-
-
 In your Escape Room, *PiPyRelayProp* centralizes the control of your main relays:
 * lights
 * electricity
@@ -74,6 +69,11 @@ See [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayCo
 
 ## Relay modules
 See [RELAY_MODULES.md](https://github.com/xcape-io/RelayProp/blob/master/RELAY_MODULES.md)
+
+STM32 Nucleo-144 boards expose the **ST Zio connector**, which extends the Arduino Uno V3 connectivity with 73 digital ouiputs (`D0` to `D72`).
+
+![](screenshots/stm32-nucleo-144-zio.png)
+
 
 
 ## Prop commands
