@@ -50,6 +50,7 @@ MegaRelayProp prop(MegaRelayProp::Bridge,
               u8"Room/My room/Props/Relay Mega/wiring/#",
               "192.168.1.53", // your MQTT server IP address
               1883); // your MQTT server port;
+              
 ```
 
 Then upload the sktech to the Relay Mega board.
@@ -92,6 +93,7 @@ MegaRelayProp prop(MegaRelayProp::WiFi,
               u8"Room/My room/Props/Relay Mega/wiring/#",
               "192.168.1.53", // your MQTT server IP address
               1883); // your MQTT server port;
+              
 ```
 
 Then upload the sktech to the Relay Mega board.
