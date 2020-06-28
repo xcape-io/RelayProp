@@ -169,7 +169,7 @@ COMMANDS_SYNONYMS_LOW = ['off', 'open']
 ## Prop data messages
 Relay state variables are sent as defined with the *wiring* GUI, as well as the board and wiring informations:
 
-```python
+```yaml
 wiring:
     NONE: not loaded
     OFFLINE ERROR: error while loading offline wiring

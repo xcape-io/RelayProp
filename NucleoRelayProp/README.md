@@ -93,21 +93,20 @@ Group commands uses the `/*` tag:
 ## Prop data messages
 Relay state variables are sent as defined with the *PyRelayControl* GUI, as well as the board and settings informations:
 
-```python
-settings:
+```yaml
+wiring:
     0: not configured
     1 to 73: number of pins configured
 
 board:
-    Mega: Mega 2560 with Ethernet/WiFi shield
-    Mega with bridge: Mega 2560 with Dragino Yún shield: 
+    STM32 Nucleo-144
 ```
 
 For example:
 
 ```bash
-board=Mega with bridge 
-settings=9 
+board=STM32 Nucleo-144 
+wiring=9 
 ```
 
 ![Outbox messages](https://github.com/xcape-io/RelayProp/blob/master/NucleoRelayProp/screenshots/outbox-messages.png)
