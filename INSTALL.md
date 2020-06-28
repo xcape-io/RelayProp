@@ -24,7 +24,7 @@ First you have to choose what's better for your room central prop:
 
 Then configure and upload either:
 
-* **MegaRelayProp** with [`MegaRelayProp.ino` sketch to Arduino Mega 2560](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#megarelkayprop)
+* **MegaRelayProp** with [`MegaRelayProp.ino` sketch to Arduino Mega 2560](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#megarelayprop)
 * **NucleoRelayProp** with [`NucleoRelayProp.ino` sketch to STM32 Nucleo-144](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#nucleorelayprop)
 * **PiPyRelayProp** with [PiPyRelayProp app to Raspberry Pi](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#pipyrelayprop)
 
