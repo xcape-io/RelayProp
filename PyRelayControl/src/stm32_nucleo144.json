@@ -1,7 +1,16 @@
 [
   {
+    "pin": "D0",
+    "variable": "props",
+    "initial": 0,
+    "alias": [
+      "on",
+      "off"
+    ]
+  },
+  {
     "pin": "D1",
-    "variable": "sw1",
+    "variable": "smoke/on",
     "initial": 0,
     "alias": [
       "1",
@@ -10,7 +19,25 @@
   },
   {
     "pin": "D2",
-    "variable": "sw2",
+    "variable": "smoke/fog",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  },
+  {
+    "pin": "D3",
+    "variable": "door/front",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  },
+  {
+    "pin": "D4",
+    "variable": "door/exit",
     "initial": 0,
     "alias": [
       "1",
@@ -19,16 +46,34 @@
   },
   {
     "pin": "D5",
-    "variable": "PORTE",
+    "variable": "light",
     "initial": 0,
     "alias": [
-      "CLOSED",
-      "OPENED"
+      "on",
+      "off"
     ]
   },
   {
     "pin": "D6",
-    "variable": "door",
+    "variable": "maglock/1",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  },
+  {
+    "pin": "D7",
+    "variable": "maglock/2",
+    "initial": 0,
+    "alias": [
+      "1",
+      "0"
+    ]
+  },
+  {
+    "pin": "D8",
+    "variable": "maglock/3",
     "initial": 0,
     "alias": [
       "1",

@@ -7,17 +7,17 @@ In your Escape Room, *PiPyRelayProp* centralizes the control of your main relays
 * maglocks (doors)
 * smoke machines (warmp-up and shots)
 
-No coding is required, the relay outputs are configured with the [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl) wiring GUI and the commands can be triggered with the [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl) panel or a regular [control panel for *Room by xcape.io* users](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-configuration-for-room-by-xcapeio).
+No coding is required, the relay outputs are configured with the [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl) wiring GUI and the commands can be triggered with the [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl) panel or a regular [control panel for *Room by xcape.io* users](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#prop-configuration-for-room-by-xcapeio).
 
 <img src="https://github.com/xcape-io/RelayProp/blob/master/docs/nucleorelayprop.png" width="900">
 
-* [Prepare Arduino IDE and Nucleo](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prepare-arduino-ide-and-nucleo)
-* [Installation for STM32 Nucleo-144 (F767ZI)](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#installation-for-dragino-yun-ethernet-or-wifi-shield)
+* [Prepare Arduino IDE and Nucleo](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#prepare-arduino-ide-and-nucleo)
+* [Installation for STM32 Nucleo-144 (F767ZI)](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#installation-for-dragino-yun-ethernet-or-wifi-shield)
 * [Relay Prop wiring and control panel](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#relay-prop-wiring-and-control-panel)
-* [Relay modules](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-modules)
-* [Prop commands](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-commands)
-* [Prop data messages](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-data-messages)
-* [Prop configuration for *Room by xcape.io*](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-configuration-for-room-by-xcapeio)
+* [Relay modules](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#relay-modules)
+* [Prop commands](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#prop-commands)
+* [Prop data messages](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#prop-data-messages)
+* [Prop configuration for *Room by xcape.io*](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#prop-configuration-for-room-by-xcapeio)
 
 
 ## Prepare Arduino IDE and Nucleo
@@ -44,7 +44,7 @@ Download <a href="https://github.com/xcape-io/RelayProp/archive/master.zip" targ
 
 Advanced users may clone the <a href="https://github.com/xcape-io/RelayProp" target="_blank">https://github.com/xcape-io/RelayProp</a> repository.
 
-Open the `MegaRelayProp.ino` sketch in the Arduino IDE to set MQTT topics for your Escape Room:
+Open the `NucleoRelayProp.ino` sketch in the Arduino IDE to set MQTT topics for your Escape Room:
 ```c
 NucleoRelayProp prop(u8"Relay Nucleo", // as MQTT client id, should be unique per client for given broker
                    u8"Room/My room/Props/Relay Nucleo/inbox",
@@ -61,8 +61,7 @@ Then upload the sktech to the Relay Mega board.
 ## Relay Prop wiring and control panel
 All relay outputs are setup with the *PyRelayControl* GUI:
 
-![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaywiring-main.png)
-
+![](https://github.com/xcape-io/RelayProp/blob/master/NucleoRelayProp/screenshots/pyrelaywiring.png)
 
 See [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl)
 
@@ -70,7 +69,7 @@ See [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayCo
 ## Relay modules
 See [RELAY_MODULES.md](https://github.com/xcape-io/RelayProp/blob/master/RELAY_MODULES.md)
 
-STM32 Nucleo-144 boards expose the **ST Zio connector**, which extends the Arduino Uno V3 connectivity with 73 digital ouiputs (`D0` to `D72`).
+STM32 Nucleo-144 boards expose the **ST Zio connector**, which extends the Arduino Uno V3 connectivity with 73 digital outputs (`D0` to `D72`).
 
 ![](screenshots/stm32-nucleo-144-zio.png)
 
@@ -111,29 +110,17 @@ board=Mega with bridge
 settings=9 
 ```
 
-![Outbox messages](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/outbox-messages.png)
+![Outbox messages](https://github.com/xcape-io/RelayProp/blob/master/NucleoRelayProp/screenshots/outbox-messages.png)
 
 
 ## Prop configuration for *Room by xcape.io*
 *Room by xcape.io* users can add the Relay Pi prop to their props:
 
-![Room prop configuration](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/room-prop-settings.png)
+![Room prop configuration](https://github.com/xcape-io/RelayProp/blob/master/NucleoRelayProp/screenshots/room-prop-settings.png)
 
 And create a regular control panel:
 
-![Room control panel](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/room-prop-control-panel.png)
-
-
-# MegaRelayEthernetProp alternative
-*Relay Prop  on Arduino Mega 2560 + Ethernet Shield.*
-
-<img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Not done yet...
-
-
-# MegaRelayWifiProp alternative
-*Relay Prop  on Arduino Mega 2560 + WiFi Shield.*
-
-<img align="middle" src="https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/warning.png" alt="Warning" /> Not done yet...
+![Room control panel](https://github.com/xcape-io/RelayProp/blob/master/NucleoRelayProp/screenshots/room-prop-control-panel.png)
 
 
 ## Author
