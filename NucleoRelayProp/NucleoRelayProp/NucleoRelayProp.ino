@@ -56,7 +56,7 @@ void setup()
 
   prop.begin(InboxMessage::run);
 
-  board.setValue(u8"STM32 Nucleo 144");
+  board.setValue(u8"STM32 Nucleo-144");
 
   // At this point, the broker is not connected yet
 }
