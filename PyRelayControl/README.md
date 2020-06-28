@@ -90,7 +90,7 @@ At fisrt start (`prop.ini` not created yet), configure the relay prop:
 
 To configure the Relay prop:
 
-1. Choose Arduino or Raspberry board model
+1. Choose Arduino, Raspberry or STM32 board model
 2. Set board option if any (Dragino Yún shield or MCP23017 expander)
 3. Edit prop MQTT topics (inbosd/outbox/wiring)
 4. Set MQTT broker IP address and port 
@@ -161,7 +161,7 @@ The SSH command is set by default for the <a href="https://github.com/xcape-io/R
 
 ## Author
 
-**Faure Systems** (Jun 4th, 2020)
+**Faure Systems** (Jun 28th, 2020)
 * company: FAURE SYSTEMS SAS
 * mail: *dev at faure dot systems*
 * github: <a href="https://github.com/fauresystems?tab=repositories" target="_blank">fauresystems</a>
