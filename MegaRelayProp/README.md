@@ -157,7 +157,7 @@ wiring=9
 
 And create a regular control panel:
 
-![Room control panel](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/room-prop-control-panel.png)
+![Room control panel](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/room-prop-relay-panel.png)
 
 
 # MegaRelayEthernetProp alternative
