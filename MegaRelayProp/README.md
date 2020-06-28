@@ -113,7 +113,7 @@ See [RELAY_MODULES.md](https://github.com/xcape-io/RelayProp/blob/master/RELAY_M
 
 
 ## Prop commands
-Commands are implicitly defined with the *PyRelaySettings* GUI, you can create group commands by naming variables in groups with the `/` separator.
+Commands are implicitly defined with the *PyRelayControl* GUI, you can create group commands by naming variables in groups with the `/` separator.
 
 Relay commands are built from the variable name:
 
@@ -128,7 +128,7 @@ Group commands uses the `/*` tag:
 
 
 ## Prop data messages
-Relay state variables are sent as defined with the *PyRelaySettings* GUI, as well as the board and settings informations:
+Relay state variables are sent as defined with the *PyRelayControl* GUI, as well as the board and settings informations:
 
 ```yaml
 wiring:
