@@ -14,7 +14,7 @@ In your Escape Room, *PiPyRelayProp* centralizes the control of your main relays
 
 No coding is required, the relay outputs are configured with the [PyRelaySettings GUI](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pyrelaysettings) and the commands can be triggered with the [PyRelayControl GUI]([PyRelaySettings](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pyccsettings)) or a regular [control panel for *Room by xcape.io* users](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-configuration-for-room-by-xcapeio).
 
-<img src="https://github.com/xcape-io/RelayProp/blob/master/docs/megarelayprop.png" width="900">
+<img src="https://github.com/xcape-io/RelayProp/blob/master/docs/nucleorelayprop.png" width="900">
 
 * [Prepare Arduino IDE and Mega 2560](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prepare-arduino-ide-and-mega-2560)
 * [Installation  for Dragino Yún, Ethernet or WiFi Shield](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#installation-for-dragino-yun-ethernet-or-wifi-shield)
