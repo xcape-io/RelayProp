@@ -16,7 +16,7 @@ Components necessary to create, manage and control a Room Relay Prop:
     
 
 ## Arduino, Nucleo or Raspberry ?
-First you have to choose what's better for your room central prop:
+First you have to choose what's better for your room Relay prop:
 
 * an Arduino Mega 2560 (with Dragino Yún shield)
 * an STM32 Nucleo-144 (F767ZI)
@@ -29,17 +29,10 @@ Then configure and upload either:
 * **PiPyRelayProp** with [PiPyRelayProp app to Raspberry Pi](https://github.com/xcape-io/RelayProp/tree/master/PiPyRelayProp#pipyrelayprop)
 
 
-## PyRelaySettings
-Install the PyQt5 applet to configure a Relay Prop:
-
-* [PyRelaySettings applet](https://github.com/xcape-io/RelayProp/tree/master/PyRelaySettings#pycentralsettings)
-
-
-
 ## PyRelayControl
-Install the PyQt5 central control applet:
+Install the PyQt5 Relay prop control applet and its wiring GUI:
 
-* [PyRelayControl applet](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl#pycentralcontrol)
+* [PyRelayControl applet](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl#pyrelaycontrol)
 
 
 ## MQTT broker
