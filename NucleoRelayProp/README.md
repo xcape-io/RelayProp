@@ -16,10 +16,9 @@ No coding is required, the relay outputs are configured with the [PyRelayControl
 
 <img src="https://github.com/xcape-io/RelayProp/blob/master/docs/nucleorelayprop.png" width="900">
 
-* [Prepare Arduino IDE and Mega 2560](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prepare-arduino-ide-and-mega-2560)
-* [Installation  for Dragino Yún, Ethernet or WiFi Shield](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#installation-for-dragino-yun-ethernet-or-wifi-shield)
-* [Relay Prop settings](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-prop-settings)
-* [Relay Prop panel](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-prop-panel)
+* [Prepare Arduino IDE and Nucleo](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prepare-arduino-ide-and-nucleo)
+* [Installation for STM32 Nucleo-144 (F767ZI)](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#installation-for-dragino-yun-ethernet-or-wifi-shield)
+* [Relay Prop wiring and control panel](https://github.com/xcape-io/RelayProp/tree/master/NucleoRelayProp#relay-prop-wiring-and-control-panel)
 * [Relay modules](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-modules)
 * [Prop commands](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-commands)
 * [Prop data messages](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-data-messages)
@@ -35,7 +34,6 @@ You will find instructions in the <a href="https://github.com/xcape-io/ArduinoPr
 Next you need to install **ArduinoJson** library:
 
 ![](https://github.com/xcape-io/RelayProp/raw/master/docs/images/arduino-install-json.png)
-
 
 Then add STM32 boards in the Boards Manager, adding `package_stm_index.json` to **Additional Boards Manager URLs** in **Preferences**:
 
