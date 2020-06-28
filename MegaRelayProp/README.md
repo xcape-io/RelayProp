@@ -137,7 +137,7 @@ settings:
 
 board:
     Mega: Mega 2560 with Ethernet/WiFi shield
-    Mega with bridge: Mega 2560 with Dragino Yún shield: 
+    Mega with bridge: Mega 2560 with Dragino Yún shield
 ```
 
 For example:
