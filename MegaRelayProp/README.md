@@ -13,8 +13,7 @@ No coding is required, the relay outputs are configured with the [PyRelayControl
 
 * [Prepare Arduino IDE and Mega 2560](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prepare-arduino-ide-and-mega-2560)
 * [Installation  for Dragino Yún, Ethernet or WiFi Shield](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#installation-for-dragino-yun-ethernet-or-wifi-shield)
-* [Relay Prop settings](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-prop-settings)
-* [Relay Prop panel](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-prop-panel)
+* [Relay Prop wiring and control panel](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-prop-wiring-and-control-panel)
 * [Relay modules](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#relay-modules)
 * [Prop commands](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-commands)
 * [Prop data messages](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-data-messages)
