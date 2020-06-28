@@ -27,6 +27,10 @@ You will find instructions in the <a href="https://github.com/xcape-io/ArduinoPr
 * **PubSubClient** library
 * **ListLib** library
 
+Then add Dragino Shield boards in the Boards Manager, adding `package_dragino_yun_test_index.json` to **Additional Boards Manager URLs** in **Preferences**:
+
+URL to add: `http://www.dragino.com/downloads/downloads/YunShield/package_dragino_yun_test_index.json`
+
 Then you need to install **ArduinoJson** library:
 
 ![](https://github.com/xcape-io/RelayProp/raw/master/docs/images/arduino-install-json.png)
