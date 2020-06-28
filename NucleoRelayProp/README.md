@@ -26,84 +26,50 @@ No coding is required, the relay outputs are configured with the [PyRelayControl
 * [Prop configuration for *Room by xcape.io*](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-configuration-for-room-by-xcapeio)
 
 
-## Prepare Arduino IDE and Mega 2560
+## Prepare Arduino IDE and Nucleo
 You will find instructions in the <a href="https://github.com/xcape-io/ArduinoProps#1-installation-and-usage" target="_blank">ArduinoProps.md (1. Installation and usage)</a> to install:
 * **ArduinoProps** library
 * **PubSubClient** library
 * **ListLib** library
 
-Then you need to install **ArduinoJson** library:
+Next you need to install **ArduinoJson** library:
 
 ![](https://github.com/xcape-io/RelayProp/raw/master/docs/images/arduino-install-json.png)
 
-## Installation for Dragino Yún, Ethernet or WiFi Shield
-Download <a href="https://github.com/xcape-io/RelayProp/archive/master.zip" target="_blank">`RelayProp-master.zip`</a>, the sketch `MegaRelayProp.ino` is in the **MegaRelayProp** folder in  `RelayProp/MegaRelayProp/`.
+
+Then add STM32 boards in the Boards Manager, adding `package_stm_index.json` to **Additional Boards Manager URLs** in **Preferences**:
+
+URL to add: `https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json`
+
+Eventually, install STM32 libraries:
+* **STM32duino Examples**
+* **STM32duino LwIP**
+* **STM32duino STM32Ethernet**
+
+## Installation for STM32 Nucleo-144 (F767ZI)
+Download <a href="https://github.com/xcape-io/RelayProp/archive/master.zip" target="_blank">`RelayProp-master.zip`</a>, the sketch `NucleoRelayProp.ino` is in the **NucleoRelayProp** folder in  `RelayProp/NucleoRelayProp/`.
 
 Advanced users may clone the <a href="https://github.com/xcape-io/RelayProp" target="_blank">https://github.com/xcape-io/RelayProp</a> repository.
 
-### Arduino Mega 2560 with Dragino Yún Shield
 Open the `MegaRelayProp.ino` sketch in the Arduino IDE to set MQTT topics for your Escape Room:
-```csharp
-MegaRelayProp prop(MegaRelayProp::Bridge,
-              u8"Relay Mega", // as MQTT client id, should be unique per client for given broker
-              u8"Room/My room/Props/Relay Mega/inbox",
-              u8"Room/My room/Props/Relay Mega/outbox",
-              u8"Room/My room/Props/Relay Mega/wiring/#",
-              "192.168.1.53", // your MQTT server IP address
-              1883); // your MQTT server port;
+```c
+NucleoRelayProp prop(u8"Relay Nucleo", // as MQTT client id, should be unique per client for given broker
+                   u8"Room/My room/Props/Relay Nucleo/inbox",
+                   u8"Room/My room/Props/Relay Nucleo/outbox",
+                   u8"Room/My room/Props/Relay Nucleo/wiring/#",
+                   "192.168.1.42", // your MQTT server IP address
+                   1883); // your MQTT server port;
+                   
 ```
 
 Then upload the sktech to the Relay Mega board.
-
-> D0 (RxD) and D1 (TxD) are used by the Arduino Bridge connection, other I/O pins are available.
-
-If **Dragino Yún Shield** has not been setup in Arduino IDE yet, see <a href="https://github.com/xcape-io/ArduinoProps#add-dragino-yun--mega-2560-board-to-arduino-ide-boards-manager" target="_blank">Add Dragino Yún + Mega 2560 board to Arduino IDE boards manager</a> in the README of ArduinoProps library.
-
-#### Dragino Yún shield setup
-If you are not familiar with Yún (a Linux SoC bridged to the MCU), you will find help:
-* <a href="https://wiki.dragino.com/index.php?title=Yun_Shield" target="_blank">Dragino Yún Shield Wiki</a>
-* <a href="https://medium.com/@monajalal/arduino-yun-boad-setup-and-demo-e1161b60e068" target="_blank">Arduino Yún Board Setup and Demo</a> at Medium
-* <a href="https://www.arduino.cc/en/Guide/ArduinoYun" target="_blank">Getting Started with the Arduino Yún</a> at arduino.cc
-* <a href="https://www.youtube.com/watch?v=9-hPhWHWnvs" target="_blank">Getting Started With Arduino Yú</a>n - Video tutorial on YouTube
-
-### Arduino Mega 2560 with Ethernet Shield
-Open the `MegaRelayProp.ino` sketch in the Arduino IDE to set MQTT topics for your Escape Room:
-
-```csharp
-MegaRelayProp prop(MegaRelayProp::Ethernet,
-              u8"Relay Mega", // as MQTT client id, should be unique per client for given broker
-              u8"Room/My room/Props/Relay Mega/inbox",
-              u8"Room/My room/Props/Relay Mega/outbox",
-              u8"Room/My room/Props/Relay Mega/wiring/#",
-              "192.168.1.53", // your MQTT server IP address
-              1883); // your MQTT server port;
-```
-
-Then upload the sktech to the Relay Mega board.
-
-> All I/O pins are available, the Ethernet shield is connected to Arduino with SPI port.
-
-### Arduino Mega 2560 with WiFi Shield
-Open the `MegaRelayProp.ino` sketch in the Arduino IDE to set MQTT topics for your Escape Room:
-```csharp
-MegaRelayProp prop(MegaRelayProp::WiFi,
-              u8"Relay Mega", // as MQTT client id, should be unique per client for given broker
-              u8"Room/My room/Props/Relay Mega/inbox",
-              u8"Room/My room/Props/Relay Mega/outbox",
-              u8"Room/My room/Props/Relay Mega/wiring/#",
-              "192.168.1.53", // your MQTT server IP address
-              1883); // your MQTT server port;
-```
-
-Then upload the sktech to the Relay Mega board.
-
-> All I/O pins are available, the WiFi shield is connected to Arduino with SPI port.
 
 
 ## Relay Prop wiring and control panel
 All relay outputs are setup with the *PyRelayControl* GUI:
 
-![](https://github.com/xcape-io/RelayProp/blob/master/MegaRelayProp/screenshots/pyrelaysettings-main.png)
+![](https://github.com/xcape-io/RelayProp/blob/master/docs/screenshots/pyrelaywiring-main.png)
+
 
 See [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl)
 
@@ -113,7 +79,7 @@ See [RELAY_MODULES.md](https://github.com/xcape-io/RelayProp/blob/master/RELAY_M
 
 
 ## Prop commands
-Commands are implicitly defined with the *PyRelaySettings* GUI, you can create group commands by naming variables in groups with the `/` separator.
+Commands are implicitly defined with the *PyRelayControl* GUI, you can create group commands by naming variables in groups with the `/` separator.
 
 Relay commands are built from the variable name:
 
@@ -128,7 +94,7 @@ Group commands uses the `/*` tag:
 
 
 ## Prop data messages
-Relay state variables are sent as defined with the *PyRelaySettings* GUI, as well as the board and settings informations:
+Relay state variables are sent as defined with the *PyRelayControl* GUI, as well as the board and settings informations:
 
 ```python
 settings:
