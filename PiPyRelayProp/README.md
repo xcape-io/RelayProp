@@ -7,7 +7,8 @@ In your Escape Room, *PiPyRelayProp* centralizes the control of your main relays
 * maglocks (doors)
 * smoke machines (warmp-up and shots)
 
-No coding is required, the relay outputs are configured and the commands can be triggered with the [PyRelayControl GUI app]((https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl)).
+No coding is required, the relay outputs are configured with the [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl) wiring GUI and the commands can be triggered with the [PyRelayControl](https://github.com/xcape-io/RelayProp/tree/master/PyRelayControl) panel or a regular [control panel for *Room by xcape.io* users](https://github.com/xcape-io/RelayProp/tree/master/MegaRelayProp#prop-configuration-for-room-by-xcapeio).
+
 
 <img src="https://github.com/xcape-io/RelayProp/blob/master/docs/pipyrelayprop.png" width="900">
 
