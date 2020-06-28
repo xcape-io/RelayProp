@@ -96,7 +96,7 @@ Relay state variables are sent as defined with the *PyRelayControl* GUI, as well
 ```python
 settings:
     0: not configured
-    1 to 50: number of pins configured
+    1 to 73: number of pins configured
 
 board:
     Mega: Mega 2560 with Ethernet/WiFi shield
